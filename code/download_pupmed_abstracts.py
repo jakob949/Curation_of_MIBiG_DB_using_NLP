@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import os
 import json
 
+
 def fetch_abstract(pubmed_id):
     """
     Fetch the abstract for a given PubMed ID from ncbi.
@@ -24,6 +25,7 @@ def fetch_abstract(pubmed_id):
     abstract = abstract_section.text.strip()
     return abstract
 
+
 def loop_through_pmid_list():
     """
        Loop through the files in /mibig-json/data/
@@ -31,11 +33,10 @@ def loop_through_pmid_list():
        to get the abstracts. Saves it in a dictionary/json file.
     """
 
-
     # Create a dictionary to store the abstracts
     abstracts = {}
     broken_files = []
-
+    abstact_list = []
     for i, filename in enumerate(os.listdir("../mibig-json/data/")):
         if filename.endswith(".json"):
             with open(f"../mibig-json/data/{filename}") as f_in:
@@ -50,23 +51,40 @@ def loop_through_pmid_list():
         # Fetch the abstract for the PubMed ID
         abstract = fetch_abstract(pmid)
         # Store the abstract in the dictionary
-        abstracts[pmid] = abstract
+        if abstract is not None:
+            abstracts[pmid] = abstract
+            import re
+            pattern = re.compile(r'\s+$')
+            abstact_list.append([re.sub(pattern, ' ', abstract.replace('\n', '')), 1])
 
         print(i)
-        if i == 25:
+        if i == 55:
             break
+
     with open("../pmid_abstract.json", "w") as outfile:
         json.dump(abstracts, outfile)
-    return abstracts, broken_files
+    return abstracts, broken_files, abstact_list
+def loop_pmid_list(file):
+    abstact_list = []
+    with open(file) as file:
+        for i, line in enumerate(file):
+            abstact = fetch_abstract(line[:-1])
+            if abstact is not None:
+                import re
+                pattern = re.compile(r'\s+$')
+                format_abs = re.sub(pattern, ' ', abstact.replace('\n', ''))
+                abstact_list.append([format_abs, 0])
+            print(i, format_abs)
+        return abstact_list
 
 
-abstracts = loop_through_pmid_list()[0]
-
-# files missing PubMed IDs
-broken_files_in_MiBig = loop_through_pmid_list()[1]
 
 
-# open the json file and print the abstract for a given PubMed ID - TESTING
-with open("../pmid_abstract.json") as f_in:
-    abstracts = json.load(f_in)
-    print(abstracts["10449723"])
+with open('small_neg_abstacts.tsv', 'w') as tsvfile:
+    for line in abstracts_list:
+        tsvfile.write(line[0] + '\t' + str(line[1]) + '\n')
+
+# # open the json file and print the abstract for a given PubMed ID - TESTING
+# with open("../pmid_abstract.json") as f_in:
+#     abstracts = json.load(f_in)
+#     print(abstracts["10449723"])
