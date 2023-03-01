@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 import os
 import json
 
-
 def fetch_abstract(pubmed_id):
     """
     Fetch the abstract for a given PubMed ID from ncbi.
@@ -58,7 +57,7 @@ def loop_through_pmid_list():
             abstact_list.append([re.sub(pattern, ' ', abstract.replace('\n', '')), 1])
 
         print(i)
-        if i == 55:
+        if i == 100:
             break
 
     with open("../pmid_abstract.json", "w") as outfile:
@@ -78,9 +77,9 @@ def loop_pmid_list(file):
         return abstact_list
 
 
+abstracts_list = loop_pmid_list("testing_small_neg_pubmed.txt")
 
-
-with open('small_neg_abstacts.tsv', 'w') as tsvfile:
+with open('Testing_small_neg_abstacts.tsv', 'w') as tsvfile:
     for line in abstracts_list:
         tsvfile.write(line[0] + '\t' + str(line[1]) + '\n')
 
@@ -88,3 +87,5 @@ with open('small_neg_abstacts.tsv', 'w') as tsvfile:
 # with open("../pmid_abstract.json") as f_in:
 #     abstracts = json.load(f_in)
 #     print(abstracts["10449723"])
+
+
