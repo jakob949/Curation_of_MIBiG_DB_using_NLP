@@ -5,6 +5,7 @@ import pickle
 import requests
 from bs4 import BeautifulSoup
 import torch
+import time
 from torch.utils.data import Dataset, DataLoader
 from transformers import (AutoModel, AutoTokenizer,
                           AutoModelForMaskedLM, RobertaForSequenceClassification,
@@ -16,10 +17,12 @@ def fetch_abstract(pubmed_id):
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
     abstract_section = soup.find("div", {"class": "abstract-content selected"})
-    if abstract_section is None:
+    title_section = soup.find("h1", {"class": "heading-title"})
+    if abstract_section is None or title_section is None:
         return None
     abstract = abstract_section.text.strip()
-    return abstract
+    title = title_section.text.strip()
+    return title, abstract
 
 
 def predict(abstract_text, tokenizer, model):
@@ -27,7 +30,7 @@ def predict(abstract_text, tokenizer, model):
         inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
         outputs = model(inputs["input_ids"], inputs["attention_mask"])
         predictions = torch.argmax(outputs.logits, dim=1)
-        print('Prediction class:', predictions.item(), '\tprobs', torch.nn.functional.softmax(outputs.logits, dim=1).tolist()[0])
+        print('Predicted class:', predictions.item(), '\tprobs', torch.nn.functional.softmax(outputs.logits, dim=1).tolist()[0])
         return predictions.item()
 
 
@@ -39,6 +42,7 @@ def loop_through_pmid_list(start_index = 0, abstracts_good = {}, abstracts_bad =
     """
     classification = ''
     abstact_list = []
+
     tokenizer = RobertaTokenizer.from_pretrained('finetuned_roberta_epoch8')
     model = RobertaForSequenceClassification.from_pretrained('finetuned_roberta_epoch8')
     for i, filename in enumerate(os.listdir("../mibig-json/data/")):
@@ -48,6 +52,9 @@ def loop_through_pmid_list(start_index = 0, abstracts_good = {}, abstracts_bad =
                 try:
                     pubmed_list = file["cluster"]["publications"]
                     print(pubmed_list, '\ti = ', i)
+                    if file["cluster"]["status"] == "retired":
+                        print('retired')
+                        continue
                 except:
                     broken_files.append(filename)
                     continue
@@ -55,11 +62,16 @@ def loop_through_pmid_list(start_index = 0, abstracts_good = {}, abstracts_bad =
 
             for j, item in enumerate(pubmed_list):
                 # Fetch the abstract for the PubMed ID
-                abstract = fetch_abstract(item.replace("pubmed:", ""))
+                try:
+                    title, abstract = fetch_abstract(item.replace("pubmed:", ""))
+                except:
+                    broken_files.append(f"{filename}_{j}")
+                    continue
                 # Store the abstract in the dictionary
                 if abstract is not None:
                     predict(abstract.replace('\n', ' ').replace('\t', ' '), tokenizer, model)
-                    classification = input(abstract.replace('\n', ' ').replace('\t', ' '))
+                    abstract = abstract.replace('\n', ' ').replace('\t', ' ')
+                    classification = input(f"TITLE: {title}... ABSTRACT: {abstract}")
                     if classification == '1':
 
                         abstracts_good[f"{filename}_{j}"] = [item.replace("pubmed:", ""), abstract]
@@ -69,8 +81,11 @@ def loop_through_pmid_list(start_index = 0, abstracts_good = {}, abstracts_bad =
                         abstracts_bad[f"{filename}_{j}"] = [item.replace("pubmed:", ""), abstract]
                         pattern = re.compile(r'\s+$')
                         abstact_list.append([re.sub(pattern, ' ', abstract.replace('\n', '')), 0])
-                    elif classification == 'stop':
+                    elif classification != '1' or classification != '0' or classification == 'stop':
+                        print('Wrong input or stopped')
+                        classification = 'stop'
                         break
+
                 elif abstract is None:
                     broken_files.append(f"{filename}_{j}")
             if classification == 'stop':
@@ -96,7 +111,8 @@ except:
     abstracts_bad = {}
     broken_files = []
     index = 0
-
+print(f"len abstracts_good: {len(abstracts_good)}, len abstracts_bad: {len(abstracts_bad)}, len broken_files: {len(broken_files)}, index: {index}")
+time_start = time.time()
 abstracts_good, abstracts_bad, broken_files, abstact_list, index = loop_through_pmid_list(start_index = index, abstracts_good=abstracts_good, abstracts_bad=abstracts_bad, broken_files=broken_files)
 
 
@@ -109,3 +125,6 @@ with open('creation_of_dataset/broken_files.pickle', 'wb') as f:
     pickle.dump(broken_files, f)
 with open('creation_of_dataset/index.pickle', 'wb') as f:
     pickle.dump(index, f)
+
+time_end = time.time()
+print(f"Time elapsed in this session: {round(time_end - time_start, 2)} seconds")
