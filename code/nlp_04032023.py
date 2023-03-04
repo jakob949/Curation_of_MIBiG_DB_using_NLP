@@ -4,6 +4,7 @@
 import torch
 from torch.utils.data import Dataset, DataLoader
 from transformers import AutoModel, AutoTokenizer, AutoModelForMaskedLM, RobertaForSequenceClassification, RobertaTokenizer, BertTokenizer, BertForSequenceClassification, AdamW
+import time
 
 # Define the dataset
 class Dataset(Dataset):
@@ -21,7 +22,7 @@ class Dataset(Dataset):
     def __len__(self):
         return len(self.data)
 
-
+time_start = time.time()
 
 model = RobertaForSequenceClassification.from_pretrained("allenai/biomed_roberta_base")
 
@@ -40,7 +41,7 @@ dataloader = DataLoader(dataset, batch_size=3, shuffle=True)
 ## Fine-tune the model ##
 save_model = True
 model.train()
-num_of_epochs = 8
+num_of_epochs = 1
 optimizer = AdamW(model.parameters(), lr=1e-5) # weight_decay=0.01
 for epoch in range(num_of_epochs):
     print(f"Epoch {epoch+1}/{num_of_epochs}")
@@ -91,3 +92,6 @@ print("Accuracy: {:.2f}%".format(accuracy * 100))
 # model_dir = "finetuned_model_roberta_epoch8"
 # model.save_pretrained(model_dir)
 # tokenizer.save_pretrained(model_dir)
+
+time_end = time.time()
+print(f"Time elapsed in this session: {round(time_end - time_start, 2)} seconds")
