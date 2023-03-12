@@ -30,7 +30,7 @@ tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
 
 
 # Define the dataloader
-file_paths = ["training_combined_small.txt"]
+file_paths = ["train_full.txt"]
 dataset = Dataset(file_paths)
 dataloader = DataLoader(dataset, batch_size=3, shuffle=True)
 
@@ -66,7 +66,7 @@ if save_model:
 
 
 # Define the test dataloader, re-using 
-test_file_path = ["testing_small.txt"]
+test_file_path = ["test_full.txt"]
 test_dataset = Dataset(test_file_path)
 test_dataloader = DataLoader(test_dataset, batch_size=1)
 
