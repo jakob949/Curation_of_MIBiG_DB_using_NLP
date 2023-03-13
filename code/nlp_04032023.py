@@ -57,15 +57,18 @@ time_start = time.time()
 #
 # tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
 
+# Example of loading pre-trained model
+model = RobertaForSequenceClassification.from_pretrained('finetuned_model_roberta_2')
+tokenizer = RobertaTokenizer.from_pretrained('finetuned_model_roberta_2')
+
+
 
 # Define the dataloader
 file_paths = ["train_full.txt"]
 dataset = Dataset(file_paths)
-dataloader = DataLoader(dataset, batch_size=3, shuffle=True)
+dataloader = DataLoader(dataset, batch_size=7, shuffle=True)
 
-# Example of loading pre-trained model
-model = RobertaForSequenceClassification.from_pretrained('finetuned_model_roberta_2')
-tokenizer = RobertaTokenizer.from_pretrained('finetuned_model_roberta_2')
+
 
 ## Fine-tune the model ##
 save_model = True
@@ -101,4 +104,4 @@ if save_model:
 # tokenizer.save_pretrained(model_dir)
 
 time_end = time.time()
-print(f"Time elapsed in this session: {round(time_end - time_start, 2)} seconds")
+print(f"Time elapsed in this session: {round(time_end - time_start, 2)/60} minutes")
