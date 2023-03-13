@@ -6,6 +6,35 @@ from torch.utils.data import Dataset, DataLoader
 from transformers import AutoModel, AutoTokenizer, AutoModelForMaskedLM, RobertaForSequenceClassification, RobertaTokenizer, BertTokenizer, BertForSequenceClassification, AdamW
 import time
 
+
+def evaluate_model(model, tokenizer):
+    print("Evaluating model...")
+    # Define the test dataloader, re-using
+    test_file_path = ["test_full.txt"]
+    test_dataset = Dataset(test_file_path)
+    test_dataloader = DataLoader(test_dataset, batch_size=1)
+
+    # Evaluate the model on the test dataset
+    model.eval()
+    total_correct_preds = 0
+    total_samples = 0
+    with torch.no_grad():
+        for i, batch in enumerate(test_dataloader):
+            print(f"Batch {i + 1}/{len(test_dataloader)}")
+
+            abstract_text, labels = batch
+            inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
+            outputs = model(inputs["input_ids"], inputs["attention_mask"])
+            predictions = torch.argmax(outputs.logits, dim=1)
+            print('Prediction class:', predictions.item(), '\tCorrect label:', labels.item(), '\tprobs',
+                  torch.nn.functional.softmax(outputs.logits, dim=1).tolist()[0])
+            total_correct_preds += torch.sum(predictions == labels).item()
+            total_samples += 1
+
+    accuracy = total_correct_preds / total_samples
+    print("Accuracy: {:.2f}%".format(accuracy * 100))
+
+
 # Define the dataset
 class Dataset(Dataset):
     def __init__(self, file_paths):
@@ -24,9 +53,9 @@ class Dataset(Dataset):
 
 time_start = time.time()
 
-model = RobertaForSequenceClassification.from_pretrained("allenai/biomed_roberta_base")
-
-tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
+# model = RobertaForSequenceClassification.from_pretrained("allenai/biomed_roberta_base")
+#
+# tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
 
 
 # Define the dataloader
@@ -35,13 +64,13 @@ dataset = Dataset(file_paths)
 dataloader = DataLoader(dataset, batch_size=3, shuffle=True)
 
 # Example of loading pre-trained model
-# model = RobertaForSequenceClassification.from_pretrained('finetuned')
-# tokenizer = RobertaTokenizer.from_pretrained('finetuned')
+model = RobertaForSequenceClassification.from_pretrained('finetuned_model_roberta_2')
+tokenizer = RobertaTokenizer.from_pretrained('finetuned_model_roberta_2')
 
 ## Fine-tune the model ##
 save_model = True
 model.train()
-num_of_epochs = 2
+num_of_epochs = 4
 optimizer = AdamW(model.parameters(), lr=1e-5) # weight_decay=0.01
 for epoch in range(num_of_epochs):
     print(f"Epoch {epoch+1}/{num_of_epochs}")
@@ -57,6 +86,7 @@ for epoch in range(num_of_epochs):
         optimizer.step()
         optimizer.zero_grad()
 
+    evaluate_model(model, tokenizer)
 
 # Save the fine-tuned model
 if save_model:
@@ -65,29 +95,6 @@ if save_model:
   tokenizer.save_pretrained(model_dir)
 
 
-# Define the test dataloader, re-using 
-test_file_path = ["test_full.txt"]
-test_dataset = Dataset(test_file_path)
-test_dataloader = DataLoader(test_dataset, batch_size=1)
-
-# Evaluate the model on the test dataset
-model.eval()
-total_correct_preds = 0
-total_samples = 0
-with torch.no_grad():
-    for i, batch in enumerate(test_dataloader):
-        print(f"Batch {i+1}/{len(test_dataloader)}")
-
-        abstract_text, labels = batch
-        inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
-        outputs = model(inputs["input_ids"], inputs["attention_mask"])
-        predictions = torch.argmax(outputs.logits, dim=1)
-        print('Prediction class:', predictions.item(), '\tCorrect label:', labels.item(), '\tprobs',torch.nn.functional.softmax(outputs.logits, dim=1).tolist()[0])
-        total_correct_preds += torch.sum(predictions == labels).item()
-        total_samples += 1
-  
-accuracy = total_correct_preds / total_samples
-print("Accuracy: {:.2f}%".format(accuracy * 100))
 
 # model_dir = "finetuned_model_roberta_epoch8"
 # model.save_pretrained(model_dir)
