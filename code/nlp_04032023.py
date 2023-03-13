@@ -32,7 +32,7 @@ tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
 # Define the dataloader
 file_paths = ["train_full.txt"]
 dataset = Dataset(file_paths)
-dataloader = DataLoader(dataset, batch_size=3, shuffle=True)
+dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
 
 # Example of loading pre-trained model
 # model = RobertaForSequenceClassification.from_pretrained('finetuned')
@@ -58,11 +58,7 @@ for epoch in range(num_of_epochs):
         optimizer.zero_grad()
 
 
-# Save the fine-tuned model
-if save_model:
-  model_dir = f"finetuned_model_roberta_{num_of_epochs}"
-  model.save_pretrained(model_dir)
-  tokenizer.save_pretrained(model_dir)
+
 
 
 # Define the test dataloader, re-using 
@@ -89,9 +85,10 @@ with torch.no_grad():
 accuracy = total_correct_preds / total_samples
 print("Accuracy: {:.2f}%".format(accuracy * 100))
 
-# model_dir = "finetuned_model_roberta_epoch8"
-# model.save_pretrained(model_dir)
-# tokenizer.save_pretrained(model_dir)
-
+# Save the fine-tuned model
+if save_model:
+  model_dir = f"finetuned_model_roberta_{num_of_epochs}"
+  model.save_pretrained(model_dir)
+  tokenizer.save_pretrained(model_dir)
 time_end = time.time()
-print(f"Time elapsed in this session: {round(time_end - time_start, 2)} seconds")
+print(f"Time elapsed in this session: {round(time_end - time_start, 2)/ 60} minutes")
