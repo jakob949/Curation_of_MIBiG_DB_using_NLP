@@ -54,7 +54,6 @@ class Dataset(Dataset):
 time_start = time.time()
 
 model = RobertaForSequenceClassification.from_pretrained("allenai/biomed_roberta_base")
-#
 tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
 
 # Example of loading pre-trained model
@@ -97,11 +96,6 @@ if save_model:
   model.save_pretrained(model_dir)
   tokenizer.save_pretrained(model_dir)
 
-
-
-# model_dir = "finetuned_model_roberta_epoch8"
-# model.save_pretrained(model_dir)
-# tokenizer.save_pretrained(model_dir)
 
 time_end = time.time()
 print(f"Time elapsed in this session: {round(time_end - time_start, 2)/60} minutes")
