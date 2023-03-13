@@ -43,47 +43,44 @@ save_model = True
 model.train()
 num_of_epochs = 4
 optimizer = AdamW(model.parameters(), lr=1e-5) # weight_decay=0.01
-for epoch in range(num_of_epochs):
-    print(f"Epoch {epoch+1}/{num_of_epochs}")
-    for i, batch in enumerate(dataloader):
-        print(f"Batch {i+1}/{len(dataloader)}")
-        texts, labels = batch
-        inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
-        outputs = model(inputs["input_ids"], inputs["attention_mask"], labels=labels)
-        
-        loss = outputs.loss
-        loss.backward()
-        
-        optimizer.step()
-        optimizer.zero_grad()
+with open('log_file.txt', 'w') as f:
+    for epoch in range(num_of_epochs):
+        print(f"Epoch {epoch+1}/{num_of_epochs}")
+        for i, batch in enumerate(dataloader):
+            print(f"Batch {i+1}/{len(dataloader)}", file=f)
+            texts, labels = batch
+            inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
+            outputs = model(inputs["input_ids"], inputs["attention_mask"], labels=labels)
 
+            loss = outputs.loss
+            loss.backward()
 
+            optimizer.step()
+            optimizer.zero_grad()
 
+    # Define the test dataloader, re-using
+    test_file_path = ["test_full.txt"]
+    test_dataset = Dataset(test_file_path)
+    test_dataloader = DataLoader(test_dataset, batch_size=1)
 
+    # Evaluate the model on the test dataset
+    model.eval()
+    total_correct_preds = 0
+    total_samples = 0
+    with torch.no_grad():
+        for i, batch in enumerate(test_dataloader):
+            print(f"Batch {i+1}/{len(test_dataloader)}")
 
-# Define the test dataloader, re-using 
-test_file_path = ["test_full.txt"]
-test_dataset = Dataset(test_file_path)
-test_dataloader = DataLoader(test_dataset, batch_size=1)
+            abstract_text, labels = batch
+            inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
+            outputs = model(inputs["input_ids"], inputs["attention_mask"])
+            predictions = torch.argmax(outputs.logits, dim=1)
+            print('Prediction class:', predictions.item(), '\tCorrect label:', labels.item(), '\tprobs',torch.nn.functional.softmax(outputs.logits, dim=1).tolist()[0], file=f)
+            total_correct_preds += torch.sum(predictions == labels).item()
+            total_samples += 1
 
-# Evaluate the model on the test dataset
-model.eval()
-total_correct_preds = 0
-total_samples = 0
-with torch.no_grad():
-    for i, batch in enumerate(test_dataloader):
-        print(f"Batch {i+1}/{len(test_dataloader)}")
-
-        abstract_text, labels = batch
-        inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
-        outputs = model(inputs["input_ids"], inputs["attention_mask"])
-        predictions = torch.argmax(outputs.logits, dim=1)
-        print('Prediction class:', predictions.item(), '\tCorrect label:', labels.item(), '\tprobs',torch.nn.functional.softmax(outputs.logits, dim=1).tolist()[0])
-        total_correct_preds += torch.sum(predictions == labels).item()
-        total_samples += 1
-  
-accuracy = total_correct_preds / total_samples
-print("Accuracy: {:.2f}%".format(accuracy * 100))
+    accuracy = total_correct_preds / total_samples
+    print("Accuracy: {:.2f}%".format(accuracy * 100))
 
 # Save the fine-tuned model
 if save_model:
