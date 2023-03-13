@@ -41,7 +41,7 @@ dataloader = DataLoader(dataset, batch_size=3, shuffle=True)
 ## Fine-tune the model ##
 save_model = True
 model.train()
-num_of_epochs = 2
+num_of_epochs = 4
 optimizer = AdamW(model.parameters(), lr=1e-5) # weight_decay=0.01
 for epoch in range(num_of_epochs):
     print(f"Epoch {epoch+1}/{num_of_epochs}")
