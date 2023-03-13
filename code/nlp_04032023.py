@@ -44,8 +44,9 @@ model.train()
 num_of_epochs = 4
 optimizer = AdamW(model.parameters(), lr=1e-5) # weight_decay=0.01
 with open('log_file.txt', 'w') as f:
+    print(f"Training for {num_of_epochs} epochs", file=f)
     for epoch in range(num_of_epochs):
-        print(f"Epoch {epoch+1}/{num_of_epochs}")
+        print(f"Epoch {epoch+1}/{num_of_epochs}", file=f)
         for i, batch in enumerate(dataloader):
             print(f"Batch {i+1}/{len(dataloader)}", file=f)
             texts, labels = batch
@@ -69,7 +70,7 @@ with open('log_file.txt', 'w') as f:
     total_samples = 0
     with torch.no_grad():
         for i, batch in enumerate(test_dataloader):
-            print(f"Batch {i+1}/{len(test_dataloader)}")
+            print(f"Batch {i+1}/{len(test_dataloader)}", file=f)
 
             abstract_text, labels = batch
             inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
