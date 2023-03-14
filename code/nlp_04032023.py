@@ -33,18 +33,18 @@ model = RobertaForSequenceClassification.from_pretrained('finetuned_model_robert
 tokenizer = RobertaTokenizer.from_pretrained('finetuned_model_roberta_4')
 
 # Define the dataloader
-file_paths = ["train_full.txt"]
+file_paths = ["train_fold_0.txt"]
 dataset = Dataset(file_paths)
 dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
 
 
 
 ## Fine-tune the model ##
-save_model = True
+save_model = False
 model.train()
-num_of_epochs = 8
+num_of_epochs = 4
 optimizer = AdamW(model.parameters(), lr=1e-5) # weight_decay=0.01
-with open('log_file.txt', 'w') as f:
+with open('log_file_fold_0.txt', 'w') as f:
     print(f"Training for {num_of_epochs} epochs", file=f)
     print(f"Training for {num_of_epochs} epochs")
     for epoch in range(num_of_epochs):
@@ -62,7 +62,7 @@ with open('log_file.txt', 'w') as f:
             optimizer.zero_grad()
 
     # Define the test dataloader, re-using
-    test_file_path = ["test_full.txt"]
+    test_file_path = ["test_fold_0.txt"]
     test_dataset = Dataset(test_file_path)
     test_dataloader = DataLoader(test_dataset, batch_size=1)
 
