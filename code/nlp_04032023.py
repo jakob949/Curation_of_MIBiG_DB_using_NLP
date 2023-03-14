@@ -24,19 +24,20 @@ class Dataset(Dataset):
 
 time_start = time.time()
 
-model = RobertaForSequenceClassification.from_pretrained("allenai/biomed_roberta_base")
+# Load the pre-trained model
+# model = RobertaForSequenceClassification.from_pretrained("allenai/biomed_roberta_base")
+# tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
 
-tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
-
+# Loading pre-trained-fine-tuned model
+model = RobertaForSequenceClassification.from_pretrained('finetuned_model_roberta_4')
+tokenizer = RobertaTokenizer.from_pretrained('finetuned_model_roberta_4')
 
 # Define the dataloader
 file_paths = ["train_full.txt"]
 dataset = Dataset(file_paths)
 dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
 
-# Example of loading pre-trained model
-# model = RobertaForSequenceClassification.from_pretrained('finetuned')
-# tokenizer = RobertaTokenizer.from_pretrained('finetuned')
+
 
 ## Fine-tune the model ##
 save_model = True
@@ -44,21 +45,22 @@ model.train()
 num_of_epochs = 4
 optimizer = AdamW(model.parameters(), lr=1e-5) # weight_decay=0.01
 with open('log_file.txt', 'w') as f:
-    print(f"Training for {num_of_epochs} epochs", file=f)
-    for epoch in range(num_of_epochs):
-        print(f"Epoch {epoch+1}/{num_of_epochs}", file=f)
-        for i, batch in enumerate(dataloader):
-            print(f"Batch {i+1}/{len(dataloader)}", file=f)
-            texts, labels = batch
-            inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
-            outputs = model(inputs["input_ids"], inputs["attention_mask"], labels=labels)
-
-            loss = outputs.loss
-            loss.backward()
-
-            optimizer.step()
-            optimizer.zero_grad()
-
+    # print(f"Training for {num_of_epochs} epochs", file=f)
+    # print(f"Training for {num_of_epochs} epochs")
+    # for epoch in range(num_of_epochs):
+    #     print(f"Epoch {epoch+1}/{num_of_epochs}", file=f)
+    #     for i, batch in enumerate(dataloader):
+    #         print(f"Batch {i+1}/{len(dataloader)}", file=f)
+    #         texts, labels = batch
+    #         inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
+    #         outputs = model(inputs["input_ids"], inputs["attention_mask"], labels=labels)
+    #
+    #         loss = outputs.loss
+    #         loss.backward()
+    #
+    #         optimizer.step()
+    #         optimizer.zero_grad()
+    #
     # Define the test dataloader, re-using
     test_file_path = ["test_full.txt"]
     test_dataset = Dataset(test_file_path)
