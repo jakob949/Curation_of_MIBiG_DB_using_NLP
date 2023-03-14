@@ -42,25 +42,25 @@ dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
 ## Fine-tune the model ##
 save_model = True
 model.train()
-num_of_epochs = 4
+num_of_epochs = 8
 optimizer = AdamW(model.parameters(), lr=1e-5) # weight_decay=0.01
 with open('log_file.txt', 'w') as f:
-    # print(f"Training for {num_of_epochs} epochs", file=f)
-    # print(f"Training for {num_of_epochs} epochs")
-    # for epoch in range(num_of_epochs):
-    #     print(f"Epoch {epoch+1}/{num_of_epochs}", file=f)
-    #     for i, batch in enumerate(dataloader):
-    #         print(f"Batch {i+1}/{len(dataloader)}", file=f)
-    #         texts, labels = batch
-    #         inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
-    #         outputs = model(inputs["input_ids"], inputs["attention_mask"], labels=labels)
-    #
-    #         loss = outputs.loss
-    #         loss.backward()
-    #
-    #         optimizer.step()
-    #         optimizer.zero_grad()
-    #
+    print(f"Training for {num_of_epochs} epochs", file=f)
+    print(f"Training for {num_of_epochs} epochs")
+    for epoch in range(num_of_epochs):
+        print(f"Epoch {epoch+1}/{num_of_epochs}", file=f)
+        for i, batch in enumerate(dataloader):
+            print(f"Batch {i+1}/{len(dataloader)}", file=f)
+            texts, labels = batch
+            inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
+            outputs = model(inputs["input_ids"], inputs["attention_mask"], labels=labels)
+
+            loss = outputs.loss
+            loss.backward()
+
+            optimizer.step()
+            optimizer.zero_grad()
+
     # Define the test dataloader, re-using
     test_file_path = ["test_full.txt"]
     test_dataset = Dataset(test_file_path)
@@ -83,7 +83,7 @@ with open('log_file.txt', 'w') as f:
             total_samples += 1
 
     accuracy = total_correct_preds / total_samples
-    print("Accuracy: {:.2f}%".format(accuracy * 100))
+    print("Accuracy: {:.2f}%".format(accuracy * 100), file=f)
 
 # Save the fine-tuned model
 if save_model:
@@ -91,4 +91,4 @@ if save_model:
   model.save_pretrained(model_dir)
   tokenizer.save_pretrained(model_dir)
 time_end = time.time()
-print(f"Time elapsed in this session: {round(time_end - time_start, 2)/ 60} minutes")
+print(f"Time elapsed in this session: {round(time_end - time_start, 2)/ 60} minutes", file=f)
