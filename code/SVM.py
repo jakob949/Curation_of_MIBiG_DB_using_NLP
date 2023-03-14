@@ -25,7 +25,7 @@ X_train, X_test = X[:split], X[split:]
 y_train, y_test = labels[:split], labels[split:]
 
 # Train the SVM classifier on the training data
-clf = SVC(kernel='linear')
+clf = SVC(kernel='rbf')
 clf.fit(X_train, y_train)
 
 # Make predictions on the testing data
