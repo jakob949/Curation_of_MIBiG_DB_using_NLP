@@ -64,7 +64,7 @@ def get_word_vectors(filename, batch_size=10000):
             sent_vectors = [word.vector for word in sent if word.has_vector]
             if sent_vectors:
                 sent_vectors = np.array(sent_vectors)
-                sent_mean = np.mean(sent_vectors, axis=0)
+                sent_mean = np.concatenate(sent_vectors, axis=0)
                 yield sent_mean
 
 
@@ -92,7 +92,6 @@ def plot_word_vectors(filename1, filename2):
     plt.xlabel("PCA Component 1")
     plt.ylabel("PCA Component 2")
     plt.savefig(f"PCA_spacy_embeddings.svg", format="svg")
-
 
 def fetch_journal(pubmed_id):
 
@@ -154,4 +153,4 @@ def journal_distribution(filename, minimum_num_journals=5):
 
     return dist
 
-dist = journal_distribution("pubMedIDs_NONBGC.txt")
+plot_word_vectors("dataset_positives_titles_abstracts.txt", "dataset_negatives_titles_abstracts.txt")

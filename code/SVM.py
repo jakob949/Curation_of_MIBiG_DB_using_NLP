@@ -1,36 +1,39 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 import numpy as np
 
 # Read in the data from the two labeled files
-with open('dataset_negatives_titles_abstracts.txt', 'r') as f:
-    data_0 = f.readlines()
-with open('dataset_positives_titles_abstracts.txt', 'r') as f:
-    data_1 = f.readlines()
+for k in range(5):
+    train_file = f'train_fold_{k}.txt'
+    test_file = f'test_fold_{k}.txt'
+    with open(train_file, 'r') as f:
+        train_data = f.readlines()
+    with open(test_file, 'r') as f:
+        test_data = f.readlines()
 
-data = data_0 + data_1
+    # Extract the labels and text from the data
+    train_labels = np.array([int(d.split('\t')[1].strip()) for d in train_data])
+    train_text = np.array([d.split('\t')[0].strip() for d in train_data])
+    test_labels = np.array([int(d.split('\t')[1].strip()) for d in test_data])
+    test_text = np.array([d.split('\t')[0].strip() for d in test_data])
 
-# Extract the labels and text from the data
-labels = np.array([int(d.split('\t')[1].strip()) for d in data])
-text = np.array([d.split('\t')[0].strip() for d in data])
+    # Convert the text into a matrix of TF-IDF features
+    vectorizer = TfidfVectorizer()
+    X_train = vectorizer.fit_transform(train_text)
+    X_test = vectorizer.transform(test_text)
 
-# Convert the text into a matrix of TF-IDF features
-vectorizer = TfidfVectorizer()
-X = vectorizer.fit_transform(text)
+    # Train the SVM classifier on the training data
+    clf = SVC(kernel='linear')
+    clf.fit(X_train, train_labels)
 
-# Split the data into training and testing sets
-split = int(0.8 * len(data))
-X_train, X_test = X[:split], X[split:]
-y_train, y_test = labels[:split], labels[split:]
+    # Make predictions on the testing data
+    y_pred = clf.predict(X_test)
 
-# Train the SVM classifier on the training data
-clf = SVC(kernel='linear')
-clf.fit(X_train, y_train)
+    # Compute the accuracy and F1 score of the classifier
+    acc_score = accuracy_score(test_labels, y_pred)
+    f1 = f1_score(test_labels, y_pred)
 
-# Make predictions on the testing data
-y_pred = clf.predict(X_test)
-
-# Print the accuracy of the classifier
-print('Accuracy:', round(accuracy_score(y_test, y_pred), 2), 'F1:', round(f1_score(y_test, y_pred),2))
-
+    # Print the accuracy and F1 score of the classifier
+    print('Accuracy:', round(acc_score, 2), 'F1 score:', round(f1,2))
+    print(confusion_matrix(test_labels, y_pred))

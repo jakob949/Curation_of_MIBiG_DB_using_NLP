@@ -80,6 +80,7 @@ with open(args.logfile, 'w') as f:
     with torch.no_grad():
         for i, batch in enumerate(test_dataloader):
             print(f"Batch {i+1}/{len(test_dataloader)}", file=f)
+            abstract_text, labels = batch
             inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
             outputs = model(inputs["input_ids"], inputs["attention_mask"])
             predictions = torch.argmax(outputs.logits, dim=1)
