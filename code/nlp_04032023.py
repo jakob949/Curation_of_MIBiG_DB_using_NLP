@@ -32,12 +32,12 @@ class Dataset(Dataset):
 time_start = time.time()
 
 # Load the pre-trained model
-model = RobertaForSequenceClassification.from_pretrained("allenai/biomed_roberta_base")
-tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
+# model = RobertaForSequenceClassification.from_pretrained("allenai/biomed_roberta_base")
+# tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
 
 # Loading pre-trained-fine-tuned model
-# model = RobertaForSequenceClassification.from_pretrained('finetuned_model_roberta_4')
-# tokenizer = RobertaTokenizer.from_pretrained('finetuned_model_roberta_4')
+model = RobertaForSequenceClassification.from_pretrained('finetuned_model_roberta_4')
+tokenizer = RobertaTokenizer.from_pretrained('finetuned_model_roberta_4')
 
 # Define the dataloader
 file_paths = [args.trainfile]
