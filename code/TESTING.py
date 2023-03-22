@@ -48,8 +48,8 @@ def loop_through_pmid_list(start_index, abstracts_good = {}, abstracts_bad = {},
     """
 
 
-    tokenizer = RobertaTokenizer.from_pretrained('finetuned_roberta_epoch8')
-    model = RobertaForSequenceClassification.from_pretrained('finetuned_roberta_epoch8')
+    tokenizer = RobertaTokenizer.from_pretrained('finetuned_model_roberta_4')
+    model = RobertaForSequenceClassification.from_pretrained('finetuned_model_roberta_4')
 
 
     for j, item in enumerate(abstracts_bad):
