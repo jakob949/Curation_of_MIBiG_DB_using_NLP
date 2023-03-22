@@ -238,7 +238,66 @@ def plot_histogram(list1, list2, label1, label2):
     plt.savefig('histogram.pdf', bbox_inches='tight', dpi=300, format='pdf')
     plt.show()
 
-plot_histogram([('gene', 0.029301070159098254), ('cluster', 0.015529662225094566), ('biosynthesis', 0.012079682183656789), ('biosynthetic', 0.010213715017075659), ('produce', 0.006633845919899637), ('acid', 0.006168146134691783), ('production', 0.006050929181952391), ('sequence', 0.005667598066237082), ('analysis', 0.00557889334524511), ('product', 0.0054933566500028515)], [('protein', 0.008742150924138542), ('cell', 0.008577324293226576), ('gene', 0.006802268268020781), ('activity', 0.004732426152914737), ('study', 0.004434470320112335), ('acid', 0.003978027342202274), ('result', 0.003965348370593661), ('bind', 0.0037085991955192513), ('high', 0.0036737320235955663), ('strain', 0.003496226421074987)], "Positive dataset", "Negative dataset")
+def PCA_last_classification_layer(file_paths = ['dataset_positives_titles_abstracts.txt', 'dataset_negatives_titles_abstracts.txt'], model_path = 'finetuned_model_roberta_4'):
+    class Dataset(Dataset):
+        def __init__(self, file_paths):
+            self.data = []
+            for file_path in file_paths:
+                with open(file_path, "r") as f:
+                    for line in f:
+                        text, label = line.strip().split("\t")
+                        self.data.append((text, int(label)))
+
+        def __getitem__(self, index):
+            return self.data[index]
+
+        def __len__(self):
+            return len(self.data)
+
+    time_start = time.time()
+
+    # Loading pre-trained model
+    model = RobertaModel.from_pretrained(model_path)
+    tokenizer = RobertaTokenizer.from_pretrained(model_path)
+
+    # Define the dataloader
+
+    dataset = Dataset(file_paths)
+    dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
+
+    # Extract embeddings from the pre-trained model
+    model.eval()
+    embeddings = []
+    labels = []
+
+    with torch.no_grad():
+        for i, batch in enumerate(dataloader):
+            texts, batch_labels = batch
+            inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
+            outputs = model(inputs["input_ids"], inputs["attention_mask"])
+            embeddings.extend(outputs.last_hidden_state[:, 0, :].detach().numpy())
+            labels.extend(batch_labels.numpy())
+
+    # Apply PCA
+    pca = PCA(n_components=2)
+    embeddings_2d = pca.fit_transform(embeddings)
+
+    # Plot PCA results
+    plt.figure(figsize=(10, 10))
+    for label in set(labels):
+        idx = [i for i, l in enumerate(labels) if l == label]
+        plt.scatter(embeddings_2d[idx, 0], embeddings_2d[idx, 1], label=label)
+
+    plt.legend()
+    plt.xlabel("PCA 1")
+    plt.ylabel("PCA 2")
+    plt.title("PCA Plot")
+    plt.savefig('PCA_embeddings.pdf', bbox_inches='tight', dpi=300, format='pdf')
+
+    time_end = time.time()
+    print(f"Time elapsed in this session: {round(time_end - time_start, 2) / 60} minutes")
+
+# plot_histogram([('gene', 0.029301070159098254), ('cluster', 0.015529662225094566), ('biosynthesis', 0.012079682183656789), ('biosynthetic', 0.010213715017075659), ('produce', 0.006633845919899637), ('acid', 0.006168146134691783), ('production', 0.006050929181952391), ('sequence', 0.005667598066237082), ('analysis', 0.00557889334524511), ('product', 0.0054933566500028515)], [('protein', 0.008742150924138542), ('cell', 0.008577324293226576), ('gene', 0.006802268268020781), ('activity', 0.004732426152914737), ('study', 0.004434470320112335), ('acid', 0.003978027342202274), ('result', 0.003965348370593661), ('bind', 0.0037085991955192513), ('high', 0.0036737320235955663), ('strain', 0.003496226421074987)], "Positive dataset", "Negative dataset")
 
 # nlp = spacy.load("en_core_web_sm")
 #
