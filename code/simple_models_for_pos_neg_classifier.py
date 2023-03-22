@@ -103,6 +103,6 @@ def classifier_based_on_freq_of_words(fold):
 
     print('accuracy', accuracy_score(labels, predicitons))
 
-nlp = spacy.load("en_core_web_sm")
-classifier_based_on_freq_of_words('4')
-# print(majority_voting_classifier(None))
+# nlp = spacy.load("en_core_web_sm")
+# classifier_based_on_freq_of_words('4')
+print(majority_voting_classifier(None))

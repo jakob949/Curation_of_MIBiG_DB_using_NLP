@@ -1,74 +1,31 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+import numpy as np
 
-import torch
-from torch.utils.data import Dataset, DataLoader
-from transformers import RobertaModel, RobertaTokenizer
-import time
-import argparse
-from sklearn.decomposition import PCA
-import matplotlib.pyplot as plt
+def softmax(x):
+    e_x = np.exp(x - np.max(x))
+    return e_x / e_x.sum(axis=-1, keepdims=True)
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-d', '--datafile', type=str, help='name of the data file')
-args = parser.parse_args()
+def self_attention(query, key, value, mask=None):
+    # Compute attention scores (query-key dot product)
+    scores = np.dot(query, key.T)
 
-# Define the dataset
-class Dataset(Dataset):
-    def __init__(self, file_paths):
-        self.data = []
-        for file_path in file_paths:
-            with open(file_path, "r") as f:
-                for line in f:
-                    text, label = line.strip().split("\t")
-                    self.data.append((text, int(label)))
+    # Apply mask if provided
+    if mask is not None:
+        scores = scores.masked_fill(mask == 0, float("-inf"))
 
-    def __getitem__(self, index):
-        return self.data[index]
+    # Compute softmax of attention scores
+    attention_weights = softmax(scores)
 
-    def __len__(self):
-        return len(self.data)
+    # Compute the weighted sum of values
+    output = np.dot(attention_weights, value)
 
-time_start = time.time()
+    return output, attention_weights
 
-# Loading pre-trained model
-model = RobertaModel.from_pretrained('finetuned_model_roberta_4')
-tokenizer = RobertaTokenizer.from_pretrained('finetuned_model_roberta_4')
+# Example usage
+# Note: In practice, Q, K, V are typically multi-dimensional arrays
+query = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+key = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+value = np.array([[0, 2, 0], [0, 3, 0], [0, 5, 0]])
 
-# Define the dataloader
-file_paths = ['dataset_positives_titles_abstracts.txt', 'dataset_negatives_titles_abstracts.txt']
-dataset = Dataset(file_paths)
-dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
-
-# Extract embeddings from the pre-trained model
-model.eval()
-embeddings = []
-labels = []
-
-with torch.no_grad():
-    for i, batch in enumerate(dataloader):
-        texts, batch_labels = batch
-        inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
-        outputs = model(inputs["input_ids"], inputs["attention_mask"])
-        embeddings.extend(outputs.last_hidden_state[:, 0, :].detach().numpy())
-        labels.extend(batch_labels.numpy())
-
-# Apply PCA
-pca = PCA(n_components=2)
-embeddings_2d = pca.fit_transform(embeddings)
-
-# Plot PCA results
-plt.figure(figsize=(10, 10))
-for label in set(labels):
-    idx = [i for i, l in enumerate(labels) if l == label]
-    plt.scatter(embeddings_2d[idx, 0], embeddings_2d[idx, 1], label=label)
-
-plt.legend()
-plt.xlabel("PCA 1")
-plt.ylabel("PCA 2")
-plt.title("PCA Plot")
-plt.savefig('PCA_embeddings.pdf', bbox_inches='tight', dpi=300, format='pdf')
-
-time_end = time.time()
-print(f"Time elapsed in this session: {round(time_end - time_start, 2) / 60} minutes")
-
+output, attention_weights = self_attention(query, key, value)
+print("Output:", output)
+print("Attention Weights:", attention_weights)
