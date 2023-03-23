@@ -1,15 +1,15 @@
 #!/bin/sh
 ### General options
 ### –- specify queue --
-#BSUB -q gpua100
+#BSUB -q gpua40
 ### -- set the job Name --
 #BSUB -J NLP
 ### -- ask for number of cores (default: 1) --
-#BSUB -n 2
+#BSUB -n 1
 ### -- Select the resources: 1 gpu in exclusive process mode --
-#BSUB -gpu "num=2:mode=exclusive_process"
+#BSUB -gpu "num=1:mode=exclusive_process"
 ### -- set walltime limit: hh:mm --  maximum 24 hours for GPU-queues right now
-#BSUB -W 24:00
+#BSUB -W 2:00
 # request 5GB of system-memory
 #BSUB -R "rusage[mem=48GB]"
 ### -- set the email address --
@@ -32,4 +32,5 @@ module load cuda/11.6
 
 /appl/cuda/11.6.0/samples/bin/x86_64/linux/release/deviceQuery
 
-nlp_04032023.py
+# nlp_04032023.py
+understand_text_dataset.py
