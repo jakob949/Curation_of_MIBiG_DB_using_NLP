@@ -3,7 +3,7 @@
 
 import torch
 from torch.utils.data import Dataset, DataLoader
-from transformers import AutoModel, AutoTokenizer, AutoModelForMaskedLM, RobertaForSequenceClassification, RobertaTokenizer, BertTokenizer, BertForSequenceClassification, AdamW
+from transformers import  T5ForConditionalGeneration, T5Tokenizer, AdamW, AutoModel, AutoTokenizer, AutoModelForMaskedLM, RobertaForSequenceClassification, RobertaTokenizer, BertTokenizer, BertForSequenceClassification, AdamW
 import time
 import argparse
 
@@ -32,8 +32,11 @@ class Dataset(Dataset):
 time_start = time.time()
 
 # Load the pre-trained model
-model = RobertaForSequenceClassification.from_pretrained("roberta-base")
-tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
+# model = RobertaForSequenceClassification.from_pretrained("roberta-base")
+# tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
+
+model = T5ForConditionalGeneration.from_pretrained("t5-base")
+tokenizer = T5Tokenizer.from_pretrained("t5-base")
 
 # Loading pre-trained-fine-tuned model
 # model = RobertaForSequenceClassification.from_pretrained('finetuned_model_roberta_4')
