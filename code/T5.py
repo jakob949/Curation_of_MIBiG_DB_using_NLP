@@ -53,8 +53,7 @@ with open(args.logfile, "w") as f:
             texts, labels = batch
             input_texts = ["classify: " + text for text in texts]
             inputs = tokenizer(input_texts, padding=True, truncation=True, return_tensors="pt", max_length=512)
-            inputs = {key: tensor.unsqueeze(0) for key, tensor in inputs.items()}
-
+            inputs = {key: tensor.view(1, -1) for key, tensor in inputs.items()}
             labels = labels.to(device)
             loss = model(input_ids=inputs["input_ids"].to(device), attention_mask=inputs["attention_mask"].to(device), labels=labels).loss
 
