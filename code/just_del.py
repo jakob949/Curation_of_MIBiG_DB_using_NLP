@@ -86,4 +86,4 @@ with torch.no_grad():
         total_samples += 1
 
 accuracy = total_correct_preds / total_samples
-print(f"Accuracy: {accuracy
+print(f"Accuracy: {accuracy})
