@@ -63,19 +63,22 @@ def evaluate_model(model, test_dataloader):
     total_samples = 0
     with torch.no_grad():
         for i, batch in enumerate(test_dataloader):
-            abstract_text, labels = batch
-            input_text = "classify: " + abstract_text[0]
-            inputs = tokenizer(input_text, padding=True, truncation=True, return_tensors="pt", max_length=512)
+            texts, labels = batch
+            input_texts = ["classify: " + text for text in texts]
+            inputs = tokenizer(input_texts, padding=True, truncation=True, return_tensors="pt", max_length=512)
             decoder_input_ids = torch.zeros_like(inputs["input_ids"])
-            outputs = model(input_ids=inputs["input_ids"].to(device), attention_mask=inputs["attention_mask"].to(device), decoder_input_ids=decoder_input_ids.to(device), return_dict=True)
+            outputs = model(input_ids=inputs["input_ids"].to(device),
+                            attention_mask=inputs["attention_mask"].to(device),
+                            decoder_input_ids=decoder_input_ids.to(device), return_dict=True)
             logits = outputs.logits
-            predicted_label = torch.argmax(logits, dim=-1).squeeze().item()
-            total_correct_preds += (predicted_label == labels.item())
-            total_samples += 1
+            predicted_labels = torch.argmax(logits, dim=-1).squeeze()
+
+            # Iterate over the predicted_labels tensor and compare it to the labels tensor
+            for j in range(predicted_labels.size(0)):
+                total_correct_preds += (predicted_labels[j].item() == labels[j].item())
+                total_samples += 1
     accuracy = total_correct_preds / total_samples
     return accuracy
-
-
 
 
 optimizer = AdamW(model.parameters(), lr=1e-5)
