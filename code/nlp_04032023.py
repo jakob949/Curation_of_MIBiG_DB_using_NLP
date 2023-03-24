@@ -53,13 +53,14 @@ dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
 ## Fine-tune the model ##
 save_model = False
 model.train()
-num_of_epochs = 1
+num_of_epochs = 4
 optimizer = AdamW(model.parameters(), lr=1e-5) # weight_decay=0.01
 with open(args.logfile, 'w') as f:
     print(f"Training for {num_of_epochs} epochs", file=f)
     print(f"Training for {num_of_epochs} epochs")
     for epoch in range(num_of_epochs):
         print(f"Epoch {epoch+1}/{num_of_epochs}", file=f)
+        print(f"Epoch {epoch+1}/{num_of_epochs}")
         for i, batch in enumerate(dataloader):
             print(f"Batch {i+1}/{len(dataloader)}", file=f)
             texts, labels = batch
@@ -94,11 +95,11 @@ with open(args.logfile, 'w') as f:
 
     accuracy = total_correct_preds / total_samples
     print("Accuracy: {:.2f}%".format(accuracy * 100), file=f)
+    time_end = time.time()
+    print(f"Time elapsed in this session: {round(time_end - time_start, 2)/ 60} minutes", file=f)
 
 # Save the fine-tuned model
 if save_model:
   model_dir = f"finetuned_model_roberta_{num_of_epochs}"
   model.save_pretrained(model_dir)
   tokenizer.save_pretrained(model_dir)
-time_end = time.time()
-print(f"Time elapsed in this session: {round(time_end - time_start, 2)/ 60} minutes", file=f)
