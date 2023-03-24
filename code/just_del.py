@@ -1,13 +1,27 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 import torch
+import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
-from transformers import AutoModel, AutoTokenizer, AutoModelForMaskedLM, RobertaForSequenceClassification, RobertaTokenizer, BertTokenizer, BertForSequenceClassification, AdamW
-import time
+from transformers import (AutoModel, AutoTokenizer)
+from torch.optim import AdamW
 
-# Define the dataset
-class Dataset(Dataset):
+class ClassificationModel(nn.Module):
+    def __init__(self, base_model, num_labels):
+        super(ClassificationModel, self).__init__()
+        self.base_model = base_model
+        self.num_labels = num_labels
+        self.classifier = nn.Linear(base_model.config.hidden_size, num_labels)
+
+    def forward(self, input_ids, attention_mask, labels=None):
+        outputs = self.base_model(input_ids=input_ids, attention_mask=attention_mask)
+        logits = self.classifier(outputs.last_hidden_state[:, 0, :])
+        if labels is not None:
+            loss_fct = nn.CrossEntropyLoss()
+            loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
+            return loss, logits
+        else:
+            return logits
+
+class TextClassificationDataset(Dataset):
     def __init__(self, file_paths):
         self.data = []
         for file_path in file_paths:
@@ -22,42 +36,34 @@ class Dataset(Dataset):
     def __len__(self):
         return len(self.data)
 
-time_start = time.time()
+# Check for CUDA availability
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load the pre-trained model
-# model = RobertaForSequenceClassification.from_pretrained("allenai/biomed_roberta_base")
-# tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
+base_model = AutoModel.from_pretrained("microsoft/biogpt").to(device)
+tokenizer = AutoTokenizer.from_pretrained("microsoft/biogpt")
+num_labels = 2
+model = ClassificationModel(base_model, num_labels).to(device)
 
-# Loading pre-trained-fine-tuned model
-model = RobertaForSequenceClassification.from_pretrained('finetuned_model_roberta_4')
-tokenizer = RobertaTokenizer.from_pretrained('finetuned_model_roberta_4')
+# Define the dataloader
+file_paths = ["spacy.txt"]
+dataset = TextClassificationDataset(file_paths)
+dataloader = DataLoader(dataset, batch_size=3, shuffle=True)
 
+## Fine-tune the model ##
+save_model = False
+model.train()
+num_of_epochs = 1
+optimizer = AdamW(model.parameters(), lr=1e-5)
+for epoch in range(num_of_epochs):
+    print(f"Epoch {epoch + 1}/{num_of_epochs}")
+    for i, batch in enumerate(dataloader):
+        print(f"Batch {i + 1}/{len(dataloader)}")
+        texts, labels = batch
+        inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt").to(device)
+        labels = labels.to(device)
+        loss, logits = model(input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"], labels=labels)
 
-
-test_file_path = ['hard_dataset.txt']
-test_dataset = Dataset(test_file_path)
-test_dataloader = DataLoader(test_dataset, batch_size=1)
-
-
-preds = []
-model.eval()
-total_correct_preds = 0
-total_samples = 0
-with torch.no_grad():
-    for i, batch in enumerate(test_dataloader):
-        print(f"Batch {i+1}/{len(test_dataloader)}")
-        abstract_text, labels = batch
-        inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
-        outputs = model(inputs["input_ids"], inputs["attention_mask"])
-        predictions = torch.argmax(outputs.logits, dim=1)
-        print('Prediction class:', predictions.item(), '\tCorrect label:', labels.item(), '\tprobs',torch.nn.functional.softmax(outputs.logits, dim=1).tolist()[0])
-        total_correct_preds += torch.sum(predictions == labels).item()
-        total_samples += 1
-        preds.append(predictions.item())
-    accuracy = total_correct_preds / total_samples
-
-
-import pickle
-with open('hard_preds.pickle', 'wb') as f:
-    pickle.dump(preds, f)
-
+        loss.backward()
+        optimizer.step()
+        optimizer.zero_grad()
