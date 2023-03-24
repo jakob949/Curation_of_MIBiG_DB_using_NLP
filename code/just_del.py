@@ -1,8 +1,15 @@
+import argparse
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from transformers import AutoModel, AutoTokenizer
 from torch.optim import AdamW
+
+parser = argparse.ArgumentParser(description="Text Classification")
+parser.add_argument("--trainfile", type=str, required=True, help="Path to the training file.")
+parser.add_argument("--testfile", type=str, required=True, help="Path to the test file.")
+parser.add_argument("--logfile", type=str, default="log.txt", help="Path to the log file.")
+args = parser.parse_args()
 
 class ClassificationModel(nn.Module):
     def __init__(self, base_model, num_labels):
@@ -36,8 +43,6 @@ class TextClassificationDataset(Dataset):
     def __len__(self):
         return len(self.data)
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 # Load the pre-trained model
 base_model = AutoModel.from_pretrained("microsoft/biogpt")
 tokenizer = AutoTokenizer.from_pretrained("microsoft/biogpt")
@@ -45,45 +50,48 @@ num_labels = 2
 model = ClassificationModel(base_model, num_labels)
 
 # Define the dataloader
-file_paths = ["spacy.txt"]
-dataset = TextClassificationDataset(file_paths)
+train_file_path = [args.trainfile]
+dataset = TextClassificationDataset(train_file_path)
 dataloader = DataLoader(dataset, batch_size=3, shuffle=True)
 
 # Fine-tune the model
 model.train()
 num_of_epochs = 1
 optimizer = AdamW(model.parameters(), lr=1e-5)
-for epoch in range(num_of_epochs):
-    print(f"Epoch {epoch + 1}/{num_of_epochs}")
-    for i, batch in enumerate(dataloader):
-        print(f"Batch {i + 1}/{len(dataloader)}")
-        texts, labels = batch
-        inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
-        loss, logits = model(input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"], labels=labels)
 
-        loss.backward()
-        optimizer.step()
-        optimizer.zero_grad()
+with open(args.logfile, "w") as f:
+    for epoch in range(num_of_epochs):
+        print(f"Epoch {epoch + 1}/{num_of_epochs}", file=f)
+        for i, batch in enumerate(dataloader):
+            print(f"Batch {i + 1}/{len(dataloader)}", file=f)
+            texts, labels = batch
+            inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
+            loss, logits = model(input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"], labels=labels)
 
-# Define the test dataloader
-test_file_path = ["spacy_neg.txt"]
-test_dataset = TextClassificationDataset(test_file_path)
-test_dataloader = DataLoader(test_dataset, batch_size=1)
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
 
-# Evaluate the model on the test dataset
-model.eval()
-total_correct_preds = 0
-total_samples = 0
-with torch.no_grad():
-    for i, batch in enumerate(test_dataloader):
-        print(f"Batch {i + 1}/{len(test_dataloader)}")
-        abstract_text, labels = batch
-        inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
-        outputs = model(inputs["input_ids"], inputs["attention_mask"])
-        predictions = torch.argmax(outputs, dim=1)
-        print(f"Prediction class: {predictions.item()}\tCorrect label: {labels.item()}\tprobs {torch.nn.functional.softmax(outputs, dim=1).tolist()[0]}")
-        total_correct_preds += torch.sum(predictions == labels).item()
-        total_samples += 1
+    # Define the test dataloader
+    test_file_path = [args.testfile]
+    test_dataset = TextClassificationDataset(test_file_path)
+    test_dataloader = DataLoader(test_dataset, batch_size=1)
 
-accuracy = total_correct_preds / total_samples
-print(f"Accuracy: {accuracy}")
+    # Evaluate the model on the test dataset
+    model.eval()
+    total_correct_preds = 0
+    total_samples = 0
+    with torch.no_grad():
+        for i, batch in enumerate(test_dataloader):
+            print(f"Batch {i + 1}/{len(test_dataloader)}", file=f)
+            abstract_text, labels = batch
+            inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
+            outputs = model(inputs["input_ids"], inputs["attention_mask"])
+            predictions = torch.argmax(outputs, dim=1)
+            print(f"Prediction class: {predictions.item()}\tCorrect label: {labels.item()}\tprobs {torch.nn.functional.softmax(outputs, dim=1).tolist()[0]}", file=f)
+            total_correct_preds += torch.sum(predictions == labels).item()
+            total_samples += 1
+
+    accuracy = total_correct_preds / total_samples
+    print(f"Accuracy: {accuracy * 100:.2f}%", file=f)
+
