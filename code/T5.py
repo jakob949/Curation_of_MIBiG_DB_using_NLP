@@ -36,7 +36,7 @@ model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-base").to(dev
 tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-base")
 
 # Define the dataloader
-train_file_path = [args.tr]
+train_file_path = [args.trainfile]
 dataset = TextClassificationDataset(train_file_path)
 dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
 
@@ -45,7 +45,7 @@ model.train()
 num_of_epochs = 4
 optimizer = AdamW(model.parameters(), lr=1e-5)
 
-with open(args.l, "w") as f:
+with open(args.logfile, "w") as f:
     for epoch in range(num_of_epochs):
         print(f"Epoch {epoch + 1}/{num_of_epochs}", file=f)
         for i, batch in enumerate(dataloader):
@@ -61,7 +61,7 @@ with open(args.l, "w") as f:
             optimizer.zero_grad()
 
     # Define the test dataloader
-    test_file_path = [args.te]
+    test_file_path = [args.testfile]
     test_dataset = TextClassificationDataset(test_file_path)
     test_dataloader = DataLoader(test_dataset, batch_size=1)
 
