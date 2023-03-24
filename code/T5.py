@@ -48,12 +48,13 @@ def train_model(model, dataloader, num_of_epochs, optimizer):
             texts, labels = batch
             input_texts = ["classify: " + text for text in texts]
             inputs = tokenizer(input_texts, padding=True, truncation=True, return_tensors="pt", max_length=512)
-            labels = labels.to(device)
+            labels = labels.unsqueeze(-1).to(device)  # Add an extra dimension to the labels tensor
             loss = model(input_ids=inputs["input_ids"].to(device), attention_mask=inputs["attention_mask"].to(device), labels=labels).loss
 
             loss.backward()
             optimizer.step()
             optimizer.zero_grad()
+
 
 # Evaluate the model on the test dataset
 def evaluate_model(model, test_dataloader):
