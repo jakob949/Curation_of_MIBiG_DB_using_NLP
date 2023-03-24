@@ -73,11 +73,17 @@ def evaluate_model(model, test_dataloader):
             predicted_labels = torch.argmax(logits, dim=-1).squeeze()
 
             # Compare the single predicted label to the corresponding label
-            total_correct_preds += (predicted_labels.item() == labels.item())
-            total_samples += 1
+            if predicted_labels.numel() == 1:
+                total_correct_preds += (predicted_labels.item() == labels.item())
+            else:
+                for j in range(predicted_labels.size(0)):
+                    total_correct_preds += (predicted_labels[j].item() == labels[j].item())
+
+            total_samples += labels.size(0)
 
     accuracy = total_correct_preds / total_samples
     return accuracy
+
 
 
 
