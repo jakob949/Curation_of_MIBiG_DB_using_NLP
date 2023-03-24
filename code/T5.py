@@ -41,19 +41,13 @@ dataset = TextClassificationDataset(train_file_path)
 dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
 
 # Fine-tune the model
-model.train()
-num_of_epochs = 4
-optimizer = AdamW(model.parameters(), lr=1e-5)
-
-with open(args.logfile, "w") as f:
+def train_model(model, dataloader, num_of_epochs, optimizer):
+    model.train()
     for epoch in range(num_of_epochs):
-        print(f"Epoch {epoch + 1}/{num_of_epochs}", file=f)
         for i, batch in enumerate(dataloader):
-            print(f"Batch {i + 1}/{len(dataloader)}", file=f)
             texts, labels = batch
             input_texts = ["classify: " + text for text in texts]
             inputs = tokenizer(input_texts, padding=True, truncation=True, return_tensors="pt", max_length=512)
-            inputs = {key: tensor.view(1, -1) for key, tensor in inputs.items()}
             labels = labels.to(device)
             loss = model(input_ids=inputs["input_ids"].to(device), attention_mask=inputs["attention_mask"].to(device), labels=labels).loss
 
@@ -61,26 +55,37 @@ with open(args.logfile, "w") as f:
             optimizer.step()
             optimizer.zero_grad()
 
+# Evaluate the model on the test dataset
+def evaluate_model(model, test_dataloader):
+    model.eval()
+    total_correct_preds = 0
+    total_samples = 0
+    with torch.no_grad():
+        for i, batch in enumerate(test_dataloader):
+            abstract_text, labels = batch
+            input_text = "classify: " + abstract_text[0]
+            inputs = tokenizer(input_text, padding=True, truncation=True, return_tensors="pt", max_length=512)
+            outputs = model.generate(inputs["input_ids"].to(device), attention_mask=inputs["attention_mask"].to(device), num_return_sequences=1)
+            prediction = tokenizer.decode(outputs[0], skip_special_tokens=True)
+            predicted_label = int(prediction)
+            total_correct_preds += (predicted_label == labels.item())
+            total_samples += 1
+    accuracy = total_correct_preds / total_samples
+    return accuracy
+
+optimizer = AdamW(model.parameters(), lr=1e-5)
+num_of_epochs = 4
+with open(args.logfile, "w") as f:
+    # Train the model
+    train_model(model, dataloader, num_of_epochs, optimizer)
+
     # Define the test dataloader
     test_file_path = [args.testfile]
     test_dataset = TextClassificationDataset(test_file_path)
     test_dataloader = DataLoader(test_dataset, batch_size=1)
 
     # Evaluate the model on the test dataset
-    model.eval()
-    total_correct_preds = 0
-    total_samples = 0
-    with torch.no_grad():
-        for i, batch in enumerate(test_dataloader):
-            print(f"Batch {i + 1}/{len(test_dataloader)}", file=f)
-            abstract_text, labels = batch
-            input_text = "classify: " + abstract_text[0]
-            inputs = tokenizer(input_text, padding=True, truncation=True, return_tensors="pt")
-            outputs = model.generate(inputs["input_ids"].to(device), attention_mask=inputs["attention_mask"].to(device), num_return_sequences=1)
-            prediction = tokenizer.decode(outputs[0], skip_special_tokens=True)
-            predicted_label = int(prediction)
-            print(f"Prediction class: {predicted_label}\tCorrect label: {labels.item()}", file=f)
-            total_correct_preds += (predicted_label == labels.item())
-            total_samples += 1
-    accuracy = total_correct_preds / total_samples
+    accuracy = evaluate_model(model, test_dataloader)
+
+    # Log the results
     print(f"Accuracy: {accuracy * 100:.2f}%", file=f)
