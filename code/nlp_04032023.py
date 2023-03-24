@@ -30,7 +30,8 @@ class Dataset(Dataset):
         return len(self.data)
 
 time_start = time.time()
-
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Using device: {device}")
 # Load the pre-trained model
 # model = RobertaForSequenceClassification.from_pretrained("allenai/biomed_roberta_base")
 # tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
