@@ -38,7 +38,7 @@ tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-base")
 # Define the dataloader
 train_file_path = [args.trainfile]
 dataset = TextClassificationDataset(train_file_path)
-dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
+dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
 
 # Fine-tune the model
 model.train()
