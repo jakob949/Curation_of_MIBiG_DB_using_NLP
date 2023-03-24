@@ -32,5 +32,5 @@ module load cuda/11.6
 
 /appl/cuda/11.6.0/samples/bin/x86_64/linux/release/deviceQuery
 
-./nlp_04032023.py -l log_roberta_fold_4.txt -te test_fold_4.txt -tr train_fold_4.txt
+./nlp_04032023.py -l log_T5_fold_4.txt -te test_fold_4.txt -tr train_fold_4.txt
 # understand_text_dataset.py
