@@ -36,6 +36,8 @@ class TextClassificationDataset(Dataset):
     def __len__(self):
         return len(self.data)
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 # Load the pre-trained model
 base_model = AutoModel.from_pretrained("microsoft/biogpt")
 tokenizer = AutoTokenizer.from_pretrained("microsoft/biogpt")
@@ -64,7 +66,7 @@ for epoch in range(num_of_epochs):
         optimizer.zero_grad()
 
 # Define the test dataloader
-test_file_path = ["test_file.txt"]
+test_file_path = ["spacy_neg.txt"]
 test_dataset = TextClassificationDataset(test_file_path)
 test_dataloader = DataLoader(test_dataset, batch_size=1)
 
