@@ -66,13 +66,15 @@ def evaluate_model(model, test_dataloader):
             abstract_text, labels = batch
             input_text = "classify: " + abstract_text[0]
             inputs = tokenizer(input_text, padding=True, truncation=True, return_tensors="pt", max_length=512)
-            outputs = model(input_ids=inputs["input_ids"].to(device), attention_mask=inputs["attention_mask"].to(device), return_dict=True)
+            decoder_input_ids = torch.zeros_like(inputs["input_ids"])
+            outputs = model(input_ids=inputs["input_ids"].to(device), attention_mask=inputs["attention_mask"].to(device), decoder_input_ids=decoder_input_ids.to(device), return_dict=True)
             logits = outputs.logits
             predicted_label = torch.argmax(logits, dim=-1).item()
             total_correct_preds += (predicted_label == labels.item())
             total_samples += 1
     accuracy = total_correct_preds / total_samples
     return accuracy
+
 
 
 optimizer = AdamW(model.parameters(), lr=1e-5)
