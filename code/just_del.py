@@ -42,6 +42,8 @@ class TextClassificationDataset(Dataset):
 
     def __len__(self):
         return len(self.data)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Using device: {device}")
 
 # Load the pre-trained model
 base_model = AutoModel.from_pretrained("microsoft/biogpt")
@@ -52,7 +54,7 @@ model = ClassificationModel(base_model, num_labels)
 # Define the dataloader
 train_file_path = [args.trainfile]
 dataset = TextClassificationDataset(train_file_path)
-dataloader = DataLoader(dataset, batch_size=3, shuffle=True)
+dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
 
 # Fine-tune the model
 model.train()
