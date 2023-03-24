@@ -58,7 +58,7 @@ dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
 
 # Fine-tune the model
 model.train()
-num_of_epochs = 1
+num_of_epochs = 4
 optimizer = AdamW(model.parameters(), lr=1e-5)
 
 with open(args.l, "w") as f:

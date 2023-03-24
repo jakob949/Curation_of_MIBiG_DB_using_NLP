@@ -1,7 +1,7 @@
 #!/bin/sh
 ### General options
 ### –- specify queue --
-#BSUB -q gpuv100
+#BSUB -q gpua100
 ### -- set the job Name --
 #BSUB -J NLP
 ### -- ask for number of cores (default: 1) --
@@ -11,7 +11,7 @@
 ### -- set walltime limit: hh:mm --  maximum 24 hours for GPU-queues right now
 #BSUB -W 20:00
 # request 5GB of system-memory
-#BSUB -R "rusage[mem=32GB]"
+#BSUB -R "rusage[mem=40GB]"
 ### -- set the email address --
 # please uncomment the following line and put in your e-mail address,
 # if you want to receive e-mail notifications on a non-default address
@@ -32,6 +32,6 @@ module load cuda/11.6
 
 /appl/cuda/11.6.0/samples/bin/x86_64/linux/release/deviceQuery
 
-./nlp_04032023.py -l log_T5_fold_4.txt -te test_fold_4.txt -tr train_fold_4.txt
+#./nlp_04032023.py -l log_T5_fold_4.txt -te test_fold_4.txt -tr train_fold_4.txt
 # understand_text_dataset.py
-python3 just_del.py
+python3 just_del.py -l log_biogpt_fold_4.txt -te test_fold_4.txt -tr train_fold_4.txt
