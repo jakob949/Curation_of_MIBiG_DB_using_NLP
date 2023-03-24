@@ -64,6 +64,7 @@ def evaluate_model(model, test_dataloader):
     with torch.no_grad():
         for i, batch in enumerate(test_dataloader):
             texts, labels = batch
+            labels = labels.to(device)
             input_texts = ["classify: " + text for text in texts]
             inputs = tokenizer(input_texts, padding=True, truncation=True, return_tensors="pt", max_length=512)
             decoder_input_ids = torch.zeros_like(inputs["input_ids"])
