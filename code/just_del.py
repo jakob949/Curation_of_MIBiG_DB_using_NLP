@@ -6,9 +6,9 @@ from transformers import AutoModel, AutoTokenizer
 from torch.optim import AdamW
 
 parser = argparse.ArgumentParser(description="Text Classification")
-parser.add_argument("--trainfile", type=str, required=True, help="Path to the training file.")
-parser.add_argument("--testfile", type=str, required=True, help="Path to the test file.")
-parser.add_argument("--logfile", type=str, default="log.txt", help="Path to the log file.")
+parser.add_argument("-tr", type=str, required=True, help="Path to the training file.")
+parser.add_argument("-te", type=str, required=True, help="Path to the test file.")
+parser.add_argument("-l", type=str, default="log.txt", help="Path to the log file.")
 args = parser.parse_args()
 
 class ClassificationModel(nn.Module):
