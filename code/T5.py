@@ -69,11 +69,12 @@ def evaluate_model(model, test_dataloader):
             decoder_input_ids = torch.zeros_like(inputs["input_ids"])
             outputs = model(input_ids=inputs["input_ids"].to(device), attention_mask=inputs["attention_mask"].to(device), decoder_input_ids=decoder_input_ids.to(device), return_dict=True)
             logits = outputs.logits
-            predicted_label = torch.argmax(logits, dim=-1).item()
+            predicted_label = torch.argmax(logits, dim=-1).squeeze().item()
             total_correct_preds += (predicted_label == labels.item())
             total_samples += 1
     accuracy = total_correct_preds / total_samples
     return accuracy
+
 
 
 
