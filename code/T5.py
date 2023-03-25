@@ -77,8 +77,8 @@ test_data = read_file("spacy_test.txt", tokenizer)
 train_dataset = ClassificationDataset(train_data)
 test_dataset = ClassificationDataset(test_data)
 
-train_dataloader = DataLoader(train_dataset, batch_size=2, shuffle=True, collate_fn=collate_fn)
-test_dataloader = DataLoader(test_dataset, batch_size=2, collate_fn=collate_fn)
+train_dataloader = DataLoader(train_dataset, batch_size=1, shuffle=True, collate_fn=collate_fn)
+test_dataloader = DataLoader(test_dataset, batch_size=1, collate_fn=collate_fn)
 
 # Initialize the model, optimizer, and device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -88,12 +88,12 @@ num_epochs = 1
 
 # Fine-tune the model and log results
 with open('log_T5_test.txt', "w") as file:
-    print(f'Start of fine-tune\nnum of epochs{num_epochs}', file=file)
+    print(f'Start of fine-tune\n{device}\nnum of epochs{num_epochs}', file=file)
 
 
 for epoch in range(num_epochs):
     model.train()
-    for input_ids, attention_mask, labels in train_dataloader:
+    for i, input_ids, attention_mask, labels in enumerate(train_dataloader):
         input_ids = input_ids.to(device)
         attention_mask = attention_mask.to(device)
         labels = labels.to(device)
@@ -103,7 +103,8 @@ for epoch in range(num_epochs):
         loss = outputs.loss
         loss.backward()
         optimizer.step()
-
+        with open('log_T5_test.txt', "a") as file:
+            print(i, end='', file=file)
     # Evaluate the model on the test set
     val_loss, val_acc = evaluate(model, test_dataloader)
     with open('log_T5_test.txt', "a") as file:
