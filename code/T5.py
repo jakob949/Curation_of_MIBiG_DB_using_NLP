@@ -1,6 +1,6 @@
 import torch
 from torch.utils.data import DataLoader, Dataset
-from transformers import T5ForConditionalGeneration, T5Tokenizer, T5Config, AdamW
+from transformers import T5ForConditionalGeneration, T5Tokenizer, T5Config, AdamW, AutoTokenizer
 
 tokenizer = AutoTokenizer.from_pretrained("t5-base")
 
