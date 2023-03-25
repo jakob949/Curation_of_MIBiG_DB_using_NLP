@@ -2,7 +2,6 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 from transformers import T5ForConditionalGeneration, T5Tokenizer, T5Config, AdamW, AutoTokenizer
 
-tokenizer = AutoTokenizer.from_pretrained("t5-base")
 
 # Define the dataset class
 class ClassificationDataset(Dataset):
@@ -76,11 +75,13 @@ test_dataloader = DataLoader(test_dataset, batch_size=2, collate_fn=collate_fn)
 
 # Initialize the model and optimizer
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+tokenizer = AutoTokenizer.from_pretrained("t5-base")
 model = T5ForConditionalGeneration.from_pretrained("t5-base").to(device)
 optimizer = AdamW(model.parameters(), lr=5e-5)
-
-# Fine-tune the model
 num_epochs = 1
+with open('log_T5_test.txt', "w") as file:
+    print(f'Start of fine-tune\nnum of epochs{num_epochs}', file=file)
+# Fine-tune the model
 for epoch in range(num_epochs):
     model.train()
     for input_ids, attention_mask, labels in train_dataloader:
@@ -96,7 +97,8 @@ for epoch in range(num_epochs):
 
     # Evaluate the model on the test set
     val_loss, val_acc = evaluate(model, test_dataloader)
-    print(f"Epoch {epoch+1}/{num_epochs}, Train Loss: {loss.item()}, Test Loss: {val_loss}, Test Acc: {val_acc}")
+    with open('log_T5_test.txt', "a") as file:
+        print(f"Epoch {epoch+1}/{num_epochs}, Train Loss: {loss.item()}, Test Loss: {val_loss}, Test Acc: {val_acc}", file=file)
 
 # Save the fine-tuned model
 model.save_pretrained("t5_finetuned_classification")
@@ -113,6 +115,6 @@ attention_mask = encoding["attention_mask"].to(device)
 with torch.no_grad():
     logits = loaded_model(input_ids=input_ids, attention_mask=attention_mask).logits
     prediction = torch.argmax(logits, dim=-1).item()
-
-print(f"Sample input classification: {prediction}")
+with open('log_T5_test.txt', "a") as file:
+    print(f"Sample input classification: {prediction}", file=file)
 
