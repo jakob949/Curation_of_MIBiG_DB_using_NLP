@@ -93,7 +93,7 @@ with open('log_T5_test.txt', "w") as file:
 
 for epoch in range(num_epochs):
     model.train()
-    for i, input_ids, attention_mask, labels in enumerate(train_dataloader):
+    for input_ids, attention_mask, labels in train_dataloader:
         input_ids = input_ids.to(device)
         attention_mask = attention_mask.to(device)
         labels = labels.to(device)
@@ -104,7 +104,7 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
         with open('log_T5_test.txt', "a") as file:
-            print(i, end='', file=file)
+            print('-', end='', file=file)
     # Evaluate the model on the test set
     val_loss, val_acc = evaluate(model, test_dataloader)
     with open('log_T5_test.txt', "a") as file:
