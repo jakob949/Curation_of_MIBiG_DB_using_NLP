@@ -101,8 +101,8 @@ for epoch in range(num_epochs):
         print(f"Epoch {epoch+1}/{num_epochs}, Train Loss: {loss.item()}, Test Loss: {val_loss}, Test Acc: {val_acc}", file=file)
 
 # Save the fine-tuned model
-model.save_pretrained("t5_finetuned_classification")
 
+model.save_pretrained("t5_finetuned_classification")
 # Load the saved model for further use
 loaded_model = T5ForConditionalGeneration.from_pretrained("t5_finetuned_classification").to(device)
 
