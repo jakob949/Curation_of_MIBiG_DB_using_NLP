@@ -1,107 +1,118 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-import argparse
 import torch
-import torch.nn as nn
-from torch.utils.data import Dataset, DataLoader
-from transformers import T5ForConditionalGeneration, T5Tokenizer
-from torch.optim import AdamW
+from torch.utils.data import DataLoader, Dataset
+from transformers import T5ForConditionalGeneration, T5Tokenizer, T5Config, AdamW
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-l', '--logfile', type=str, help='name of the log file')
-parser.add_argument('-tr', '--trainfile', type=str, help='name of the training file')
-parser.add_argument('-te', '--testfile', type=str, help='name of the test file')
-args = parser.parse_args()
+tokenizer = AutoTokenizer.from_pretrained("t5-base")
 
-class TextClassificationDataset(Dataset):
-    def __init__(self, file_paths):
-        self.data = []
-        for file_path in file_paths:
-            with open(file_path, "r") as f:
-                for line in f:
-                    text, label = line.strip().split("\t")
-                    self.data.append((text, int(label)))
-
-    def __getitem__(self, index):
-        return self.data[index]
+# Define the dataset class
+class ClassificationDataset(Dataset):
+    def __init__(self, data):
+        self.data = data
 
     def __len__(self):
         return len(self.data)
 
+    def __getitem__(self, idx):
+        input_ids, attention_mask, label = self.data[idx]
+        return input_ids, attention_mask, label
+
+def read_file(filepath, tokenizer):
+    with open(filepath, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+    data = []
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        text, label = line.split("\t")
+        encoding = tokenizer(text, return_tensors="pt", truncation=True, max_length=2500)
+        input_ids = encoding["input_ids"].squeeze()
+        attention_mask = encoding["attention_mask"].squeeze()
+        label = int(label)
+        data.append((input_ids, attention_mask, label))
+    return data
+
+def collate_fn(batch):
+    input_ids, attention_masks, labels = zip(*batch)
+    input_ids = torch.nn.utils.rnn.pad_sequence(input_ids, batch_first=True, padding_value=tokenizer.pad_token_id)
+    attention_masks = torch.nn.utils.rnn.pad_sequence(attention_masks, batch_first=True, padding_value=0)
+    labels = torch.tensor(labels, dtype=torch.long)
+    return input_ids, attention_masks, labels
+
+# Define the evaluation function
+def evaluate(model, dataloader):
+    model.eval()
+    total_loss = 0
+    total_correct = 0
+    with torch.no_grad():
+        for input_ids, attention_mask, labels in dataloader:
+            input_ids = input_ids.to(device)
+            attention_mask = attention_mask.to(device)
+            labels = labels.to(device)
+
+            outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
+            loss = outputs.loss
+            total_loss += loss.item()
+
+            logits = outputs.logits
+            preds = torch.argmax(logits, dim=-1)
+            correct = (preds == labels).sum().item()
+            total_correct += correct
+
+    return total_loss / len(dataloader), total_correct / len(dataloader.dataset)
+
+# Read the training data
+train_data = read_file("spacy_train.txt", tokenizer)
+
+# Read the test data
+test_data = read_file("spacy_test.txt", tokenizer)
+
+# Create the datasets and dataloaders
+train_dataset = ClassificationDataset(train_data)
+test_dataset = ClassificationDataset(test_data)
+
+train_dataloader = DataLoader(train_dataset, batch_size=8, shuffle=True, collate_fn=collate_fn)
+test_dataloader = DataLoader(test_dataset, batch_size=8, collate_fn=collate_fn)
+
+# Initialize the model and optimizer
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"Using device: {device}")
-
-# Load the pre-trained model
-model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-base").to(device)
-tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-base")
-
-# Define the dataloader
-train_file_path = [args.trainfile]
-dataset = TextClassificationDataset(train_file_path)
-dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
+model = T5ForConditionalGeneration.from_pretrained("t5-base").to(device)
+optimizer = AdamW(model.parameters(), lr=5e-5)
 
 # Fine-tune the model
-def train_model(model, dataloader, num_of_epochs, optimizer):
+num_epochs = 3
+for epoch in range(num_epochs):
     model.train()
-    for epoch in range(num_of_epochs):
-        for i, batch in enumerate(dataloader):
-            texts, labels = batch
-            input_texts = ["classify: " + text for text in texts]
-            inputs = tokenizer(input_texts, padding=True, truncation=True, return_tensors="pt", max_length=512)
-            labels = labels.unsqueeze(-1).to(device)  # Add an extra dimension to the labels tensor
-            loss = model(input_ids=inputs["input_ids"].to(device), attention_mask=inputs["attention_mask"].to(device), labels=labels).loss
+    for input_ids, attention_mask, labels in train_dataloader:
+        input_ids = input_ids.to(device)
+        attention_mask = attention_mask.to(device)
+        labels = labels.to(device)
 
-            loss.backward()
-            optimizer.step()
-            optimizer.zero_grad()
+        optimizer.zero_grad()
+        outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels= labels)
+        loss = outputs.loss
+        loss.backward()
+        optimizer.step()
 
+    # Evaluate the model on the test set
+    val_loss, val_acc = evaluate(model, test_dataloader)
+    print(f"Epoch {epoch+1}/{num_epochs}, Train Loss: {loss.item()}, Test Loss: {val_loss}, Test Acc: {val_acc}")
 
-# Evaluate the model on the test dataset
-def evaluate_model(model, test_dataloader):
-    model.eval()
-    total_correct_preds = 0
-    total_samples = 0
-    with torch.no_grad():
-        for i, batch in enumerate(test_dataloader):
-            texts, labels = batch
-            labels = labels.to(device)
-            input_texts = ["classify: " + text for text in texts]
-            inputs = tokenizer(input_texts, padding=True, truncation=True, return_tensors="pt", max_length=512)
-            decoder_input_ids = torch.zeros_like(inputs["input_ids"])
-            outputs = model(input_ids=inputs["input_ids"].to(device), attention_mask=inputs["attention_mask"].to(device), decoder_input_ids=decoder_input_ids.to(device), return_dict=True)
-            logits = outputs.logits
-            predicted_labels = torch.argmax(logits, dim=-1).squeeze()
+# Save the fine-tuned model
+model.save_pretrained("t5_finetuned_classification")
 
-            # Debug information
-            print(f"predicted_labels size: {predicted_labels.size()}, labels size: {labels.size()}")
-            if predicted_labels.numel() == 1:
-                total_correct_preds += (predicted_labels.item() == labels.item())
-            else:
-                for j in range(predicted_labels.size(0)):
-                    total_correct_preds += (predicted_labels[j].item() == labels[j].item())
+# Load the saved model for further use
+loaded_model = T5ForConditionalGeneration.from_pretrained("t5_finetuned_classification").to(device)
 
-            total_samples += labels.size(0)
+# Test the loaded model with a sample input
+sample_input = "This is a sample input text for classification."
+encoding = tokenizer(sample_input, return_tensors="pt", padding=True, truncation=True, max_length=2500)
+input_ids = encoding["input_ids"].to(device)
+attention_mask = encoding["attention_mask"].to(device)
 
-    accuracy = total_correct_preds / total_samples
-    return accuracy
+with torch.no_grad():
+    logits = loaded_model(input_ids=input_ids, attention_mask=attention_mask).logits
+    prediction = torch.argmax(logits, dim=-1).item()
 
+print(f"Sample input classification: {prediction}")
 
-
-
-
-optimizer = AdamW(model.parameters(), lr=1e-5)
-num_of_epochs = 4
-with open(args.logfile, "w") as f:
-    # Train the model
-    train_model(model, dataloader, num_of_epochs, optimizer)
-
-    # Define the test dataloader
-    test_file_path = [args.testfile]
-    test_dataset = TextClassificationDataset(test_file_path)
-    test_dataloader = DataLoader(test_dataset, batch_size=1)
-
-    # Evaluate the model on the test dataset
-    accuracy = evaluate_model(model, test_dataloader)
-
-    # Log the results
-    print(f"Accuracy: {accuracy * 100:.2f}%", file=f)
