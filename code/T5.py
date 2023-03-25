@@ -60,6 +60,7 @@ def evaluate(model, dataloader):
 
     return total_loss / len(dataloader), total_correct / len(dataloader.dataset)
 
+tokenizer = AutoTokenizer.from_pretrained("t5-base")
 # Read the training data
 train_data = read_file("spacy_train.txt", tokenizer)
 
@@ -75,7 +76,6 @@ test_dataloader = DataLoader(test_dataset, batch_size=2, collate_fn=collate_fn)
 
 # Initialize the model and optimizer
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-tokenizer = AutoTokenizer.from_pretrained("t5-base")
 model = T5ForConditionalGeneration.from_pretrained("t5-base").to(device)
 optimizer = AdamW(model.parameters(), lr=5e-5)
 num_epochs = 1
