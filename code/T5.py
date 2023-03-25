@@ -25,7 +25,7 @@ def read_file(filepath, tokenizer):
         if not line:
             continue
         text, label = line.split("\t")
-        encoding = tokenizer(text, return_tensors="pt", truncation=True, max_length=2500)
+        encoding = tokenizer(text, return_tensors="pt", truncation=True, max_length='max_length')
         input_ids = encoding["input_ids"].squeeze()
         attention_mask = encoding["attention_mask"].squeeze()
         label = int(label)
@@ -71,8 +71,8 @@ test_data = read_file("spacy_test.txt", tokenizer)
 train_dataset = ClassificationDataset(train_data)
 test_dataset = ClassificationDataset(test_data)
 
-train_dataloader = DataLoader(train_dataset, batch_size=8, shuffle=True, collate_fn=collate_fn)
-test_dataloader = DataLoader(test_dataset, batch_size=8, collate_fn=collate_fn)
+train_dataloader = DataLoader(train_dataset, batch_size=2, shuffle=True, collate_fn=collate_fn)
+test_dataloader = DataLoader(test_dataset, batch_size=2, collate_fn=collate_fn)
 
 # Initialize the model and optimizer
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -80,7 +80,7 @@ model = T5ForConditionalGeneration.from_pretrained("t5-base").to(device)
 optimizer = AdamW(model.parameters(), lr=5e-5)
 
 # Fine-tune the model
-num_epochs = 3
+num_epochs = 1
 for epoch in range(num_epochs):
     model.train()
     for input_ids, attention_mask, labels in train_dataloader:
