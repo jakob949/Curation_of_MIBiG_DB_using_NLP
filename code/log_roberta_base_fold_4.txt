@@ -1,0 +1,4525 @@
+Training for 4 epochs
+Epoch 1/4
+Batch 1/565
+Batch 2/565
+Batch 3/565
+Batch 4/565
+Batch 5/565
+Batch 6/565
+Batch 7/565
+Batch 8/565
+Batch 9/565
+Batch 10/565
+Batch 11/565
+Batch 12/565
+Batch 13/565
+Batch 14/565
+Batch 15/565
+Batch 16/565
+Batch 17/565
+Batch 18/565
+Batch 19/565
+Batch 20/565
+Batch 21/565
+Batch 22/565
+Batch 23/565
+Batch 24/565
+Batch 25/565
+Batch 26/565
+Batch 27/565
+Batch 28/565
+Batch 29/565
+Batch 30/565
+Batch 31/565
+Batch 32/565
+Batch 33/565
+Batch 34/565
+Batch 35/565
+Batch 36/565
+Batch 37/565
+Batch 38/565
+Batch 39/565
+Batch 40/565
+Batch 41/565
+Batch 42/565
+Batch 43/565
+Batch 44/565
+Batch 45/565
+Batch 46/565
+Batch 47/565
+Batch 48/565
+Batch 49/565
+Batch 50/565
+Batch 51/565
+Batch 52/565
+Batch 53/565
+Batch 54/565
+Batch 55/565
+Batch 56/565
+Batch 57/565
+Batch 58/565
+Batch 59/565
+Batch 60/565
+Batch 61/565
+Batch 62/565
+Batch 63/565
+Batch 64/565
+Batch 65/565
+Batch 66/565
+Batch 67/565
+Batch 68/565
+Batch 69/565
+Batch 70/565
+Batch 71/565
+Batch 72/565
+Batch 73/565
+Batch 74/565
+Batch 75/565
+Batch 76/565
+Batch 77/565
+Batch 78/565
+Batch 79/565
+Batch 80/565
+Batch 81/565
+Batch 82/565
+Batch 83/565
+Batch 84/565
+Batch 85/565
+Batch 86/565
+Batch 87/565
+Batch 88/565
+Batch 89/565
+Batch 90/565
+Batch 91/565
+Batch 92/565
+Batch 93/565
+Batch 94/565
+Batch 95/565
+Batch 96/565
+Batch 97/565
+Batch 98/565
+Batch 99/565
+Batch 100/565
+Batch 101/565
+Batch 102/565
+Batch 103/565
+Batch 104/565
+Batch 105/565
+Batch 106/565
+Batch 107/565
+Batch 108/565
+Batch 109/565
+Batch 110/565
+Batch 111/565
+Batch 112/565
+Batch 113/565
+Batch 114/565
+Batch 115/565
+Batch 116/565
+Batch 117/565
+Batch 118/565
+Batch 119/565
+Batch 120/565
+Batch 121/565
+Batch 122/565
+Batch 123/565
+Batch 124/565
+Batch 125/565
+Batch 126/565
+Batch 127/565
+Batch 128/565
+Batch 129/565
+Batch 130/565
+Batch 131/565
+Batch 132/565
+Batch 133/565
+Batch 134/565
+Batch 135/565
+Batch 136/565
+Batch 137/565
+Batch 138/565
+Batch 139/565
+Batch 140/565
+Batch 141/565
+Batch 142/565
+Batch 143/565
+Batch 144/565
+Batch 145/565
+Batch 146/565
+Batch 147/565
+Batch 148/565
+Batch 149/565
+Batch 150/565
+Batch 151/565
+Batch 152/565
+Batch 153/565
+Batch 154/565
+Batch 155/565
+Batch 156/565
+Batch 157/565
+Batch 158/565
+Batch 159/565
+Batch 160/565
+Batch 161/565
+Batch 162/565
+Batch 163/565
+Batch 164/565
+Batch 165/565
+Batch 166/565
+Batch 167/565
+Batch 168/565
+Batch 169/565
+Batch 170/565
+Batch 171/565
+Batch 172/565
+Batch 173/565
+Batch 174/565
+Batch 175/565
+Batch 176/565
+Batch 177/565
+Batch 178/565
+Batch 179/565
+Batch 180/565
+Batch 181/565
+Batch 182/565
+Batch 183/565
+Batch 184/565
+Batch 185/565
+Batch 186/565
+Batch 187/565
+Batch 188/565
+Batch 189/565
+Batch 190/565
+Batch 191/565
+Batch 192/565
+Batch 193/565
+Batch 194/565
+Batch 195/565
+Batch 196/565
+Batch 197/565
+Batch 198/565
+Batch 199/565
+Batch 200/565
+Batch 201/565
+Batch 202/565
+Batch 203/565
+Batch 204/565
+Batch 205/565
+Batch 206/565
+Batch 207/565
+Batch 208/565
+Batch 209/565
+Batch 210/565
+Batch 211/565
+Batch 212/565
+Batch 213/565
+Batch 214/565
+Batch 215/565
+Batch 216/565
+Batch 217/565
+Batch 218/565
+Batch 219/565
+Batch 220/565
+Batch 221/565
+Batch 222/565
+Batch 223/565
+Batch 224/565
+Batch 225/565
+Batch 226/565
+Batch 227/565
+Batch 228/565
+Batch 229/565
+Batch 230/565
+Batch 231/565
+Batch 232/565
+Batch 233/565
+Batch 234/565
+Batch 235/565
+Batch 236/565
+Batch 237/565
+Batch 238/565
+Batch 239/565
+Batch 240/565
+Batch 241/565
+Batch 242/565
+Batch 243/565
+Batch 244/565
+Batch 245/565
+Batch 246/565
+Batch 247/565
+Batch 248/565
+Batch 249/565
+Batch 250/565
+Batch 251/565
+Batch 252/565
+Batch 253/565
+Batch 254/565
+Batch 255/565
+Batch 256/565
+Batch 257/565
+Batch 258/565
+Batch 259/565
+Batch 260/565
+Batch 261/565
+Batch 262/565
+Batch 263/565
+Batch 264/565
+Batch 265/565
+Batch 266/565
+Batch 267/565
+Batch 268/565
+Batch 269/565
+Batch 270/565
+Batch 271/565
+Batch 272/565
+Batch 273/565
+Batch 274/565
+Batch 275/565
+Batch 276/565
+Batch 277/565
+Batch 278/565
+Batch 279/565
+Batch 280/565
+Batch 281/565
+Batch 282/565
+Batch 283/565
+Batch 284/565
+Batch 285/565
+Batch 286/565
+Batch 287/565
+Batch 288/565
+Batch 289/565
+Batch 290/565
+Batch 291/565
+Batch 292/565
+Batch 293/565
+Batch 294/565
+Batch 295/565
+Batch 296/565
+Batch 297/565
+Batch 298/565
+Batch 299/565
+Batch 300/565
+Batch 301/565
+Batch 302/565
+Batch 303/565
+Batch 304/565
+Batch 305/565
+Batch 306/565
+Batch 307/565
+Batch 308/565
+Batch 309/565
+Batch 310/565
+Batch 311/565
+Batch 312/565
+Batch 313/565
+Batch 314/565
+Batch 315/565
+Batch 316/565
+Batch 317/565
+Batch 318/565
+Batch 319/565
+Batch 320/565
+Batch 321/565
+Batch 322/565
+Batch 323/565
+Batch 324/565
+Batch 325/565
+Batch 326/565
+Batch 327/565
+Batch 328/565
+Batch 329/565
+Batch 330/565
+Batch 331/565
+Batch 332/565
+Batch 333/565
+Batch 334/565
+Batch 335/565
+Batch 336/565
+Batch 337/565
+Batch 338/565
+Batch 339/565
+Batch 340/565
+Batch 341/565
+Batch 342/565
+Batch 343/565
+Batch 344/565
+Batch 345/565
+Batch 346/565
+Batch 347/565
+Batch 348/565
+Batch 349/565
+Batch 350/565
+Batch 351/565
+Batch 352/565
+Batch 353/565
+Batch 354/565
+Batch 355/565
+Batch 356/565
+Batch 357/565
+Batch 358/565
+Batch 359/565
+Batch 360/565
+Batch 361/565
+Batch 362/565
+Batch 363/565
+Batch 364/565
+Batch 365/565
+Batch 366/565
+Batch 367/565
+Batch 368/565
+Batch 369/565
+Batch 370/565
+Batch 371/565
+Batch 372/565
+Batch 373/565
+Batch 374/565
+Batch 375/565
+Batch 376/565
+Batch 377/565
+Batch 378/565
+Batch 379/565
+Batch 380/565
+Batch 381/565
+Batch 382/565
+Batch 383/565
+Batch 384/565
+Batch 385/565
+Batch 386/565
+Batch 387/565
+Batch 388/565
+Batch 389/565
+Batch 390/565
+Batch 391/565
+Batch 392/565
+Batch 393/565
+Batch 394/565
+Batch 395/565
+Batch 396/565
+Batch 397/565
+Batch 398/565
+Batch 399/565
+Batch 400/565
+Batch 401/565
+Batch 402/565
+Batch 403/565
+Batch 404/565
+Batch 405/565
+Batch 406/565
+Batch 407/565
+Batch 408/565
+Batch 409/565
+Batch 410/565
+Batch 411/565
+Batch 412/565
+Batch 413/565
+Batch 414/565
+Batch 415/565
+Batch 416/565
+Batch 417/565
+Batch 418/565
+Batch 419/565
+Batch 420/565
+Batch 421/565
+Batch 422/565
+Batch 423/565
+Batch 424/565
+Batch 425/565
+Batch 426/565
+Batch 427/565
+Batch 428/565
+Batch 429/565
+Batch 430/565
+Batch 431/565
+Batch 432/565
+Batch 433/565
+Batch 434/565
+Batch 435/565
+Batch 436/565
+Batch 437/565
+Batch 438/565
+Batch 439/565
+Batch 440/565
+Batch 441/565
+Batch 442/565
+Batch 443/565
+Batch 444/565
+Batch 445/565
+Batch 446/565
+Batch 447/565
+Batch 448/565
+Batch 449/565
+Batch 450/565
+Batch 451/565
+Batch 452/565
+Batch 453/565
+Batch 454/565
+Batch 455/565
+Batch 456/565
+Batch 457/565
+Batch 458/565
+Batch 459/565
+Batch 460/565
+Batch 461/565
+Batch 462/565
+Batch 463/565
+Batch 464/565
+Batch 465/565
+Batch 466/565
+Batch 467/565
+Batch 468/565
+Batch 469/565
+Batch 470/565
+Batch 471/565
+Batch 472/565
+Batch 473/565
+Batch 474/565
+Batch 475/565
+Batch 476/565
+Batch 477/565
+Batch 478/565
+Batch 479/565
+Batch 480/565
+Batch 481/565
+Batch 482/565
+Batch 483/565
+Batch 484/565
+Batch 485/565
+Batch 486/565
+Batch 487/565
+Batch 488/565
+Batch 489/565
+Batch 490/565
+Batch 491/565
+Batch 492/565
+Batch 493/565
+Batch 494/565
+Batch 495/565
+Batch 496/565
+Batch 497/565
+Batch 498/565
+Batch 499/565
+Batch 500/565
+Batch 501/565
+Batch 502/565
+Batch 503/565
+Batch 504/565
+Batch 505/565
+Batch 506/565
+Batch 507/565
+Batch 508/565
+Batch 509/565
+Batch 510/565
+Batch 511/565
+Batch 512/565
+Batch 513/565
+Batch 514/565
+Batch 515/565
+Batch 516/565
+Batch 517/565
+Batch 518/565
+Batch 519/565
+Batch 520/565
+Batch 521/565
+Batch 522/565
+Batch 523/565
+Batch 524/565
+Batch 525/565
+Batch 526/565
+Batch 527/565
+Batch 528/565
+Batch 529/565
+Batch 530/565
+Batch 531/565
+Batch 532/565
+Batch 533/565
+Batch 534/565
+Batch 535/565
+Batch 536/565
+Batch 537/565
+Batch 538/565
+Batch 539/565
+Batch 540/565
+Batch 541/565
+Batch 542/565
+Batch 543/565
+Batch 544/565
+Batch 545/565
+Batch 546/565
+Batch 547/565
+Batch 548/565
+Batch 549/565
+Batch 550/565
+Batch 551/565
+Batch 552/565
+Batch 553/565
+Batch 554/565
+Batch 555/565
+Batch 556/565
+Batch 557/565
+Batch 558/565
+Batch 559/565
+Batch 560/565
+Batch 561/565
+Batch 562/565
+Batch 563/565
+Batch 564/565
+Batch 565/565
+Epoch 2/4
+Batch 1/565
+Batch 2/565
+Batch 3/565
+Batch 4/565
+Batch 5/565
+Batch 6/565
+Batch 7/565
+Batch 8/565
+Batch 9/565
+Batch 10/565
+Batch 11/565
+Batch 12/565
+Batch 13/565
+Batch 14/565
+Batch 15/565
+Batch 16/565
+Batch 17/565
+Batch 18/565
+Batch 19/565
+Batch 20/565
+Batch 21/565
+Batch 22/565
+Batch 23/565
+Batch 24/565
+Batch 25/565
+Batch 26/565
+Batch 27/565
+Batch 28/565
+Batch 29/565
+Batch 30/565
+Batch 31/565
+Batch 32/565
+Batch 33/565
+Batch 34/565
+Batch 35/565
+Batch 36/565
+Batch 37/565
+Batch 38/565
+Batch 39/565
+Batch 40/565
+Batch 41/565
+Batch 42/565
+Batch 43/565
+Batch 44/565
+Batch 45/565
+Batch 46/565
+Batch 47/565
+Batch 48/565
+Batch 49/565
+Batch 50/565
+Batch 51/565
+Batch 52/565
+Batch 53/565
+Batch 54/565
+Batch 55/565
+Batch 56/565
+Batch 57/565
+Batch 58/565
+Batch 59/565
+Batch 60/565
+Batch 61/565
+Batch 62/565
+Batch 63/565
+Batch 64/565
+Batch 65/565
+Batch 66/565
+Batch 67/565
+Batch 68/565
+Batch 69/565
+Batch 70/565
+Batch 71/565
+Batch 72/565
+Batch 73/565
+Batch 74/565
+Batch 75/565
+Batch 76/565
+Batch 77/565
+Batch 78/565
+Batch 79/565
+Batch 80/565
+Batch 81/565
+Batch 82/565
+Batch 83/565
+Batch 84/565
+Batch 85/565
+Batch 86/565
+Batch 87/565
+Batch 88/565
+Batch 89/565
+Batch 90/565
+Batch 91/565
+Batch 92/565
+Batch 93/565
+Batch 94/565
+Batch 95/565
+Batch 96/565
+Batch 97/565
+Batch 98/565
+Batch 99/565
+Batch 100/565
+Batch 101/565
+Batch 102/565
+Batch 103/565
+Batch 104/565
+Batch 105/565
+Batch 106/565
+Batch 107/565
+Batch 108/565
+Batch 109/565
+Batch 110/565
+Batch 111/565
+Batch 112/565
+Batch 113/565
+Batch 114/565
+Batch 115/565
+Batch 116/565
+Batch 117/565
+Batch 118/565
+Batch 119/565
+Batch 120/565
+Batch 121/565
+Batch 122/565
+Batch 123/565
+Batch 124/565
+Batch 125/565
+Batch 126/565
+Batch 127/565
+Batch 128/565
+Batch 129/565
+Batch 130/565
+Batch 131/565
+Batch 132/565
+Batch 133/565
+Batch 134/565
+Batch 135/565
+Batch 136/565
+Batch 137/565
+Batch 138/565
+Batch 139/565
+Batch 140/565
+Batch 141/565
+Batch 142/565
+Batch 143/565
+Batch 144/565
+Batch 145/565
+Batch 146/565
+Batch 147/565
+Batch 148/565
+Batch 149/565
+Batch 150/565
+Batch 151/565
+Batch 152/565
+Batch 153/565
+Batch 154/565
+Batch 155/565
+Batch 156/565
+Batch 157/565
+Batch 158/565
+Batch 159/565
+Batch 160/565
+Batch 161/565
+Batch 162/565
+Batch 163/565
+Batch 164/565
+Batch 165/565
+Batch 166/565
+Batch 167/565
+Batch 168/565
+Batch 169/565
+Batch 170/565
+Batch 171/565
+Batch 172/565
+Batch 173/565
+Batch 174/565
+Batch 175/565
+Batch 176/565
+Batch 177/565
+Batch 178/565
+Batch 179/565
+Batch 180/565
+Batch 181/565
+Batch 182/565
+Batch 183/565
+Batch 184/565
+Batch 185/565
+Batch 186/565
+Batch 187/565
+Batch 188/565
+Batch 189/565
+Batch 190/565
+Batch 191/565
+Batch 192/565
+Batch 193/565
+Batch 194/565
+Batch 195/565
+Batch 196/565
+Batch 197/565
+Batch 198/565
+Batch 199/565
+Batch 200/565
+Batch 201/565
+Batch 202/565
+Batch 203/565
+Batch 204/565
+Batch 205/565
+Batch 206/565
+Batch 207/565
+Batch 208/565
+Batch 209/565
+Batch 210/565
+Batch 211/565
+Batch 212/565
+Batch 213/565
+Batch 214/565
+Batch 215/565
+Batch 216/565
+Batch 217/565
+Batch 218/565
+Batch 219/565
+Batch 220/565
+Batch 221/565
+Batch 222/565
+Batch 223/565
+Batch 224/565
+Batch 225/565
+Batch 226/565
+Batch 227/565
+Batch 228/565
+Batch 229/565
+Batch 230/565
+Batch 231/565
+Batch 232/565
+Batch 233/565
+Batch 234/565
+Batch 235/565
+Batch 236/565
+Batch 237/565
+Batch 238/565
+Batch 239/565
+Batch 240/565
+Batch 241/565
+Batch 242/565
+Batch 243/565
+Batch 244/565
+Batch 245/565
+Batch 246/565
+Batch 247/565
+Batch 248/565
+Batch 249/565
+Batch 250/565
+Batch 251/565
+Batch 252/565
+Batch 253/565
+Batch 254/565
+Batch 255/565
+Batch 256/565
+Batch 257/565
+Batch 258/565
+Batch 259/565
+Batch 260/565
+Batch 261/565
+Batch 262/565
+Batch 263/565
+Batch 264/565
+Batch 265/565
+Batch 266/565
+Batch 267/565
+Batch 268/565
+Batch 269/565
+Batch 270/565
+Batch 271/565
+Batch 272/565
+Batch 273/565
+Batch 274/565
+Batch 275/565
+Batch 276/565
+Batch 277/565
+Batch 278/565
+Batch 279/565
+Batch 280/565
+Batch 281/565
+Batch 282/565
+Batch 283/565
+Batch 284/565
+Batch 285/565
+Batch 286/565
+Batch 287/565
+Batch 288/565
+Batch 289/565
+Batch 290/565
+Batch 291/565
+Batch 292/565
+Batch 293/565
+Batch 294/565
+Batch 295/565
+Batch 296/565
+Batch 297/565
+Batch 298/565
+Batch 299/565
+Batch 300/565
+Batch 301/565
+Batch 302/565
+Batch 303/565
+Batch 304/565
+Batch 305/565
+Batch 306/565
+Batch 307/565
+Batch 308/565
+Batch 309/565
+Batch 310/565
+Batch 311/565
+Batch 312/565
+Batch 313/565
+Batch 314/565
+Batch 315/565
+Batch 316/565
+Batch 317/565
+Batch 318/565
+Batch 319/565
+Batch 320/565
+Batch 321/565
+Batch 322/565
+Batch 323/565
+Batch 324/565
+Batch 325/565
+Batch 326/565
+Batch 327/565
+Batch 328/565
+Batch 329/565
+Batch 330/565
+Batch 331/565
+Batch 332/565
+Batch 333/565
+Batch 334/565
+Batch 335/565
+Batch 336/565
+Batch 337/565
+Batch 338/565
+Batch 339/565
+Batch 340/565
+Batch 341/565
+Batch 342/565
+Batch 343/565
+Batch 344/565
+Batch 345/565
+Batch 346/565
+Batch 347/565
+Batch 348/565
+Batch 349/565
+Batch 350/565
+Batch 351/565
+Batch 352/565
+Batch 353/565
+Batch 354/565
+Batch 355/565
+Batch 356/565
+Batch 357/565
+Batch 358/565
+Batch 359/565
+Batch 360/565
+Batch 361/565
+Batch 362/565
+Batch 363/565
+Batch 364/565
+Batch 365/565
+Batch 366/565
+Batch 367/565
+Batch 368/565
+Batch 369/565
+Batch 370/565
+Batch 371/565
+Batch 372/565
+Batch 373/565
+Batch 374/565
+Batch 375/565
+Batch 376/565
+Batch 377/565
+Batch 378/565
+Batch 379/565
+Batch 380/565
+Batch 381/565
+Batch 382/565
+Batch 383/565
+Batch 384/565
+Batch 385/565
+Batch 386/565
+Batch 387/565
+Batch 388/565
+Batch 389/565
+Batch 390/565
+Batch 391/565
+Batch 392/565
+Batch 393/565
+Batch 394/565
+Batch 395/565
+Batch 396/565
+Batch 397/565
+Batch 398/565
+Batch 399/565
+Batch 400/565
+Batch 401/565
+Batch 402/565
+Batch 403/565
+Batch 404/565
+Batch 405/565
+Batch 406/565
+Batch 407/565
+Batch 408/565
+Batch 409/565
+Batch 410/565
+Batch 411/565
+Batch 412/565
+Batch 413/565
+Batch 414/565
+Batch 415/565
+Batch 416/565
+Batch 417/565
+Batch 418/565
+Batch 419/565
+Batch 420/565
+Batch 421/565
+Batch 422/565
+Batch 423/565
+Batch 424/565
+Batch 425/565
+Batch 426/565
+Batch 427/565
+Batch 428/565
+Batch 429/565
+Batch 430/565
+Batch 431/565
+Batch 432/565
+Batch 433/565
+Batch 434/565
+Batch 435/565
+Batch 436/565
+Batch 437/565
+Batch 438/565
+Batch 439/565
+Batch 440/565
+Batch 441/565
+Batch 442/565
+Batch 443/565
+Batch 444/565
+Batch 445/565
+Batch 446/565
+Batch 447/565
+Batch 448/565
+Batch 449/565
+Batch 450/565
+Batch 451/565
+Batch 452/565
+Batch 453/565
+Batch 454/565
+Batch 455/565
+Batch 456/565
+Batch 457/565
+Batch 458/565
+Batch 459/565
+Batch 460/565
+Batch 461/565
+Batch 462/565
+Batch 463/565
+Batch 464/565
+Batch 465/565
+Batch 466/565
+Batch 467/565
+Batch 468/565
+Batch 469/565
+Batch 470/565
+Batch 471/565
+Batch 472/565
+Batch 473/565
+Batch 474/565
+Batch 475/565
+Batch 476/565
+Batch 477/565
+Batch 478/565
+Batch 479/565
+Batch 480/565
+Batch 481/565
+Batch 482/565
+Batch 483/565
+Batch 484/565
+Batch 485/565
+Batch 486/565
+Batch 487/565
+Batch 488/565
+Batch 489/565
+Batch 490/565
+Batch 491/565
+Batch 492/565
+Batch 493/565
+Batch 494/565
+Batch 495/565
+Batch 496/565
+Batch 497/565
+Batch 498/565
+Batch 499/565
+Batch 500/565
+Batch 501/565
+Batch 502/565
+Batch 503/565
+Batch 504/565
+Batch 505/565
+Batch 506/565
+Batch 507/565
+Batch 508/565
+Batch 509/565
+Batch 510/565
+Batch 511/565
+Batch 512/565
+Batch 513/565
+Batch 514/565
+Batch 515/565
+Batch 516/565
+Batch 517/565
+Batch 518/565
+Batch 519/565
+Batch 520/565
+Batch 521/565
+Batch 522/565
+Batch 523/565
+Batch 524/565
+Batch 525/565
+Batch 526/565
+Batch 527/565
+Batch 528/565
+Batch 529/565
+Batch 530/565
+Batch 531/565
+Batch 532/565
+Batch 533/565
+Batch 534/565
+Batch 535/565
+Batch 536/565
+Batch 537/565
+Batch 538/565
+Batch 539/565
+Batch 540/565
+Batch 541/565
+Batch 542/565
+Batch 543/565
+Batch 544/565
+Batch 545/565
+Batch 546/565
+Batch 547/565
+Batch 548/565
+Batch 549/565
+Batch 550/565
+Batch 551/565
+Batch 552/565
+Batch 553/565
+Batch 554/565
+Batch 555/565
+Batch 556/565
+Batch 557/565
+Batch 558/565
+Batch 559/565
+Batch 560/565
+Batch 561/565
+Batch 562/565
+Batch 563/565
+Batch 564/565
+Batch 565/565
+Epoch 3/4
+Batch 1/565
+Batch 2/565
+Batch 3/565
+Batch 4/565
+Batch 5/565
+Batch 6/565
+Batch 7/565
+Batch 8/565
+Batch 9/565
+Batch 10/565
+Batch 11/565
+Batch 12/565
+Batch 13/565
+Batch 14/565
+Batch 15/565
+Batch 16/565
+Batch 17/565
+Batch 18/565
+Batch 19/565
+Batch 20/565
+Batch 21/565
+Batch 22/565
+Batch 23/565
+Batch 24/565
+Batch 25/565
+Batch 26/565
+Batch 27/565
+Batch 28/565
+Batch 29/565
+Batch 30/565
+Batch 31/565
+Batch 32/565
+Batch 33/565
+Batch 34/565
+Batch 35/565
+Batch 36/565
+Batch 37/565
+Batch 38/565
+Batch 39/565
+Batch 40/565
+Batch 41/565
+Batch 42/565
+Batch 43/565
+Batch 44/565
+Batch 45/565
+Batch 46/565
+Batch 47/565
+Batch 48/565
+Batch 49/565
+Batch 50/565
+Batch 51/565
+Batch 52/565
+Batch 53/565
+Batch 54/565
+Batch 55/565
+Batch 56/565
+Batch 57/565
+Batch 58/565
+Batch 59/565
+Batch 60/565
+Batch 61/565
+Batch 62/565
+Batch 63/565
+Batch 64/565
+Batch 65/565
+Batch 66/565
+Batch 67/565
+Batch 68/565
+Batch 69/565
+Batch 70/565
+Batch 71/565
+Batch 72/565
+Batch 73/565
+Batch 74/565
+Batch 75/565
+Batch 76/565
+Batch 77/565
+Batch 78/565
+Batch 79/565
+Batch 80/565
+Batch 81/565
+Batch 82/565
+Batch 83/565
+Batch 84/565
+Batch 85/565
+Batch 86/565
+Batch 87/565
+Batch 88/565
+Batch 89/565
+Batch 90/565
+Batch 91/565
+Batch 92/565
+Batch 93/565
+Batch 94/565
+Batch 95/565
+Batch 96/565
+Batch 97/565
+Batch 98/565
+Batch 99/565
+Batch 100/565
+Batch 101/565
+Batch 102/565
+Batch 103/565
+Batch 104/565
+Batch 105/565
+Batch 106/565
+Batch 107/565
+Batch 108/565
+Batch 109/565
+Batch 110/565
+Batch 111/565
+Batch 112/565
+Batch 113/565
+Batch 114/565
+Batch 115/565
+Batch 116/565
+Batch 117/565
+Batch 118/565
+Batch 119/565
+Batch 120/565
+Batch 121/565
+Batch 122/565
+Batch 123/565
+Batch 124/565
+Batch 125/565
+Batch 126/565
+Batch 127/565
+Batch 128/565
+Batch 129/565
+Batch 130/565
+Batch 131/565
+Batch 132/565
+Batch 133/565
+Batch 134/565
+Batch 135/565
+Batch 136/565
+Batch 137/565
+Batch 138/565
+Batch 139/565
+Batch 140/565
+Batch 141/565
+Batch 142/565
+Batch 143/565
+Batch 144/565
+Batch 145/565
+Batch 146/565
+Batch 147/565
+Batch 148/565
+Batch 149/565
+Batch 150/565
+Batch 151/565
+Batch 152/565
+Batch 153/565
+Batch 154/565
+Batch 155/565
+Batch 156/565
+Batch 157/565
+Batch 158/565
+Batch 159/565
+Batch 160/565
+Batch 161/565
+Batch 162/565
+Batch 163/565
+Batch 164/565
+Batch 165/565
+Batch 166/565
+Batch 167/565
+Batch 168/565
+Batch 169/565
+Batch 170/565
+Batch 171/565
+Batch 172/565
+Batch 173/565
+Batch 174/565
+Batch 175/565
+Batch 176/565
+Batch 177/565
+Batch 178/565
+Batch 179/565
+Batch 180/565
+Batch 181/565
+Batch 182/565
+Batch 183/565
+Batch 184/565
+Batch 185/565
+Batch 186/565
+Batch 187/565
+Batch 188/565
+Batch 189/565
+Batch 190/565
+Batch 191/565
+Batch 192/565
+Batch 193/565
+Batch 194/565
+Batch 195/565
+Batch 196/565
+Batch 197/565
+Batch 198/565
+Batch 199/565
+Batch 200/565
+Batch 201/565
+Batch 202/565
+Batch 203/565
+Batch 204/565
+Batch 205/565
+Batch 206/565
+Batch 207/565
+Batch 208/565
+Batch 209/565
+Batch 210/565
+Batch 211/565
+Batch 212/565
+Batch 213/565
+Batch 214/565
+Batch 215/565
+Batch 216/565
+Batch 217/565
+Batch 218/565
+Batch 219/565
+Batch 220/565
+Batch 221/565
+Batch 222/565
+Batch 223/565
+Batch 224/565
+Batch 225/565
+Batch 226/565
+Batch 227/565
+Batch 228/565
+Batch 229/565
+Batch 230/565
+Batch 231/565
+Batch 232/565
+Batch 233/565
+Batch 234/565
+Batch 235/565
+Batch 236/565
+Batch 237/565
+Batch 238/565
+Batch 239/565
+Batch 240/565
+Batch 241/565
+Batch 242/565
+Batch 243/565
+Batch 244/565
+Batch 245/565
+Batch 246/565
+Batch 247/565
+Batch 248/565
+Batch 249/565
+Batch 250/565
+Batch 251/565
+Batch 252/565
+Batch 253/565
+Batch 254/565
+Batch 255/565
+Batch 256/565
+Batch 257/565
+Batch 258/565
+Batch 259/565
+Batch 260/565
+Batch 261/565
+Batch 262/565
+Batch 263/565
+Batch 264/565
+Batch 265/565
+Batch 266/565
+Batch 267/565
+Batch 268/565
+Batch 269/565
+Batch 270/565
+Batch 271/565
+Batch 272/565
+Batch 273/565
+Batch 274/565
+Batch 275/565
+Batch 276/565
+Batch 277/565
+Batch 278/565
+Batch 279/565
+Batch 280/565
+Batch 281/565
+Batch 282/565
+Batch 283/565
+Batch 284/565
+Batch 285/565
+Batch 286/565
+Batch 287/565
+Batch 288/565
+Batch 289/565
+Batch 290/565
+Batch 291/565
+Batch 292/565
+Batch 293/565
+Batch 294/565
+Batch 295/565
+Batch 296/565
+Batch 297/565
+Batch 298/565
+Batch 299/565
+Batch 300/565
+Batch 301/565
+Batch 302/565
+Batch 303/565
+Batch 304/565
+Batch 305/565
+Batch 306/565
+Batch 307/565
+Batch 308/565
+Batch 309/565
+Batch 310/565
+Batch 311/565
+Batch 312/565
+Batch 313/565
+Batch 314/565
+Batch 315/565
+Batch 316/565
+Batch 317/565
+Batch 318/565
+Batch 319/565
+Batch 320/565
+Batch 321/565
+Batch 322/565
+Batch 323/565
+Batch 324/565
+Batch 325/565
+Batch 326/565
+Batch 327/565
+Batch 328/565
+Batch 329/565
+Batch 330/565
+Batch 331/565
+Batch 332/565
+Batch 333/565
+Batch 334/565
+Batch 335/565
+Batch 336/565
+Batch 337/565
+Batch 338/565
+Batch 339/565
+Batch 340/565
+Batch 341/565
+Batch 342/565
+Batch 343/565
+Batch 344/565
+Batch 345/565
+Batch 346/565
+Batch 347/565
+Batch 348/565
+Batch 349/565
+Batch 350/565
+Batch 351/565
+Batch 352/565
+Batch 353/565
+Batch 354/565
+Batch 355/565
+Batch 356/565
+Batch 357/565
+Batch 358/565
+Batch 359/565
+Batch 360/565
+Batch 361/565
+Batch 362/565
+Batch 363/565
+Batch 364/565
+Batch 365/565
+Batch 366/565
+Batch 367/565
+Batch 368/565
+Batch 369/565
+Batch 370/565
+Batch 371/565
+Batch 372/565
+Batch 373/565
+Batch 374/565
+Batch 375/565
+Batch 376/565
+Batch 377/565
+Batch 378/565
+Batch 379/565
+Batch 380/565
+Batch 381/565
+Batch 382/565
+Batch 383/565
+Batch 384/565
+Batch 385/565
+Batch 386/565
+Batch 387/565
+Batch 388/565
+Batch 389/565
+Batch 390/565
+Batch 391/565
+Batch 392/565
+Batch 393/565
+Batch 394/565
+Batch 395/565
+Batch 396/565
+Batch 397/565
+Batch 398/565
+Batch 399/565
+Batch 400/565
+Batch 401/565
+Batch 402/565
+Batch 403/565
+Batch 404/565
+Batch 405/565
+Batch 406/565
+Batch 407/565
+Batch 408/565
+Batch 409/565
+Batch 410/565
+Batch 411/565
+Batch 412/565
+Batch 413/565
+Batch 414/565
+Batch 415/565
+Batch 416/565
+Batch 417/565
+Batch 418/565
+Batch 419/565
+Batch 420/565
+Batch 421/565
+Batch 422/565
+Batch 423/565
+Batch 424/565
+Batch 425/565
+Batch 426/565
+Batch 427/565
+Batch 428/565
+Batch 429/565
+Batch 430/565
+Batch 431/565
+Batch 432/565
+Batch 433/565
+Batch 434/565
+Batch 435/565
+Batch 436/565
+Batch 437/565
+Batch 438/565
+Batch 439/565
+Batch 440/565
+Batch 441/565
+Batch 442/565
+Batch 443/565
+Batch 444/565
+Batch 445/565
+Batch 446/565
+Batch 447/565
+Batch 448/565
+Batch 449/565
+Batch 450/565
+Batch 451/565
+Batch 452/565
+Batch 453/565
+Batch 454/565
+Batch 455/565
+Batch 456/565
+Batch 457/565
+Batch 458/565
+Batch 459/565
+Batch 460/565
+Batch 461/565
+Batch 462/565
+Batch 463/565
+Batch 464/565
+Batch 465/565
+Batch 466/565
+Batch 467/565
+Batch 468/565
+Batch 469/565
+Batch 470/565
+Batch 471/565
+Batch 472/565
+Batch 473/565
+Batch 474/565
+Batch 475/565
+Batch 476/565
+Batch 477/565
+Batch 478/565
+Batch 479/565
+Batch 480/565
+Batch 481/565
+Batch 482/565
+Batch 483/565
+Batch 484/565
+Batch 485/565
+Batch 486/565
+Batch 487/565
+Batch 488/565
+Batch 489/565
+Batch 490/565
+Batch 491/565
+Batch 492/565
+Batch 493/565
+Batch 494/565
+Batch 495/565
+Batch 496/565
+Batch 497/565
+Batch 498/565
+Batch 499/565
+Batch 500/565
+Batch 501/565
+Batch 502/565
+Batch 503/565
+Batch 504/565
+Batch 505/565
+Batch 506/565
+Batch 507/565
+Batch 508/565
+Batch 509/565
+Batch 510/565
+Batch 511/565
+Batch 512/565
+Batch 513/565
+Batch 514/565
+Batch 515/565
+Batch 516/565
+Batch 517/565
+Batch 518/565
+Batch 519/565
+Batch 520/565
+Batch 521/565
+Batch 522/565
+Batch 523/565
+Batch 524/565
+Batch 525/565
+Batch 526/565
+Batch 527/565
+Batch 528/565
+Batch 529/565
+Batch 530/565
+Batch 531/565
+Batch 532/565
+Batch 533/565
+Batch 534/565
+Batch 535/565
+Batch 536/565
+Batch 537/565
+Batch 538/565
+Batch 539/565
+Batch 540/565
+Batch 541/565
+Batch 542/565
+Batch 543/565
+Batch 544/565
+Batch 545/565
+Batch 546/565
+Batch 547/565
+Batch 548/565
+Batch 549/565
+Batch 550/565
+Batch 551/565
+Batch 552/565
+Batch 553/565
+Batch 554/565
+Batch 555/565
+Batch 556/565
+Batch 557/565
+Batch 558/565
+Batch 559/565
+Batch 560/565
+Batch 561/565
+Batch 562/565
+Batch 563/565
+Batch 564/565
+Batch 565/565
+Epoch 4/4
+Batch 1/565
+Batch 2/565
+Batch 3/565
+Batch 4/565
+Batch 5/565
+Batch 6/565
+Batch 7/565
+Batch 8/565
+Batch 9/565
+Batch 10/565
+Batch 11/565
+Batch 12/565
+Batch 13/565
+Batch 14/565
+Batch 15/565
+Batch 16/565
+Batch 17/565
+Batch 18/565
+Batch 19/565
+Batch 20/565
+Batch 21/565
+Batch 22/565
+Batch 23/565
+Batch 24/565
+Batch 25/565
+Batch 26/565
+Batch 27/565
+Batch 28/565
+Batch 29/565
+Batch 30/565
+Batch 31/565
+Batch 32/565
+Batch 33/565
+Batch 34/565
+Batch 35/565
+Batch 36/565
+Batch 37/565
+Batch 38/565
+Batch 39/565
+Batch 40/565
+Batch 41/565
+Batch 42/565
+Batch 43/565
+Batch 44/565
+Batch 45/565
+Batch 46/565
+Batch 47/565
+Batch 48/565
+Batch 49/565
+Batch 50/565
+Batch 51/565
+Batch 52/565
+Batch 53/565
+Batch 54/565
+Batch 55/565
+Batch 56/565
+Batch 57/565
+Batch 58/565
+Batch 59/565
+Batch 60/565
+Batch 61/565
+Batch 62/565
+Batch 63/565
+Batch 64/565
+Batch 65/565
+Batch 66/565
+Batch 67/565
+Batch 68/565
+Batch 69/565
+Batch 70/565
+Batch 71/565
+Batch 72/565
+Batch 73/565
+Batch 74/565
+Batch 75/565
+Batch 76/565
+Batch 77/565
+Batch 78/565
+Batch 79/565
+Batch 80/565
+Batch 81/565
+Batch 82/565
+Batch 83/565
+Batch 84/565
+Batch 85/565
+Batch 86/565
+Batch 87/565
+Batch 88/565
+Batch 89/565
+Batch 90/565
+Batch 91/565
+Batch 92/565
+Batch 93/565
+Batch 94/565
+Batch 95/565
+Batch 96/565
+Batch 97/565
+Batch 98/565
+Batch 99/565
+Batch 100/565
+Batch 101/565
+Batch 102/565
+Batch 103/565
+Batch 104/565
+Batch 105/565
+Batch 106/565
+Batch 107/565
+Batch 108/565
+Batch 109/565
+Batch 110/565
+Batch 111/565
+Batch 112/565
+Batch 113/565
+Batch 114/565
+Batch 115/565
+Batch 116/565
+Batch 117/565
+Batch 118/565
+Batch 119/565
+Batch 120/565
+Batch 121/565
+Batch 122/565
+Batch 123/565
+Batch 124/565
+Batch 125/565
+Batch 126/565
+Batch 127/565
+Batch 128/565
+Batch 129/565
+Batch 130/565
+Batch 131/565
+Batch 132/565
+Batch 133/565
+Batch 134/565
+Batch 135/565
+Batch 136/565
+Batch 137/565
+Batch 138/565
+Batch 139/565
+Batch 140/565
+Batch 141/565
+Batch 142/565
+Batch 143/565
+Batch 144/565
+Batch 145/565
+Batch 146/565
+Batch 147/565
+Batch 148/565
+Batch 149/565
+Batch 150/565
+Batch 151/565
+Batch 152/565
+Batch 153/565
+Batch 154/565
+Batch 155/565
+Batch 156/565
+Batch 157/565
+Batch 158/565
+Batch 159/565
+Batch 160/565
+Batch 161/565
+Batch 162/565
+Batch 163/565
+Batch 164/565
+Batch 165/565
+Batch 166/565
+Batch 167/565
+Batch 168/565
+Batch 169/565
+Batch 170/565
+Batch 171/565
+Batch 172/565
+Batch 173/565
+Batch 174/565
+Batch 175/565
+Batch 176/565
+Batch 177/565
+Batch 178/565
+Batch 179/565
+Batch 180/565
+Batch 181/565
+Batch 182/565
+Batch 183/565
+Batch 184/565
+Batch 185/565
+Batch 186/565
+Batch 187/565
+Batch 188/565
+Batch 189/565
+Batch 190/565
+Batch 191/565
+Batch 192/565
+Batch 193/565
+Batch 194/565
+Batch 195/565
+Batch 196/565
+Batch 197/565
+Batch 198/565
+Batch 199/565
+Batch 200/565
+Batch 201/565
+Batch 202/565
+Batch 203/565
+Batch 204/565
+Batch 205/565
+Batch 206/565
+Batch 207/565
+Batch 208/565
+Batch 209/565
+Batch 210/565
+Batch 211/565
+Batch 212/565
+Batch 213/565
+Batch 214/565
+Batch 215/565
+Batch 216/565
+Batch 217/565
+Batch 218/565
+Batch 219/565
+Batch 220/565
+Batch 221/565
+Batch 222/565
+Batch 223/565
+Batch 224/565
+Batch 225/565
+Batch 226/565
+Batch 227/565
+Batch 228/565
+Batch 229/565
+Batch 230/565
+Batch 231/565
+Batch 232/565
+Batch 233/565
+Batch 234/565
+Batch 235/565
+Batch 236/565
+Batch 237/565
+Batch 238/565
+Batch 239/565
+Batch 240/565
+Batch 241/565
+Batch 242/565
+Batch 243/565
+Batch 244/565
+Batch 245/565
+Batch 246/565
+Batch 247/565
+Batch 248/565
+Batch 249/565
+Batch 250/565
+Batch 251/565
+Batch 252/565
+Batch 253/565
+Batch 254/565
+Batch 255/565
+Batch 256/565
+Batch 257/565
+Batch 258/565
+Batch 259/565
+Batch 260/565
+Batch 261/565
+Batch 262/565
+Batch 263/565
+Batch 264/565
+Batch 265/565
+Batch 266/565
+Batch 267/565
+Batch 268/565
+Batch 269/565
+Batch 270/565
+Batch 271/565
+Batch 272/565
+Batch 273/565
+Batch 274/565
+Batch 275/565
+Batch 276/565
+Batch 277/565
+Batch 278/565
+Batch 279/565
+Batch 280/565
+Batch 281/565
+Batch 282/565
+Batch 283/565
+Batch 284/565
+Batch 285/565
+Batch 286/565
+Batch 287/565
+Batch 288/565
+Batch 289/565
+Batch 290/565
+Batch 291/565
+Batch 292/565
+Batch 293/565
+Batch 294/565
+Batch 295/565
+Batch 296/565
+Batch 297/565
+Batch 298/565
+Batch 299/565
+Batch 300/565
+Batch 301/565
+Batch 302/565
+Batch 303/565
+Batch 304/565
+Batch 305/565
+Batch 306/565
+Batch 307/565
+Batch 308/565
+Batch 309/565
+Batch 310/565
+Batch 311/565
+Batch 312/565
+Batch 313/565
+Batch 314/565
+Batch 315/565
+Batch 316/565
+Batch 317/565
+Batch 318/565
+Batch 319/565
+Batch 320/565
+Batch 321/565
+Batch 322/565
+Batch 323/565
+Batch 324/565
+Batch 325/565
+Batch 326/565
+Batch 327/565
+Batch 328/565
+Batch 329/565
+Batch 330/565
+Batch 331/565
+Batch 332/565
+Batch 333/565
+Batch 334/565
+Batch 335/565
+Batch 336/565
+Batch 337/565
+Batch 338/565
+Batch 339/565
+Batch 340/565
+Batch 341/565
+Batch 342/565
+Batch 343/565
+Batch 344/565
+Batch 345/565
+Batch 346/565
+Batch 347/565
+Batch 348/565
+Batch 349/565
+Batch 350/565
+Batch 351/565
+Batch 352/565
+Batch 353/565
+Batch 354/565
+Batch 355/565
+Batch 356/565
+Batch 357/565
+Batch 358/565
+Batch 359/565
+Batch 360/565
+Batch 361/565
+Batch 362/565
+Batch 363/565
+Batch 364/565
+Batch 365/565
+Batch 366/565
+Batch 367/565
+Batch 368/565
+Batch 369/565
+Batch 370/565
+Batch 371/565
+Batch 372/565
+Batch 373/565
+Batch 374/565
+Batch 375/565
+Batch 376/565
+Batch 377/565
+Batch 378/565
+Batch 379/565
+Batch 380/565
+Batch 381/565
+Batch 382/565
+Batch 383/565
+Batch 384/565
+Batch 385/565
+Batch 386/565
+Batch 387/565
+Batch 388/565
+Batch 389/565
+Batch 390/565
+Batch 391/565
+Batch 392/565
+Batch 393/565
+Batch 394/565
+Batch 395/565
+Batch 396/565
+Batch 397/565
+Batch 398/565
+Batch 399/565
+Batch 400/565
+Batch 401/565
+Batch 402/565
+Batch 403/565
+Batch 404/565
+Batch 405/565
+Batch 406/565
+Batch 407/565
+Batch 408/565
+Batch 409/565
+Batch 410/565
+Batch 411/565
+Batch 412/565
+Batch 413/565
+Batch 414/565
+Batch 415/565
+Batch 416/565
+Batch 417/565
+Batch 418/565
+Batch 419/565
+Batch 420/565
+Batch 421/565
+Batch 422/565
+Batch 423/565
+Batch 424/565
+Batch 425/565
+Batch 426/565
+Batch 427/565
+Batch 428/565
+Batch 429/565
+Batch 430/565
+Batch 431/565
+Batch 432/565
+Batch 433/565
+Batch 434/565
+Batch 435/565
+Batch 436/565
+Batch 437/565
+Batch 438/565
+Batch 439/565
+Batch 440/565
+Batch 441/565
+Batch 442/565
+Batch 443/565
+Batch 444/565
+Batch 445/565
+Batch 446/565
+Batch 447/565
+Batch 448/565
+Batch 449/565
+Batch 450/565
+Batch 451/565
+Batch 452/565
+Batch 453/565
+Batch 454/565
+Batch 455/565
+Batch 456/565
+Batch 457/565
+Batch 458/565
+Batch 459/565
+Batch 460/565
+Batch 461/565
+Batch 462/565
+Batch 463/565
+Batch 464/565
+Batch 465/565
+Batch 466/565
+Batch 467/565
+Batch 468/565
+Batch 469/565
+Batch 470/565
+Batch 471/565
+Batch 472/565
+Batch 473/565
+Batch 474/565
+Batch 475/565
+Batch 476/565
+Batch 477/565
+Batch 478/565
+Batch 479/565
+Batch 480/565
+Batch 481/565
+Batch 482/565
+Batch 483/565
+Batch 484/565
+Batch 485/565
+Batch 486/565
+Batch 487/565
+Batch 488/565
+Batch 489/565
+Batch 490/565
+Batch 491/565
+Batch 492/565
+Batch 493/565
+Batch 494/565
+Batch 495/565
+Batch 496/565
+Batch 497/565
+Batch 498/565
+Batch 499/565
+Batch 500/565
+Batch 501/565
+Batch 502/565
+Batch 503/565
+Batch 504/565
+Batch 505/565
+Batch 506/565
+Batch 507/565
+Batch 508/565
+Batch 509/565
+Batch 510/565
+Batch 511/565
+Batch 512/565
+Batch 513/565
+Batch 514/565
+Batch 515/565
+Batch 516/565
+Batch 517/565
+Batch 518/565
+Batch 519/565
+Batch 520/565
+Batch 521/565
+Batch 522/565
+Batch 523/565
+Batch 524/565
+Batch 525/565
+Batch 526/565
+Batch 527/565
+Batch 528/565
+Batch 529/565
+Batch 530/565
+Batch 531/565
+Batch 532/565
+Batch 533/565
+Batch 534/565
+Batch 535/565
+Batch 536/565
+Batch 537/565
+Batch 538/565
+Batch 539/565
+Batch 540/565
+Batch 541/565
+Batch 542/565
+Batch 543/565
+Batch 544/565
+Batch 545/565
+Batch 546/565
+Batch 547/565
+Batch 548/565
+Batch 549/565
+Batch 550/565
+Batch 551/565
+Batch 552/565
+Batch 553/565
+Batch 554/565
+Batch 555/565
+Batch 556/565
+Batch 557/565
+Batch 558/565
+Batch 559/565
+Batch 560/565
+Batch 561/565
+Batch 562/565
+Batch 563/565
+Batch 564/565
+Batch 565/565
+Batch 1/1129
+Prediction class: 1 	Correct label: 0 	probs [0.033947091549634933, 0.9660528898239136]
+Batch 2/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987629652023315, 0.001237046322785318]
+Batch 3/1129
+Prediction class: 1 	Correct label: 0 	probs [0.19086644053459167, 0.8091335296630859]
+Batch 4/1129
+Prediction class: 1 	Correct label: 0 	probs [0.3238929808139801, 0.6761070489883423]
+Batch 5/1129
+Prediction class: 0 	Correct label: 1 	probs [0.6041626334190369, 0.39583733677864075]
+Batch 6/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9968460202217102, 0.003153920639306307]
+Batch 7/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009134650230407715, 0.9908654093742371]
+Batch 8/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009608063846826553, 0.9903919696807861]
+Batch 9/1129
+Prediction class: 1 	Correct label: 1 	probs [0.015463081188499928, 0.9845369458198547]
+Batch 10/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008113599382340908, 0.9918863773345947]
+Batch 11/1129
+Prediction class: 0 	Correct label: 1 	probs [0.5444536805152893, 0.4555463194847107]
+Batch 12/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013658876530826092, 0.9863410592079163]
+Batch 13/1129
+Prediction class: 1 	Correct label: 1 	probs [0.018074138090014458, 0.9819258451461792]
+Batch 14/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013837016187608242, 0.9861629605293274]
+Batch 15/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9946188926696777, 0.005381085444241762]
+Batch 16/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991061091423035, 0.0008938969112932682]
+Batch 17/1129
+Prediction class: 1 	Correct label: 1 	probs [0.0425129234790802, 0.9574870467185974]
+Batch 18/1129
+Prediction class: 1 	Correct label: 0 	probs [0.38418617844581604, 0.6158137917518616]
+Batch 19/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9981505274772644, 0.0018494273535907269]
+Batch 20/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985653758049011, 0.0014347005635499954]
+Batch 21/1129
+Prediction class: 1 	Correct label: 1 	probs [0.1318361610174179, 0.8681638240814209]
+Batch 22/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9601722359657288, 0.039827752858400345]
+Batch 23/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01145201362669468, 0.9885480403900146]
+Batch 24/1129
+Prediction class: 1 	Correct label: 1 	probs [0.019964100793004036, 0.9800358414649963]
+Batch 25/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9921801090240479, 0.00781989749521017]
+Batch 26/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008172976784408092, 0.9918270111083984]
+Batch 27/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008888990618288517, 0.9911110401153564]
+Batch 28/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988742470741272, 0.001125710317865014]
+Batch 29/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013204299844801426, 0.9867956638336182]
+Batch 30/1129
+Prediction class: 1 	Correct label: 1 	probs [0.12694011628627777, 0.873059868812561]
+Batch 31/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02178620733320713, 0.9782137870788574]
+Batch 32/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9962777495384216, 0.003722214139997959]
+Batch 33/1129
+Prediction class: 1 	Correct label: 0 	probs [0.47002172470092773, 0.529978334903717]
+Batch 34/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9503000974655151, 0.04969983920454979]
+Batch 35/1129
+Prediction class: 1 	Correct label: 1 	probs [0.016499599441885948, 0.9835003614425659]
+Batch 36/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011587319895625114, 0.9884126782417297]
+Batch 37/1129
+Prediction class: 1 	Correct label: 1 	probs [0.028855040669441223, 0.9711449146270752]
+Batch 38/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985085129737854, 0.0014915214851498604]
+Batch 39/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987393021583557, 0.0012606987729668617]
+Batch 40/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990586638450623, 0.0009412872022949159]
+Batch 41/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008014078252017498, 0.9919859170913696]
+Batch 42/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985615611076355, 0.0014384669484570622]
+Batch 43/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9925668239593506, 0.007433223072439432]
+Batch 44/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9974387884140015, 0.002561160596087575]
+Batch 45/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01379353553056717, 0.9862064719200134]
+Batch 46/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011648129671812057, 0.9883518815040588]
+Batch 47/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984790682792664, 0.0015209312550723553]
+Batch 48/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9982385635375977, 0.0017613773234188557]
+Batch 49/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00668339105322957, 0.9933165311813354]
+Batch 50/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9971469044685364, 0.0028530778363347054]
+Batch 51/1129
+Prediction class: 1 	Correct label: 1 	probs [0.015862995758652687, 0.9841370582580566]
+Batch 52/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006640973966568708, 0.9933590292930603]
+Batch 53/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9744384288787842, 0.025561628863215446]
+Batch 54/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009464098140597343, 0.9905359148979187]
+Batch 55/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9981472492218018, 0.0018527330830693245]
+Batch 56/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9967380166053772, 0.003261989215388894]
+Batch 57/1129
+Prediction class: 0 	Correct label: 0 	probs [0.5144585967063904, 0.48554131388664246]
+Batch 58/1129
+Prediction class: 1 	Correct label: 1 	probs [0.015255504287779331, 0.9847444891929626]
+Batch 59/1129
+Prediction class: 1 	Correct label: 1 	probs [0.018625376746058464, 0.9813746809959412]
+Batch 60/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03387048840522766, 0.9661295413970947]
+Batch 61/1129
+Prediction class: 0 	Correct label: 0 	probs [0.993517279624939, 0.006482754368335009]
+Batch 62/1129
+Prediction class: 0 	Correct label: 0 	probs [0.7179834246635437, 0.2820166051387787]
+Batch 63/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03932790830731392, 0.9606720805168152]
+Batch 64/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006841188762336969, 0.9931588768959045]
+Batch 65/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008007439784705639, 0.9919925928115845]
+Batch 66/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013952599838376045, 0.9860473871231079]
+Batch 67/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006738661322742701, 0.9932613968849182]
+Batch 68/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012749912217259407, 0.9872501492500305]
+Batch 69/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008755977265536785, 0.9912440776824951]
+Batch 70/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006907555740326643, 0.99309241771698]
+Batch 71/1129
+Prediction class: 1 	Correct label: 1 	probs [0.07363398373126984, 0.9263659715652466]
+Batch 72/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985711574554443, 0.0014287816593423486]
+Batch 73/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9956556558609009, 0.00434437021613121]
+Batch 74/1129
+Prediction class: 1 	Correct label: 1 	probs [0.018749922513961792, 0.9812501072883606]
+Batch 75/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009394697844982147, 0.9906052947044373]
+Batch 76/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012984764762222767, 0.9870152473449707]
+Batch 77/1129
+Prediction class: 1 	Correct label: 0 	probs [0.00940887350589037, 0.9905911087989807]
+Batch 78/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013844234868884087, 0.9861558079719543]
+Batch 79/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009927650913596153, 0.9900723695755005]
+Batch 80/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9986373782157898, 0.001362625160254538]
+Batch 81/1129
+Prediction class: 0 	Correct label: 0 	probs [0.977618396282196, 0.022381609305739403]
+Batch 82/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9955645799636841, 0.004435399081557989]
+Batch 83/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9938976168632507, 0.006102396175265312]
+Batch 84/1129
+Prediction class: 1 	Correct label: 1 	probs [0.018198739737272263, 0.9818012714385986]
+Batch 85/1129
+Prediction class: 1 	Correct label: 1 	probs [0.05373106524348259, 0.9462689757347107]
+Batch 86/1129
+Prediction class: 0 	Correct label: 0 	probs [0.888547420501709, 0.11145258694887161]
+Batch 87/1129
+Prediction class: 1 	Correct label: 1 	probs [0.015294327400624752, 0.9847056269645691]
+Batch 88/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9593433737754822, 0.04065657779574394]
+Batch 89/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009831313043832779, 0.9901686906814575]
+Batch 90/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988100528717041, 0.0011899808887392282]
+Batch 91/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9967558979988098, 0.003244119230657816]
+Batch 92/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990216493606567, 0.0009783285204321146]
+Batch 93/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010247789323329926, 0.9897521734237671]
+Batch 94/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01944497786462307, 0.98055499792099]
+Batch 95/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008589976467192173, 0.9914100766181946]
+Batch 96/1129
+Prediction class: 1 	Correct label: 1 	probs [0.04222383722662926, 0.9577761888504028]
+Batch 97/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988110065460205, 0.0011889990419149399]
+Batch 98/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008274778723716736, 0.9917252063751221]
+Batch 99/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9969010353088379, 0.0030990312807261944]
+Batch 100/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008252987638115883, 0.9917470216751099]
+Batch 101/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990587830543518, 0.0009412693907506764]
+Batch 102/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010732904076576233, 0.989267110824585]
+Batch 103/1129
+Prediction class: 1 	Correct label: 1 	probs [0.015184825286269188, 0.9848151206970215]
+Batch 104/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9972161054611206, 0.0027838514652103186]
+Batch 105/1129
+Prediction class: 1 	Correct label: 0 	probs [0.10157547891139984, 0.8984245657920837]
+Batch 106/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984827637672424, 0.0015172376297414303]
+Batch 107/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8781492710113525, 0.12185073643922806]
+Batch 108/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9974431991577148, 0.0025567766278982162]
+Batch 109/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9461807012557983, 0.053819332271814346]
+Batch 110/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011099672876298428, 0.9889003038406372]
+Batch 111/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9484636187553406, 0.05153634399175644]
+Batch 112/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01016258541494608, 0.9898374676704407]
+Batch 113/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9986624717712402, 0.0013375813141465187]
+Batch 114/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014409614726901054, 0.985590398311615]
+Batch 115/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013704950921237469, 0.9862950444221497]
+Batch 116/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9973933696746826, 0.0026066440623253584]
+Batch 117/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8779650926589966, 0.1220349371433258]
+Batch 118/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9895331263542175, 0.0104668028652668]
+Batch 119/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013798102736473083, 0.9862019419670105]
+Batch 120/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985211491584778, 0.0014788651606068015]
+Batch 121/1129
+Prediction class: 0 	Correct label: 0 	probs [0.924820065498352, 0.07517991960048676]
+Batch 122/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009837052784860134, 0.9901629686355591]
+Batch 123/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008089394308626652, 0.9919106364250183]
+Batch 124/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9986385703086853, 0.0013614323688670993]
+Batch 125/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990944862365723, 0.0009055073605850339]
+Batch 126/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010049810633063316, 0.9899501800537109]
+Batch 127/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01974167861044407, 0.9802583456039429]
+Batch 128/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008113526739180088, 0.9918864369392395]
+Batch 129/1129
+Prediction class: 1 	Correct label: 1 	probs [0.05004303157329559, 0.9499569535255432]
+Batch 130/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010229862295091152, 0.9897701740264893]
+Batch 131/1129
+Prediction class: 0 	Correct label: 0 	probs [0.991969645023346, 0.008030387572944164]
+Batch 132/1129
+Prediction class: 1 	Correct label: 1 	probs [0.04220474511384964, 0.9577952027320862]
+Batch 133/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987861514091492, 0.001213831827044487]
+Batch 134/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9977624416351318, 0.0022375003900378942]
+Batch 135/1129
+Prediction class: 1 	Correct label: 1 	probs [0.027882294729351997, 0.9721177220344543]
+Batch 136/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012333364225924015, 0.9876666069030762]
+Batch 137/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00608447939157486, 0.9939154982566833]
+Batch 138/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9986451268196106, 0.0013548925053328276]
+Batch 139/1129
+Prediction class: 1 	Correct label: 1 	probs [0.06969672441482544, 0.9303032755851746]
+Batch 140/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010387446731328964, 0.9896125197410583]
+Batch 141/1129
+Prediction class: 1 	Correct label: 1 	probs [0.11998414993286133, 0.8800157904624939]
+Batch 142/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013445776887238026, 0.9865541458129883]
+Batch 143/1129
+Prediction class: 1 	Correct label: 1 	probs [0.024770433083176613, 0.9752296209335327]
+Batch 144/1129
+Prediction class: 0 	Correct label: 0 	probs [0.5078018307685852, 0.4921981394290924]
+Batch 145/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012095588259398937, 0.9879044890403748]
+Batch 146/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009337421506643295, 0.9906626343727112]
+Batch 147/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990083575248718, 0.0009917061543092132]
+Batch 148/1129
+Prediction class: 0 	Correct label: 0 	probs [0.7108840346336365, 0.2891159653663635]
+Batch 149/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008115367963910103, 0.9918845891952515]
+Batch 150/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9924460053443909, 0.007554070558398962]
+Batch 151/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9974799752235413, 0.0025200694799423218]
+Batch 152/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01797553338110447, 0.9820244312286377]
+Batch 153/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014862330630421638, 0.9851377010345459]
+Batch 154/1129
+Prediction class: 1 	Correct label: 1 	probs [0.14610785245895386, 0.8538921475410461]
+Batch 155/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01967204548418522, 0.9803279042243958]
+Batch 156/1129
+Prediction class: 1 	Correct label: 0 	probs [0.21929676830768585, 0.7807032465934753]
+Batch 157/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007615416310727596, 0.9923845529556274]
+Batch 158/1129
+Prediction class: 1 	Correct label: 1 	probs [0.07636349648237228, 0.9236364960670471]
+Batch 159/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9890084862709045, 0.010991539806127548]
+Batch 160/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9938376545906067, 0.0061623272486031055]
+Batch 161/1129
+Prediction class: 0 	Correct label: 0 	probs [0.98973149061203, 0.010268451645970345]
+Batch 162/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9766339659690857, 0.02336597628891468]
+Batch 163/1129
+Prediction class: 1 	Correct label: 1 	probs [0.022738462314009666, 0.9772615432739258]
+Batch 164/1129
+Prediction class: 1 	Correct label: 1 	probs [0.019568506628274918, 0.9804314970970154]
+Batch 165/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8753633499145508, 0.12463665753602982]
+Batch 166/1129
+Prediction class: 1 	Correct label: 1 	probs [0.08614235371351242, 0.913857638835907]
+Batch 167/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02919188141822815, 0.9708080887794495]
+Batch 168/1129
+Prediction class: 1 	Correct label: 1 	probs [0.019998688250780106, 0.9800012707710266]
+Batch 169/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007299421820789576, 0.9927005767822266]
+Batch 170/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9938873648643494, 0.0061126891523599625]
+Batch 171/1129
+Prediction class: 1 	Correct label: 0 	probs [0.05015560984611511, 0.9498444199562073]
+Batch 172/1129
+Prediction class: 1 	Correct label: 1 	probs [0.027378618717193604, 0.9726213216781616]
+Batch 173/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03400461748242378, 0.9659953713417053]
+Batch 174/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9503577351570129, 0.04964231327176094]
+Batch 175/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02014479972422123, 0.9798551797866821]
+Batch 176/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00830676220357418, 0.9916931986808777]
+Batch 177/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988201260566711, 0.0011798576451838017]
+Batch 178/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9932466745376587, 0.00675335805863142]
+Batch 179/1129
+Prediction class: 1 	Correct label: 1 	probs [0.2751266658306122, 0.7248733043670654]
+Batch 180/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008407291024923325, 0.9915927648544312]
+Batch 181/1129
+Prediction class: 1 	Correct label: 0 	probs [0.3549233376979828, 0.6450766921043396]
+Batch 182/1129
+Prediction class: 1 	Correct label: 0 	probs [0.44533535838127136, 0.5546646118164062]
+Batch 183/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9795189499855042, 0.020481059327721596]
+Batch 184/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989128112792969, 0.0010872228303924203]
+Batch 185/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9281830191612244, 0.07181699573993683]
+Batch 186/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9972165822982788, 0.0027833960484713316]
+Batch 187/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8872362971305847, 0.11276373267173767]
+Batch 188/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007972147315740585, 0.9920278191566467]
+Batch 189/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010716714896261692, 0.9892833232879639]
+Batch 190/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008438162505626678, 0.9915618300437927]
+Batch 191/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03016853518784046, 0.9698315262794495]
+Batch 192/1129
+Prediction class: 1 	Correct label: 1 	probs [0.029314184561371803, 0.9706858396530151]
+Batch 193/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9970765113830566, 0.0029234844259917736]
+Batch 194/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9979225993156433, 0.0020773988217115402]
+Batch 195/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9114688634872437, 0.08853117376565933]
+Batch 196/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9942051768302917, 0.00579484598711133]
+Batch 197/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8993388414382935, 0.10066112875938416]
+Batch 198/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987190961837769, 0.0012809858890250325]
+Batch 199/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985378980636597, 0.0014621621230617166]
+Batch 200/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9513956904411316, 0.04860426485538483]
+Batch 201/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8602502942085266, 0.13974963128566742]
+Batch 202/1129
+Prediction class: 1 	Correct label: 1 	probs [0.019201265648007393, 0.9807987809181213]
+Batch 203/1129
+Prediction class: 1 	Correct label: 1 	probs [0.016574708744883537, 0.9834253191947937]
+Batch 204/1129
+Prediction class: 0 	Correct label: 1 	probs [0.5976682305335999, 0.40233179926872253]
+Batch 205/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987452030181885, 0.0012547820806503296]
+Batch 206/1129
+Prediction class: 0 	Correct label: 0 	probs [0.7108840346336365, 0.2891159653663635]
+Batch 207/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007452685385942459, 0.992547333240509]
+Batch 208/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9973233342170715, 0.0026767230592668056]
+Batch 209/1129
+Prediction class: 1 	Correct label: 0 	probs [0.4605538845062256, 0.5394461750984192]
+Batch 210/1129
+Prediction class: 1 	Correct label: 1 	probs [0.025164848193526268, 0.974835216999054]
+Batch 211/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00830162689089775, 0.9916983842849731]
+Batch 212/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8677300214767456, 0.1322699785232544]
+Batch 213/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007283076643943787, 0.992716908454895]
+Batch 214/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9974721074104309, 0.0025278846733272076]
+Batch 215/1129
+Prediction class: 1 	Correct label: 1 	probs [0.1445913314819336, 0.8554086685180664]
+Batch 216/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9992135763168335, 0.0007863887003622949]
+Batch 217/1129
+Prediction class: 1 	Correct label: 1 	probs [0.016788968816399574, 0.9832110404968262]
+Batch 218/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012404639273881912, 0.9875953197479248]
+Batch 219/1129
+Prediction class: 1 	Correct label: 1 	probs [0.05130310729146004, 0.9486969709396362]
+Batch 220/1129
+Prediction class: 1 	Correct label: 1 	probs [0.0113852359354496, 0.9886147975921631]
+Batch 221/1129
+Prediction class: 1 	Correct label: 1 	probs [0.0126606160774827, 0.9873393774032593]
+Batch 222/1129
+Prediction class: 0 	Correct label: 0 	probs [0.7270399928092957, 0.27295994758605957]
+Batch 223/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006273453589528799, 0.9937264919281006]
+Batch 224/1129
+Prediction class: 0 	Correct label: 0 	probs [0.997897744178772, 0.0021022504661232233]
+Batch 225/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012396024540066719, 0.9876039028167725]
+Batch 226/1129
+Prediction class: 1 	Correct label: 1 	probs [0.048749711364507675, 0.9512502551078796]
+Batch 227/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9976264834403992, 0.002373487688601017]
+Batch 228/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989491105079651, 0.0010509162675589323]
+Batch 229/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010906262323260307, 0.9890937805175781]
+Batch 230/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9970909357070923, 0.002909075701609254]
+Batch 231/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010085992515087128, 0.989914059638977]
+Batch 232/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9981010556221008, 0.0018989895470440388]
+Batch 233/1129
+Prediction class: 1 	Correct label: 1 	probs [0.022123467177152634, 0.9778764843940735]
+Batch 234/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9978203773498535, 0.0021796466317027807]
+Batch 235/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9975542426109314, 0.0024457403924316168]
+Batch 236/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03598646819591522, 0.9640135765075684]
+Batch 237/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9974842071533203, 0.002515731379389763]
+Batch 238/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011875157244503498, 0.9881248474121094]
+Batch 239/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9919180274009705, 0.008082040585577488]
+Batch 240/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9950379729270935, 0.004962042439728975]
+Batch 241/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9933199882507324, 0.006679980084300041]
+Batch 242/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013006942346692085, 0.9869930744171143]
+Batch 243/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9814953207969666, 0.018504684790968895]
+Batch 244/1129
+Prediction class: 1 	Correct label: 0 	probs [0.11022090911865234, 0.8897791504859924]
+Batch 245/1129
+Prediction class: 1 	Correct label: 1 	probs [0.058112673461437225, 0.941887378692627]
+Batch 246/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990909099578857, 0.0009091105894185603]
+Batch 247/1129
+Prediction class: 1 	Correct label: 1 	probs [0.018596000969409943, 0.9814040660858154]
+Batch 248/1129
+Prediction class: 0 	Correct label: 0 	probs [0.830390989780426, 0.16960899531841278]
+Batch 249/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008215099573135376, 0.991784930229187]
+Batch 250/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007391557563096285, 0.992608368396759]
+Batch 251/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9919866323471069, 0.00801331177353859]
+Batch 252/1129
+Prediction class: 1 	Correct label: 1 	probs [0.005845193285495043, 0.9941548705101013]
+Batch 253/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9970794916152954, 0.0029204809106886387]
+Batch 254/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010750709101557732, 0.9892492294311523]
+Batch 255/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9915592074394226, 0.008440764620900154]
+Batch 256/1129
+Prediction class: 1 	Correct label: 1 	probs [0.04827175289392471, 0.9517282247543335]
+Batch 257/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9866641759872437, 0.013335777446627617]
+Batch 258/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01460187416523695, 0.9853981733322144]
+Batch 259/1129
+Prediction class: 1 	Correct label: 0 	probs [0.22257058322429657, 0.7774294018745422]
+Batch 260/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013360048644244671, 0.9866399168968201]
+Batch 261/1129
+Prediction class: 0 	Correct label: 0 	probs [0.889319896697998, 0.11068012565374374]
+Batch 262/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00968773104250431, 0.9903122186660767]
+Batch 263/1129
+Prediction class: 1 	Correct label: 1 	probs [0.13488918542861938, 0.8651107549667358]
+Batch 264/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9982715845108032, 0.0017284423811361194]
+Batch 265/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9983890056610107, 0.0016109877033159137]
+Batch 266/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9964725375175476, 0.0035274403635412455]
+Batch 267/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012534410692751408, 0.9874655604362488]
+Batch 268/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9880176782608032, 0.011982288211584091]
+Batch 269/1129
+Prediction class: 1 	Correct label: 0 	probs [0.12998957931995392, 0.8700103759765625]
+Batch 270/1129
+Prediction class: 1 	Correct label: 1 	probs [0.021564528346061707, 0.9784355163574219]
+Batch 271/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011595098301768303, 0.9884048700332642]
+Batch 272/1129
+Prediction class: 0 	Correct label: 0 	probs [0.996619701385498, 0.003380285808816552]
+Batch 273/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008487498387694359, 0.9915124773979187]
+Batch 274/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00953886192291975, 0.9904611706733704]
+Batch 275/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014607849530875683, 0.985392153263092]
+Batch 276/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010332233272492886, 0.9896677732467651]
+Batch 277/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8364439606666565, 0.1635560244321823]
+Batch 278/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989098310470581, 0.001090141129679978]
+Batch 279/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013700993731617928, 0.9862989783287048]
+Batch 280/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009228534065186977, 0.9907714128494263]
+Batch 281/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991507530212402, 0.0008492731722071767]
+Batch 282/1129
+Prediction class: 0 	Correct label: 0 	probs [0.7600309252738953, 0.23996910452842712]
+Batch 283/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9961104989051819, 0.003889528103172779]
+Batch 284/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985388517379761, 0.001461186446249485]
+Batch 285/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9968626499176025, 0.0031373626552522182]
+Batch 286/1129
+Prediction class: 0 	Correct label: 0 	probs [0.998588502407074, 0.001411491772159934]
+Batch 287/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01648632436990738, 0.983513593673706]
+Batch 288/1129
+Prediction class: 1 	Correct label: 1 	probs [0.05362242832779884, 0.9463775157928467]
+Batch 289/1129
+Prediction class: 1 	Correct label: 1 	probs [0.019298434257507324, 0.9807015061378479]
+Batch 290/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9913978576660156, 0.008602183312177658]
+Batch 291/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010586214251816273, 0.9894137382507324]
+Batch 292/1129
+Prediction class: 1 	Correct label: 0 	probs [0.317281037569046, 0.6827189326286316]
+Batch 293/1129
+Prediction class: 1 	Correct label: 1 	probs [0.039943475276231766, 0.960056483745575]
+Batch 294/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01608399860560894, 0.9839159846305847]
+Batch 295/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03177911415696144, 0.9682209491729736]
+Batch 296/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9802162051200867, 0.019783729687333107]
+Batch 297/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9982397556304932, 0.0017602232983335853]
+Batch 298/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006633051671087742, 0.9933668971061707]
+Batch 299/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010103379376232624, 0.9898966550827026]
+Batch 300/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00863065104931593, 0.9913694262504578]
+Batch 301/1129
+Prediction class: 1 	Correct label: 1 	probs [0.024177419021725655, 0.9758225679397583]
+Batch 302/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00926522072404623, 0.9907348155975342]
+Batch 303/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990504384040833, 0.0009495825506746769]
+Batch 304/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984725117683411, 0.0015274907927960157]
+Batch 305/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008815065957605839, 0.9911848902702332]
+Batch 306/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9966404438018799, 0.0033594986889511347]
+Batch 307/1129
+Prediction class: 0 	Correct label: 0 	probs [0.7520478367805481, 0.2479521781206131]
+Batch 308/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010721467435359955, 0.9892784953117371]
+Batch 309/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987612962722778, 0.0012386610032990575]
+Batch 310/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011896207928657532, 0.9881038069725037]
+Batch 311/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9897465705871582, 0.010253464803099632]
+Batch 312/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01457645371556282, 0.9854235053062439]
+Batch 313/1129
+Prediction class: 1 	Correct label: 1 	probs [0.022535255178809166, 0.9774647355079651]
+Batch 314/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00840840395539999, 0.9915915727615356]
+Batch 315/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006032821722328663, 0.9939671754837036]
+Batch 316/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014745820313692093, 0.9852542281150818]
+Batch 317/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9262210130691528, 0.07377900928258896]
+Batch 318/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9971160888671875, 0.0028839646838605404]
+Batch 319/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9962685108184814, 0.0037314952351152897]
+Batch 320/1129
+Prediction class: 1 	Correct label: 0 	probs [0.03568340465426445, 0.9643165469169617]
+Batch 321/1129
+Prediction class: 1 	Correct label: 0 	probs [0.07140176743268967, 0.9285982251167297]
+Batch 322/1129
+Prediction class: 1 	Correct label: 1 	probs [0.10505948960781097, 0.8949405550956726]
+Batch 323/1129
+Prediction class: 1 	Correct label: 1 	probs [0.020975660532712936, 0.9790244102478027]
+Batch 324/1129
+Prediction class: 1 	Correct label: 1 	probs [0.0067827133461833, 0.9932172894477844]
+Batch 325/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01419187244027853, 0.9858081340789795]
+Batch 326/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8955403566360474, 0.10445962846279144]
+Batch 327/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9983246922492981, 0.001675340929068625]
+Batch 328/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9773438572883606, 0.022656112909317017]
+Batch 329/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03903185576200485, 0.9609681367874146]
+Batch 330/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006567036267369986, 0.9934329986572266]
+Batch 331/1129
+Prediction class: 1 	Correct label: 1 	probs [0.04041530191898346, 0.9595847129821777]
+Batch 332/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990293979644775, 0.0009706116397865117]
+Batch 333/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990766048431396, 0.0009233204182237387]
+Batch 334/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010289146564900875, 0.9897108674049377]
+Batch 335/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9850305914878845, 0.014969385229051113]
+Batch 336/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01124558411538601, 0.988754391670227]
+Batch 337/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9837222695350647, 0.01627773605287075]
+Batch 338/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012959975749254227, 0.9870399832725525]
+Batch 339/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01040723454207182, 0.9895927906036377]
+Batch 340/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989728927612305, 0.0010271795326843858]
+Batch 341/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987370371818542, 0.0012629643315449357]
+Batch 342/1129
+Prediction class: 0 	Correct label: 0 	probs [0.992214024066925, 0.007786001544445753]
+Batch 343/1129
+Prediction class: 1 	Correct label: 1 	probs [0.018427887931466103, 0.981572151184082]
+Batch 344/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9971574544906616, 0.0028425895143300295]
+Batch 345/1129
+Prediction class: 0 	Correct label: 0 	probs [0.998471200466156, 0.0015287873102352023]
+Batch 346/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9963712692260742, 0.003628792241215706]
+Batch 347/1129
+Prediction class: 1 	Correct label: 1 	probs [0.016800155863165855, 0.9831998348236084]
+Batch 348/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014852057211101055, 0.985148012638092]
+Batch 349/1129
+Prediction class: 0 	Correct label: 1 	probs [0.7016611695289612, 0.29833880066871643]
+Batch 350/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984136819839478, 0.001586253521963954]
+Batch 351/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012211744673550129, 0.9877882599830627]
+Batch 352/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9947050213813782, 0.0052950419485569]
+Batch 353/1129
+Prediction class: 1 	Correct label: 1 	probs [0.017604127526283264, 0.9823958873748779]
+Batch 354/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989904761314392, 0.001009480096399784]
+Batch 355/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013492930680513382, 0.9865070581436157]
+Batch 356/1129
+Prediction class: 1 	Correct label: 1 	probs [0.08177796751260757, 0.9182220101356506]
+Batch 357/1129
+Prediction class: 0 	Correct label: 1 	probs [0.939574122428894, 0.06042586639523506]
+Batch 358/1129
+Prediction class: 1 	Correct label: 1 	probs [0.018009081482887268, 0.9819908738136292]
+Batch 359/1129
+Prediction class: 1 	Correct label: 1 	probs [0.019315563142299652, 0.9806844592094421]
+Batch 360/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984437823295593, 0.0015562628395855427]
+Batch 361/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8517274260520935, 0.1482725441455841]
+Batch 362/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01029878854751587, 0.9897011518478394]
+Batch 363/1129
+Prediction class: 0 	Correct label: 0 	probs [0.974612295627594, 0.02538769319653511]
+Batch 364/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9968771934509277, 0.0031227516010403633]
+Batch 365/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009887690655887127, 0.9901123642921448]
+Batch 366/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012026960030198097, 0.9879729747772217]
+Batch 367/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009339816868305206, 0.9906601309776306]
+Batch 368/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014064440503716469, 0.9859355688095093]
+Batch 369/1129
+Prediction class: 0 	Correct label: 0 	probs [0.994659960269928, 0.005340058822184801]
+Batch 370/1129
+Prediction class: 1 	Correct label: 1 	probs [0.06301938742399216, 0.936980664730072]
+Batch 371/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990954399108887, 0.0009045376791618764]
+Batch 372/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9931461811065674, 0.006853894330561161]
+Batch 373/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014266368001699448, 0.9857336282730103]
+Batch 374/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014236264862120152, 0.9857637286186218]
+Batch 375/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989846348762512, 0.0010153613984584808]
+Batch 376/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9741243124008179, 0.02587570622563362]
+Batch 377/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02743905410170555, 0.9725610017776489]
+Batch 378/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989051818847656, 0.001094793202355504]
+Batch 379/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9980201721191406, 0.0019798080902546644]
+Batch 380/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985682964324951, 0.0014317210298031569]
+Batch 381/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012515419162809849, 0.9874845147132874]
+Batch 382/1129
+Prediction class: 0 	Correct label: 0 	probs [0.998112678527832, 0.0018873563967645168]
+Batch 383/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9970446228981018, 0.002955378033220768]
+Batch 384/1129
+Prediction class: 0 	Correct label: 1 	probs [0.6465428471565247, 0.35345718264579773]
+Batch 385/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008830712176859379, 0.9911693334579468]
+Batch 386/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9965119957923889, 0.003488050540909171]
+Batch 387/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013991397805511951, 0.9860085844993591]
+Batch 388/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9791606068611145, 0.020839372649788857]
+Batch 389/1129
+Prediction class: 1 	Correct label: 0 	probs [0.30421626567840576, 0.6957837343215942]
+Batch 390/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01838333159685135, 0.9816166162490845]
+Batch 391/1129
+Prediction class: 1 	Correct label: 1 	probs [0.045626863837242126, 0.9543731808662415]
+Batch 392/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008956474252045155, 0.9910435676574707]
+Batch 393/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011856136843562126, 0.9881438612937927]
+Batch 394/1129
+Prediction class: 1 	Correct label: 0 	probs [0.17332139611244202, 0.8266786336898804]
+Batch 395/1129
+Prediction class: 1 	Correct label: 1 	probs [0.030275719240307808, 0.9697242975234985]
+Batch 396/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008547207340598106, 0.9914528131484985]
+Batch 397/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9981166124343872, 0.0018833759240806103]
+Batch 398/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9721818566322327, 0.02781812846660614]
+Batch 399/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9007673859596252, 0.09923259913921356]
+Batch 400/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006921101827174425, 0.993078887462616]
+Batch 401/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985430240631104, 0.0014570000348612666]
+Batch 402/1129
+Prediction class: 0 	Correct label: 0 	probs [0.7912077903747559, 0.20879222452640533]
+Batch 403/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9912663102149963, 0.008733680471777916]
+Batch 404/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989670515060425, 0.001032990519888699]
+Batch 405/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008379098027944565, 0.9916208982467651]
+Batch 406/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00876391027122736, 0.9912360906600952]
+Batch 407/1129
+Prediction class: 1 	Correct label: 1 	probs [0.021677996963262558, 0.9783219695091248]
+Batch 408/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991316199302673, 0.0008684198837727308]
+Batch 409/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9976171851158142, 0.0023827662225812674]
+Batch 410/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985930323600769, 0.001406900119036436]
+Batch 411/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01097516156733036, 0.989024817943573]
+Batch 412/1129
+Prediction class: 1 	Correct label: 0 	probs [0.2706250250339508, 0.7293750047683716]
+Batch 413/1129
+Prediction class: 0 	Correct label: 0 	probs [0.987106204032898, 0.012893766164779663]
+Batch 414/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991635084152222, 0.0008365485700778663]
+Batch 415/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9981592297554016, 0.0018407456809654832]
+Batch 416/1129
+Prediction class: 0 	Correct label: 0 	probs [0.993024468421936, 0.006975560914725065]
+Batch 417/1129
+Prediction class: 1 	Correct label: 0 	probs [0.1686737984418869, 0.8313261866569519]
+Batch 418/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9753277897834778, 0.024672240018844604]
+Batch 419/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984627962112427, 0.0015372203197330236]
+Batch 420/1129
+Prediction class: 1 	Correct label: 0 	probs [0.0751553475856781, 0.9248446226119995]
+Batch 421/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010280845686793327, 0.9897191524505615]
+Batch 422/1129
+Prediction class: 1 	Correct label: 1 	probs [0.04420775547623634, 0.955792248249054]
+Batch 423/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9835916757583618, 0.016408272087574005]
+Batch 424/1129
+Prediction class: 0 	Correct label: 0 	probs [0.997962236404419, 0.0020377414766699076]
+Batch 425/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009576361626386642, 0.9904236197471619]
+Batch 426/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009594987146556377, 0.9904050827026367]
+Batch 427/1129
+Prediction class: 1 	Correct label: 1 	probs [0.024385174736380577, 0.9756149053573608]
+Batch 428/1129
+Prediction class: 1 	Correct label: 1 	probs [0.005980108864605427, 0.9940198659896851]
+Batch 429/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007545734755694866, 0.9924543499946594]
+Batch 430/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00846549216657877, 0.9915345311164856]
+Batch 431/1129
+Prediction class: 1 	Correct label: 1 	probs [0.021295301616191864, 0.9787046909332275]
+Batch 432/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9154444932937622, 0.08455552160739899]
+Batch 433/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985962510108948, 0.0014037898508831859]
+Batch 434/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013225160539150238, 0.9867748022079468]
+Batch 435/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9760133028030396, 0.023986635729670525]
+Batch 436/1129
+Prediction class: 1 	Correct label: 1 	probs [0.023106353357434273, 0.9768936038017273]
+Batch 437/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988217949867249, 0.0011781691573560238]
+Batch 438/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8596541285514832, 0.14034585654735565]
+Batch 439/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988565444946289, 0.0011434773914515972]
+Batch 440/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990359544754028, 0.000964091916102916]
+Batch 441/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9743145704269409, 0.025685440748929977]
+Batch 442/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014548364095389843, 0.9854516386985779]
+Batch 443/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03105705976486206, 0.9689429402351379]
+Batch 444/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989581108093262, 0.001041910843923688]
+Batch 445/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9956421852111816, 0.004357792902737856]
+Batch 446/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010464335791766644, 0.9895357489585876]
+Batch 447/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9899728298187256, 0.010027122683823109]
+Batch 448/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9961345195770264, 0.0038654892705380917]
+Batch 449/1129
+Prediction class: 1 	Correct label: 1 	probs [0.04570874571800232, 0.9542912840843201]
+Batch 450/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011269441805779934, 0.9887306094169617]
+Batch 451/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01167205534875393, 0.9883279204368591]
+Batch 452/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9982326030731201, 0.0017673957627266645]
+Batch 453/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9981259703636169, 0.0018739962251856923]
+Batch 454/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9949605464935303, 0.0050394353456795216]
+Batch 455/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01598396711051464, 0.9840160608291626]
+Batch 456/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9495620727539062, 0.05043790489435196]
+Batch 457/1129
+Prediction class: 0 	Correct label: 0 	probs [0.997072696685791, 0.0029273510444909334]
+Batch 458/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9940010905265808, 0.005998839624226093]
+Batch 459/1129
+Prediction class: 1 	Correct label: 1 	probs [0.023249981924891472, 0.9767500758171082]
+Batch 460/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012352540157735348, 0.9876474142074585]
+Batch 461/1129
+Prediction class: 0 	Correct label: 0 	probs [0.998112678527832, 0.0018872754881158471]
+Batch 462/1129
+Prediction class: 0 	Correct label: 0 	probs [0.909555971622467, 0.09044404327869415]
+Batch 463/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9978179931640625, 0.00218204571865499]
+Batch 464/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008128833957016468, 0.9918712377548218]
+Batch 465/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9952925443649292, 0.0047075217589735985]
+Batch 466/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00763196125626564, 0.9923680424690247]
+Batch 467/1129
+Prediction class: 1 	Correct label: 1 	probs [0.005927898921072483, 0.9940721392631531]
+Batch 468/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9902294278144836, 0.009770524688065052]
+Batch 469/1129
+Prediction class: 0 	Correct label: 1 	probs [0.9731066823005676, 0.02689327858388424]
+Batch 470/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9218214154243469, 0.07817860692739487]
+Batch 471/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9974442720413208, 0.0025557861663401127]
+Batch 472/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008950982242822647, 0.99104905128479]
+Batch 473/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9959123730659485, 0.004087585955858231]
+Batch 474/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9980904459953308, 0.0019095432944595814]
+Batch 475/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991989731788635, 0.0008009993471205235]
+Batch 476/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02406749129295349, 0.9759324789047241]
+Batch 477/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987439513206482, 0.0012561155017465353]
+Batch 478/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007494326215237379, 0.9925056099891663]
+Batch 479/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007193300873041153, 0.9928066730499268]
+Batch 480/1129
+Prediction class: 1 	Correct label: 1 	probs [0.06823284924030304, 0.9317671060562134]
+Batch 481/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010761100798845291, 0.9892388582229614]
+Batch 482/1129
+Prediction class: 0 	Correct label: 1 	probs [0.6392689943313599, 0.36073100566864014]
+Batch 483/1129
+Prediction class: 1 	Correct label: 1 	probs [0.04362906143069267, 0.9563709497451782]
+Batch 484/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008478313684463501, 0.9915217161178589]
+Batch 485/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010517200455069542, 0.9894828200340271]
+Batch 486/1129
+Prediction class: 1 	Correct label: 1 	probs [0.028702067211270332, 0.9712979793548584]
+Batch 487/1129
+Prediction class: 1 	Correct label: 1 	probs [0.035411201417446136, 0.9645887613296509]
+Batch 488/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9939577579498291, 0.006042224820703268]
+Batch 489/1129
+Prediction class: 0 	Correct label: 0 	probs [0.994809627532959, 0.005190318450331688]
+Batch 490/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006784023717045784, 0.9932159781455994]
+Batch 491/1129
+Prediction class: 0 	Correct label: 0 	probs [0.999085545539856, 0.0009145091753453016]
+Batch 492/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9976844787597656, 0.0023155270610004663]
+Batch 493/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01290194969624281, 0.9870980381965637]
+Batch 494/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010129871778190136, 0.9898701310157776]
+Batch 495/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9019259810447693, 0.09807395935058594]
+Batch 496/1129
+Prediction class: 1 	Correct label: 1 	probs [0.08057316392660141, 0.9194268584251404]
+Batch 497/1129
+Prediction class: 1 	Correct label: 0 	probs [0.030837906524538994, 0.969162106513977]
+Batch 498/1129
+Prediction class: 1 	Correct label: 1 	probs [0.16727368533611298, 0.8327263593673706]
+Batch 499/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9976252913475037, 0.0023746732622385025]
+Batch 500/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8232665061950684, 0.17673352360725403]
+Batch 501/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984038472175598, 0.0015961088938638568]
+Batch 502/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01303576398640871, 0.9869642853736877]
+Batch 503/1129
+Prediction class: 0 	Correct label: 1 	probs [0.8944442272186279, 0.1055556982755661]
+Batch 504/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991551637649536, 0.0008448371663689613]
+Batch 505/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9981874823570251, 0.0018125268397852778]
+Batch 506/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9903152585029602, 0.009684767574071884]
+Batch 507/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9982873797416687, 0.0017126479651778936]
+Batch 508/1129
+Prediction class: 1 	Correct label: 1 	probs [0.05312468111515045, 0.9468753337860107]
+Batch 509/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987618923187256, 0.0012381592532619834]
+Batch 510/1129
+Prediction class: 1 	Correct label: 0 	probs [0.20848697423934937, 0.7915130257606506]
+Batch 511/1129
+Prediction class: 1 	Correct label: 1 	probs [0.016392480581998825, 0.9836074709892273]
+Batch 512/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9952011108398438, 0.004798838868737221]
+Batch 513/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011764287017285824, 0.9882357120513916]
+Batch 514/1129
+Prediction class: 0 	Correct label: 0 	probs [0.812867283821106, 0.18713276088237762]
+Batch 515/1129
+Prediction class: 1 	Correct label: 1 	probs [0.13635721802711487, 0.8636427521705627]
+Batch 516/1129
+Prediction class: 1 	Correct label: 1 	probs [0.016683943569660187, 0.9833160042762756]
+Batch 517/1129
+Prediction class: 1 	Correct label: 1 	probs [0.035966817289590836, 0.9640331864356995]
+Batch 518/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9934073686599731, 0.006592650432139635]
+Batch 519/1129
+Prediction class: 0 	Correct label: 0 	probs [0.590751051902771, 0.4092489182949066]
+Batch 520/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007079350762069225, 0.9929206967353821]
+Batch 521/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01770746149122715, 0.9822924733161926]
+Batch 522/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008852289989590645, 0.9911476373672485]
+Batch 523/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007039759308099747, 0.9929602742195129]
+Batch 524/1129
+Prediction class: 1 	Correct label: 0 	probs [0.1424696147441864, 0.8575303554534912]
+Batch 525/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010956253856420517, 0.9890437126159668]
+Batch 526/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01099045667797327, 0.9890095591545105]
+Batch 527/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9974835515022278, 0.002516435459256172]
+Batch 528/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9959207773208618, 0.0040792557410895824]
+Batch 529/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9627697467803955, 0.03723020479083061]
+Batch 530/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009821910411119461, 0.9901781678199768]
+Batch 531/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00891079381108284, 0.9910892248153687]
+Batch 532/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011806854978203773, 0.9881932139396667]
+Batch 533/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01048496924340725, 0.9895150661468506]
+Batch 534/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9910616874694824, 0.008938241750001907]
+Batch 535/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008366662077605724, 0.9916332960128784]
+Batch 536/1129
+Prediction class: 0 	Correct label: 0 	probs [0.999052107334137, 0.0009478858555667102]
+Batch 537/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007690881844609976, 0.9923090934753418]
+Batch 538/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9826594591140747, 0.01734049618244171]
+Batch 539/1129
+Prediction class: 1 	Correct label: 1 	probs [0.023542210459709167, 0.9764577746391296]
+Batch 540/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9993414282798767, 0.0006585329538211226]
+Batch 541/1129
+Prediction class: 1 	Correct label: 1 	probs [0.017397871240973473, 0.9826021194458008]
+Batch 542/1129
+Prediction class: 1 	Correct label: 0 	probs [0.12859061360359192, 0.8714094161987305]
+Batch 543/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8214384317398071, 0.17856153845787048]
+Batch 544/1129
+Prediction class: 1 	Correct label: 1 	probs [0.05989161506295204, 0.9401084184646606]
+Batch 545/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9635458588600159, 0.03645419329404831]
+Batch 546/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014129272662103176, 0.9858706593513489]
+Batch 547/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03026816062629223, 0.9697318077087402]
+Batch 548/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9975274205207825, 0.0024726090487092733]
+Batch 549/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991281628608704, 0.0008718062308616936]
+Batch 550/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01898067630827427, 0.9810193181037903]
+Batch 551/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03029545769095421, 0.9697045683860779]
+Batch 552/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007118624169379473, 0.9928814172744751]
+Batch 553/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989538192749023, 0.0010461534839123487]
+Batch 554/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00926234945654869, 0.9907376170158386]
+Batch 555/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007398967631161213, 0.9926009774208069]
+Batch 556/1129
+Prediction class: 1 	Correct label: 1 	probs [0.020368659868836403, 0.9796313643455505]
+Batch 557/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02153925783932209, 0.9784607291221619]
+Batch 558/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008183365687727928, 0.9918166995048523]
+Batch 559/1129
+Prediction class: 1 	Correct label: 1 	probs [0.019766252487897873, 0.9802337288856506]
+Batch 560/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9953117370605469, 0.00468817912042141]
+Batch 561/1129
+Prediction class: 0 	Correct label: 0 	probs [0.93702632188797, 0.0629737377166748]
+Batch 562/1129
+Prediction class: 1 	Correct label: 0 	probs [0.3249187171459198, 0.6750813126564026]
+Batch 563/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9986048340797424, 0.0013952127192169428]
+Batch 564/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989938139915466, 0.0010062361834570765]
+Batch 565/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9982492923736572, 0.0017507777083665133]
+Batch 566/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02755706198513508, 0.9724429845809937]
+Batch 567/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9801892042160034, 0.01981087028980255]
+Batch 568/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9992172718048096, 0.0007827167864888906]
+Batch 569/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9892610311508179, 0.010738997720181942]
+Batch 570/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9967317581176758, 0.0032681995071470737]
+Batch 571/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9983735084533691, 0.0016264530131593347]
+Batch 572/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989365935325623, 0.0010634404607117176]
+Batch 573/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9981548190116882, 0.0018451139330863953]
+Batch 574/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991552829742432, 0.0008447663276456296]
+Batch 575/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01184170413762331, 0.9881582856178284]
+Batch 576/1129
+Prediction class: 1 	Correct label: 1 	probs [0.027688229456543922, 0.9723117351531982]
+Batch 577/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9950633645057678, 0.004936689976602793]
+Batch 578/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014685289934277534, 0.9853147268295288]
+Batch 579/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008242106065154076, 0.9917579293251038]
+Batch 580/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9972457885742188, 0.002754242392256856]
+Batch 581/1129
+Prediction class: 0 	Correct label: 0 	probs [0.987881064414978, 0.012118866667151451]
+Batch 582/1129
+Prediction class: 1 	Correct label: 1 	probs [0.015429911203682423, 0.9845700860023499]
+Batch 583/1129
+Prediction class: 1 	Correct label: 1 	probs [0.021672988310456276, 0.9783269762992859]
+Batch 584/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8729468584060669, 0.1270531266927719]
+Batch 585/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01849609613418579, 0.981503963470459]
+Batch 586/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02022123523056507, 0.9797787666320801]
+Batch 587/1129
+Prediction class: 0 	Correct label: 0 	probs [0.792310893535614, 0.20768915116786957]
+Batch 588/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9986181259155273, 0.0013818982988595963]
+Batch 589/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987905621528625, 0.001209472306072712]
+Batch 590/1129
+Prediction class: 1 	Correct label: 1 	probs [0.029202399775385857, 0.9707976579666138]
+Batch 591/1129
+Prediction class: 1 	Correct label: 1 	probs [0.030828073620796204, 0.9691720008850098]
+Batch 592/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00889518391340971, 0.991104781627655]
+Batch 593/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9962766766548157, 0.003723310772329569]
+Batch 594/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9969623684883118, 0.003037569345906377]
+Batch 595/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010866750963032246, 0.9891332983970642]
+Batch 596/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9978048205375671, 0.0021951557137072086]
+Batch 597/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989550113677979, 0.001045007025822997]
+Batch 598/1129
+Prediction class: 0 	Correct label: 0 	probs [0.7164236307144165, 0.2835763394832611]
+Batch 599/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9983019828796387, 0.0016979897627606988]
+Batch 600/1129
+Prediction class: 1 	Correct label: 0 	probs [0.05946886166930199, 0.9405310750007629]
+Batch 601/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03495176136493683, 0.9650481939315796]
+Batch 602/1129
+Prediction class: 1 	Correct label: 1 	probs [0.021950392052531242, 0.9780495762825012]
+Batch 603/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9982800483703613, 0.001720006694085896]
+Batch 604/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989307522773743, 0.001069225138053298]
+Batch 605/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9954987168312073, 0.004501224495470524]
+Batch 606/1129
+Prediction class: 1 	Correct label: 0 	probs [0.4398818910121918, 0.5601181387901306]
+Batch 607/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012241668067872524, 0.9877583384513855]
+Batch 608/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014506095089018345, 0.9854938983917236]
+Batch 609/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988269209861755, 0.0011731074191629887]
+Batch 610/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9982101917266846, 0.001789870555512607]
+Batch 611/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990037083625793, 0.0009962577605620027]
+Batch 612/1129
+Prediction class: 1 	Correct label: 1 	probs [0.017427412793040276, 0.9825725555419922]
+Batch 613/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012422850355505943, 0.9875771999359131]
+Batch 614/1129
+Prediction class: 1 	Correct label: 1 	probs [0.028120404109358788, 0.9718796610832214]
+Batch 615/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011999106034636497, 0.9880009293556213]
+Batch 616/1129
+Prediction class: 0 	Correct label: 0 	probs [0.998930037021637, 0.001069960417225957]
+Batch 617/1129
+Prediction class: 1 	Correct label: 1 	probs [0.057231657207012177, 0.942768394947052]
+Batch 618/1129
+Prediction class: 1 	Correct label: 1 	probs [0.026411477476358414, 0.9735885262489319]
+Batch 619/1129
+Prediction class: 1 	Correct label: 1 	probs [0.020095478743314743, 0.9799045324325562]
+Batch 620/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00797494687139988, 0.9920251369476318]
+Batch 621/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991545677185059, 0.000845394388306886]
+Batch 622/1129
+Prediction class: 1 	Correct label: 1 	probs [0.015324894338846207, 0.9846751093864441]
+Batch 623/1129
+Prediction class: 0 	Correct label: 0 	probs [0.6219514608383179, 0.37804844975471497]
+Batch 624/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012580085545778275, 0.9874199032783508]
+Batch 625/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02436455525457859, 0.9756354093551636]
+Batch 626/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9982885718345642, 0.0017113715875893831]
+Batch 627/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9963375329971313, 0.0036625077482312918]
+Batch 628/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987371563911438, 0.0012628723634406924]
+Batch 629/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990216493606567, 0.0009783285204321146]
+Batch 630/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985895752906799, 0.0014104546280577779]
+Batch 631/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9973275661468506, 0.0026724759954959154]
+Batch 632/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02294284850358963, 0.9770570993423462]
+Batch 633/1129
+Prediction class: 0 	Correct label: 0 	probs [0.997020423412323, 0.002979570534080267]
+Batch 634/1129
+Prediction class: 1 	Correct label: 0 	probs [0.08893775194883347, 0.9110621809959412]
+Batch 635/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9224064946174622, 0.07759348303079605]
+Batch 636/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02354990318417549, 0.9764501452445984]
+Batch 637/1129
+Prediction class: 1 	Correct label: 0 	probs [0.18099184334278107, 0.8190081119537354]
+Batch 638/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9980465173721313, 0.0019535229075700045]
+Batch 639/1129
+Prediction class: 1 	Correct label: 0 	probs [0.18401314318180084, 0.8159868717193604]
+Batch 640/1129
+Prediction class: 1 	Correct label: 0 	probs [0.03428567945957184, 0.9657143354415894]
+Batch 641/1129
+Prediction class: 1 	Correct label: 1 	probs [0.019418971613049507, 0.9805810451507568]
+Batch 642/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9630966186523438, 0.03690338879823685]
+Batch 643/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009829521179199219, 0.990170419216156]
+Batch 644/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9962685108184814, 0.0037314952351152897]
+Batch 645/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989724159240723, 0.0010276591638103127]
+Batch 646/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8521093726158142, 0.1478905975818634]
+Batch 647/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9874087572097778, 0.012591291218996048]
+Batch 648/1129
+Prediction class: 1 	Correct label: 1 	probs [0.026496542617678642, 0.9735034108161926]
+Batch 649/1129
+Prediction class: 1 	Correct label: 1 	probs [0.018134184181690216, 0.9818658232688904]
+Batch 650/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987200498580933, 0.001279944903217256]
+Batch 651/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991078972816467, 0.0008920513791963458]
+Batch 652/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9398176074028015, 0.06018242985010147]
+Batch 653/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01662835292518139, 0.9833716750144958]
+Batch 654/1129
+Prediction class: 0 	Correct label: 0 	probs [0.70416259765625, 0.2958373725414276]
+Batch 655/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010531027801334858, 0.9894689321517944]
+Batch 656/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01030360721051693, 0.9896963834762573]
+Batch 657/1129
+Prediction class: 1 	Correct label: 0 	probs [0.17918232083320618, 0.8208176493644714]
+Batch 658/1129
+Prediction class: 1 	Correct label: 1 	probs [0.09353146702051163, 0.9064685106277466]
+Batch 659/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9977707862854004, 0.0022291848435997963]
+Batch 660/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9123741388320923, 0.08762582391500473]
+Batch 661/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011653322726488113, 0.9883466362953186]
+Batch 662/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989763498306274, 0.0010236415546387434]
+Batch 663/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013465373776853085, 0.986534595489502]
+Batch 664/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010685265995562077, 0.9893146753311157]
+Batch 665/1129
+Prediction class: 0 	Correct label: 0 	probs [0.998193085193634, 0.0018069002544507384]
+Batch 666/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009168872609734535, 0.9908310770988464]
+Batch 667/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010405030101537704, 0.9895949959754944]
+Batch 668/1129
+Prediction class: 1 	Correct label: 1 	probs [0.018804840743541718, 0.9811951518058777]
+Batch 669/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9972814321517944, 0.002718528965488076]
+Batch 670/1129
+Prediction class: 1 	Correct label: 1 	probs [0.021980704739689827, 0.9780192375183105]
+Batch 671/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013920530676841736, 0.9860795140266418]
+Batch 672/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9959700107574463, 0.00403004651889205]
+Batch 673/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8080065846443176, 0.19199338555335999]
+Batch 674/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990002512931824, 0.00099970493465662]
+Batch 675/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9986145496368408, 0.0013854150893166661]
+Batch 676/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007763855624943972, 0.9922360777854919]
+Batch 677/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006779745686799288, 0.9932202100753784]
+Batch 678/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9960816502571106, 0.003918417729437351]
+Batch 679/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010089285671710968, 0.9899106621742249]
+Batch 680/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9961367249488831, 0.003863297635689378]
+Batch 681/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9972742199897766, 0.002725753700360656]
+Batch 682/1129
+Prediction class: 1 	Correct label: 1 	probs [0.021570149809122086, 0.9784297943115234]
+Batch 683/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009796218015253544, 0.9902037382125854]
+Batch 684/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9958814382553101, 0.00411862600594759]
+Batch 685/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9931461811065674, 0.006853894330561161]
+Batch 686/1129
+Prediction class: 0 	Correct label: 0 	probs [0.999151349067688, 0.0008486085571348667]
+Batch 687/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013049867935478687, 0.9869500994682312]
+Batch 688/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989581108093262, 0.0010419158497825265]
+Batch 689/1129
+Prediction class: 1 	Correct label: 1 	probs [0.13598930835723877, 0.8640106916427612]
+Batch 690/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008480815216898918, 0.9915191531181335]
+Batch 691/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989489912986755, 0.0010510626016184688]
+Batch 692/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9964411854743958, 0.0035587819293141365]
+Batch 693/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9953173398971558, 0.004682702943682671]
+Batch 694/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008652771823108196, 0.9913472533226013]
+Batch 695/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9880943894386292, 0.011905593797564507]
+Batch 696/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009413568302989006, 0.9905864596366882]
+Batch 697/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9731733202934265, 0.026826635003089905]
+Batch 698/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01476086676120758, 0.9852391481399536]
+Batch 699/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991891980171204, 0.0008108299225568771]
+Batch 700/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010252355597913265, 0.9897476434707642]
+Batch 701/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02439490705728531, 0.9756051301956177]
+Batch 702/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01221551839262247, 0.9877845048904419]
+Batch 703/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988129138946533, 0.001187065034173429]
+Batch 704/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9983104467391968, 0.0016895125154405832]
+Batch 705/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8240737915039062, 0.17592619359493256]
+Batch 706/1129
+Prediction class: 1 	Correct label: 0 	probs [0.01373207475990057, 0.9862679243087769]
+Batch 707/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8729468584060669, 0.1270531266927719]
+Batch 708/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9982509016990662, 0.0017490724567323923]
+Batch 709/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9979248046875, 0.002075213473290205]
+Batch 710/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9982101917266846, 0.001789870555512607]
+Batch 711/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012216846458613873, 0.9877831339836121]
+Batch 712/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9632428884506226, 0.03675707057118416]
+Batch 713/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9977989792823792, 0.002200959948822856]
+Batch 714/1129
+Prediction class: 1 	Correct label: 0 	probs [0.1485397070646286, 0.8514602780342102]
+Batch 715/1129
+Prediction class: 1 	Correct label: 1 	probs [0.015481311827898026, 0.9845186471939087]
+Batch 716/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9949778914451599, 0.005022040568292141]
+Batch 717/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009985257871448994, 0.9900147914886475]
+Batch 718/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989007711410522, 0.0010991812450811267]
+Batch 719/1129
+Prediction class: 1 	Correct label: 0 	probs [0.3840710520744324, 0.6159290075302124]
+Batch 720/1129
+Prediction class: 1 	Correct label: 1 	probs [0.031621161848306656, 0.9683788418769836]
+Batch 721/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012628831900656223, 0.9873712062835693]
+Batch 722/1129
+Prediction class: 1 	Correct label: 1 	probs [0.045990921556949615, 0.9540091156959534]
+Batch 723/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9986862540245056, 0.0013137231580913067]
+Batch 724/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991816878318787, 0.0008182953461073339]
+Batch 725/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9983198046684265, 0.0016801472520455718]
+Batch 726/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990754127502441, 0.0009245352703146636]
+Batch 727/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9312151074409485, 0.06878487020730972]
+Batch 728/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9668679237365723, 0.03313207998871803]
+Batch 729/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991348385810852, 0.0008652123506180942]
+Batch 730/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012244908139109612, 0.9877551198005676]
+Batch 731/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991676807403564, 0.0008322987123392522]
+Batch 732/1129
+Prediction class: 0 	Correct label: 0 	probs [0.977756917476654, 0.02224309742450714]
+Batch 733/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00819004513323307, 0.9918100237846375]
+Batch 734/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009939308278262615, 0.9900606870651245]
+Batch 735/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010604179464280605, 0.989395797252655]
+Batch 736/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009699792601168156, 0.990300178527832]
+Batch 737/1129
+Prediction class: 1 	Correct label: 1 	probs [0.04667134955525398, 0.9533286690711975]
+Batch 738/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9983079433441162, 0.0016920834314078093]
+Batch 739/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012807822786271572, 0.9871921539306641]
+Batch 740/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010247446596622467, 0.9897525310516357]
+Batch 741/1129
+Prediction class: 1 	Correct label: 1 	probs [0.0095345014706254, 0.990465521812439]
+Batch 742/1129
+Prediction class: 1 	Correct label: 1 	probs [0.029495373368263245, 0.9705045819282532]
+Batch 743/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9979512095451355, 0.0020488258451223373]
+Batch 744/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9551940560340881, 0.04480591416358948]
+Batch 745/1129
+Prediction class: 1 	Correct label: 1 	probs [0.005918134469538927, 0.9940819144248962]
+Batch 746/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009873196482658386, 0.9901268482208252]
+Batch 747/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9651287794113159, 0.03487125784158707]
+Batch 748/1129
+Prediction class: 1 	Correct label: 1 	probs [0.07335765659809113, 0.9266423583030701]
+Batch 749/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991775155067444, 0.0008224717457778752]
+Batch 750/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9980188608169556, 0.001981136156246066]
+Batch 751/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009490271098911762, 0.9905097484588623]
+Batch 752/1129
+Prediction class: 1 	Correct label: 1 	probs [0.018581153824925423, 0.9814188480377197]
+Batch 753/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9859647750854492, 0.014035244472324848]
+Batch 754/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8760092258453369, 0.12399078160524368]
+Batch 755/1129
+Prediction class: 1 	Correct label: 1 	probs [0.2755088806152344, 0.7244911789894104]
+Batch 756/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01779039390385151, 0.9822095632553101]
+Batch 757/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9367182850837708, 0.06328172236680984]
+Batch 758/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989651441574097, 0.0010348778450861573]
+Batch 759/1129
+Prediction class: 1 	Correct label: 0 	probs [0.017287427559494972, 0.9827125072479248]
+Batch 760/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02112348936498165, 0.9788765907287598]
+Batch 761/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987063407897949, 0.0012936870334669948]
+Batch 762/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987512826919556, 0.0012487104395404458]
+Batch 763/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02893601357936859, 0.9710639715194702]
+Batch 764/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9956122636795044, 0.004387713503092527]
+Batch 765/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9617167711257935, 0.03828323259949684]
+Batch 766/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02767632156610489, 0.9723237156867981]
+Batch 767/1129
+Prediction class: 0 	Correct label: 0 	probs [0.998548686504364, 0.001451299525797367]
+Batch 768/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006685759872198105, 0.9933142066001892]
+Batch 769/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010246851481497288, 0.9897531270980835]
+Batch 770/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985709190368652, 0.0014290239196270704]
+Batch 771/1129
+Prediction class: 1 	Correct label: 1 	probs [0.07413096725940704, 0.9258690476417542]
+Batch 772/1129
+Prediction class: 1 	Correct label: 1 	probs [0.05924532189965248, 0.9407547116279602]
+Batch 773/1129
+Prediction class: 1 	Correct label: 1 	probs [0.019130095839500427, 0.9808698892593384]
+Batch 774/1129
+Prediction class: 0 	Correct label: 0 	probs [0.7249791026115417, 0.27502089738845825]
+Batch 775/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990028738975525, 0.0009971813997253776]
+Batch 776/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007405152078717947, 0.9925948977470398]
+Batch 777/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011536727659404278, 0.9884632229804993]
+Batch 778/1129
+Prediction class: 1 	Correct label: 0 	probs [0.16492509841918945, 0.8350749015808105]
+Batch 779/1129
+Prediction class: 1 	Correct label: 1 	probs [0.005998504348099232, 0.9940014481544495]
+Batch 780/1129
+Prediction class: 0 	Correct label: 1 	probs [0.5127983093261719, 0.48720166087150574]
+Batch 781/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03506021946668625, 0.9649398326873779]
+Batch 782/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9241775274276733, 0.07582248747348785]
+Batch 783/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9978971481323242, 0.002102850703522563]
+Batch 784/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9845213294029236, 0.015478696674108505]
+Batch 785/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9960760474205017, 0.003923902288079262]
+Batch 786/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007149725221097469, 0.9928503036499023]
+Batch 787/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9710444211959839, 0.028955547139048576]
+Batch 788/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009568238630890846, 0.9904317259788513]
+Batch 789/1129
+Prediction class: 0 	Correct label: 0 	probs [0.953400194644928, 0.04659973829984665]
+Batch 790/1129
+Prediction class: 1 	Correct label: 1 	probs [0.0074658822268247604, 0.9925341606140137]
+Batch 791/1129
+Prediction class: 0 	Correct label: 0 	probs [0.6743491291999817, 0.3256508409976959]
+Batch 792/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991764426231384, 0.00082347821444273]
+Batch 793/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006581271067261696, 0.9934187531471252]
+Batch 794/1129
+Prediction class: 1 	Correct label: 1 	probs [0.017262861132621765, 0.9827371835708618]
+Batch 795/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008288862183690071, 0.9917111396789551]
+Batch 796/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009503664448857307, 0.9904963970184326]
+Batch 797/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009819225408136845, 0.9901808500289917]
+Batch 798/1129
+Prediction class: 1 	Correct label: 1 	probs [0.12873277068138123, 0.8712672591209412]
+Batch 799/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9963769316673279, 0.00362309324555099]
+Batch 800/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9978908896446228, 0.002109122695401311]
+Batch 801/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00923913437873125, 0.990760862827301]
+Batch 802/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9640361666679382, 0.035963792353868484]
+Batch 803/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00889573059976101, 0.991104245185852]
+Batch 804/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989219903945923, 0.0010780631564557552]
+Batch 805/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007555574644356966, 0.9924444556236267]
+Batch 806/1129
+Prediction class: 1 	Correct label: 0 	probs [0.059265125542879105, 0.94073486328125]
+Batch 807/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9912892580032349, 0.008710700087249279]
+Batch 808/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985734224319458, 0.001426577684469521]
+Batch 809/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9697276949882507, 0.030272332951426506]
+Batch 810/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9960944056510925, 0.003905652556568384]
+Batch 811/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02393999509513378, 0.9760599732398987]
+Batch 812/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9983142614364624, 0.0016857786104083061]
+Batch 813/1129
+Prediction class: 1 	Correct label: 0 	probs [0.3249187171459198, 0.6750813126564026]
+Batch 814/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03550763800740242, 0.9644923806190491]
+Batch 815/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9911670088768005, 0.008832999505102634]
+Batch 816/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00787731446325779, 0.9921227097511292]
+Batch 817/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010761761106550694, 0.9892382621765137]
+Batch 818/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9915083646774292, 0.008491632528603077]
+Batch 819/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9548718929290771, 0.04512808099389076]
+Batch 820/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03399597853422165, 0.9660040140151978]
+Batch 821/1129
+Prediction class: 1 	Correct label: 1 	probs [0.017410095781087875, 0.9825899004936218]
+Batch 822/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987547397613525, 0.0012453011004254222]
+Batch 823/1129
+Prediction class: 1 	Correct label: 0 	probs [0.22214549779891968, 0.7778545022010803]
+Batch 824/1129
+Prediction class: 1 	Correct label: 1 	probs [0.08803418278694153, 0.9119657874107361]
+Batch 825/1129
+Prediction class: 0 	Correct label: 0 	probs [0.7958200573921204, 0.20417995750904083]
+Batch 826/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009183804504573345, 0.9908162355422974]
+Batch 827/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9978179931640625, 0.00218204571865499]
+Batch 828/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9980570673942566, 0.001942938193678856]
+Batch 829/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991185069084167, 0.0008814704488031566]
+Batch 830/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987456798553467, 0.0012542424956336617]
+Batch 831/1129
+Prediction class: 1 	Correct label: 1 	probs [0.3449692726135254, 0.6550307273864746]
+Batch 832/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010852445848286152, 0.9891475439071655]
+Batch 833/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8258981108665466, 0.17410190403461456]
+Batch 834/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9899269342422485, 0.010073069483041763]
+Batch 835/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012000445276498795, 0.9879994988441467]
+Batch 836/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006878905929625034, 0.9931210875511169]
+Batch 837/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989237189292908, 0.001076254528015852]
+Batch 838/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007920807227492332, 0.9920791983604431]
+Batch 839/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01262599602341652, 0.9873740077018738]
+Batch 840/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012460790574550629, 0.9875391721725464]
+Batch 841/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011221216060221195, 0.9887787699699402]
+Batch 842/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01080702431499958, 0.9891930222511292]
+Batch 843/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007394476793706417, 0.9926055669784546]
+Batch 844/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9986491799354553, 0.0013508815318346024]
+Batch 845/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009601142257452011, 0.9903988838195801]
+Batch 846/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010566115379333496, 0.9894338250160217]
+Batch 847/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00981069728732109, 0.9901893734931946]
+Batch 848/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02347027324140072, 0.9765297174453735]
+Batch 849/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9957131147384644, 0.004286896903067827]
+Batch 850/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984601736068726, 0.001539804507046938]
+Batch 851/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9982792139053345, 0.001720756758004427]
+Batch 852/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014693108387291431, 0.9853068590164185]
+Batch 853/1129
+Prediction class: 1 	Correct label: 1 	probs [0.042815275490283966, 0.9571847319602966]
+Batch 854/1129
+Prediction class: 1 	Correct label: 1 	probs [0.020384401082992554, 0.9796155691146851]
+Batch 855/1129
+Prediction class: 0 	Correct label: 0 	probs [0.997162401676178, 0.002837514504790306]
+Batch 856/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01226862333714962, 0.987731397151947]
+Batch 857/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9992056488990784, 0.0007943408563733101]
+Batch 858/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9903562664985657, 0.009643725119531155]
+Batch 859/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987415671348572, 0.0012584446230903268]
+Batch 860/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9950239658355713, 0.004976009484380484]
+Batch 861/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987930059432983, 0.0012069758959114552]
+Batch 862/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991517066955566, 0.0008482791599817574]
+Batch 863/1129
+Prediction class: 1 	Correct label: 1 	probs [0.005478510633111, 0.9945214986801147]
+Batch 864/1129
+Prediction class: 0 	Correct label: 0 	probs [0.998699426651001, 0.0013005374930799007]
+Batch 865/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990339279174805, 0.0009660706273280084]
+Batch 866/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010768463835120201, 0.989231526851654]
+Batch 867/1129
+Prediction class: 0 	Correct label: 0 	probs [0.994166374206543, 0.005833663512021303]
+Batch 868/1129
+Prediction class: 1 	Correct label: 1 	probs [0.016284646466374397, 0.9837153553962708]
+Batch 869/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01674492098391056, 0.9832550287246704]
+Batch 870/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00700125889852643, 0.9929987192153931]
+Batch 871/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984644651412964, 0.0015355158830061555]
+Batch 872/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9916204214096069, 0.0083796177059412]
+Batch 873/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008851282298564911, 0.9911487102508545]
+Batch 874/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9915447235107422, 0.008455243892967701]
+Batch 875/1129
+Prediction class: 1 	Correct label: 1 	probs [0.11504022777080536, 0.8849597573280334]
+Batch 876/1129
+Prediction class: 0 	Correct label: 0 	probs [0.997214138507843, 0.0027858337853103876]
+Batch 877/1129
+Prediction class: 1 	Correct label: 0 	probs [0.03468944877386093, 0.9653105735778809]
+Batch 878/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008959281258285046, 0.9910407662391663]
+Batch 879/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01070111058652401, 0.989298939704895]
+Batch 880/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984503984451294, 0.0015495974803343415]
+Batch 881/1129
+Prediction class: 1 	Correct label: 1 	probs [0.2935568392276764, 0.7064431309700012]
+Batch 882/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9965834021568298, 0.0034166001714766026]
+Batch 883/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9741340279579163, 0.02586602047085762]
+Batch 884/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9919827580451965, 0.008017286658287048]
+Batch 885/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010605775751173496, 0.9893942475318909]
+Batch 886/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00742726493626833, 0.9925726652145386]
+Batch 887/1129
+Prediction class: 1 	Correct label: 0 	probs [0.35474658012390137, 0.6452534198760986]
+Batch 888/1129
+Prediction class: 1 	Correct label: 1 	probs [0.019003234803676605, 0.9809967279434204]
+Batch 889/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02486235462129116, 0.9751376509666443]
+Batch 890/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9572533965110779, 0.04274658113718033]
+Batch 891/1129
+Prediction class: 1 	Correct label: 1 	probs [0.0059029655531048775, 0.9940969944000244]
+Batch 892/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011050054803490639, 0.9889499545097351]
+Batch 893/1129
+Prediction class: 0 	Correct label: 0 	probs [0.99332594871521, 0.0066740792244672775]
+Batch 894/1129
+Prediction class: 1 	Correct label: 0 	probs [0.24525640904903412, 0.7547435760498047]
+Batch 895/1129
+Prediction class: 0 	Correct label: 0 	probs [0.997897744178772, 0.0021022504661232233]
+Batch 896/1129
+Prediction class: 1 	Correct label: 1 	probs [0.05893848463892937, 0.9410614967346191]
+Batch 897/1129
+Prediction class: 1 	Correct label: 0 	probs [0.11543349921703339, 0.8845665454864502]
+Batch 898/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011316388845443726, 0.9886836409568787]
+Batch 899/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010326256044209003, 0.9896737337112427]
+Batch 900/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006626014597713947, 0.9933739900588989]
+Batch 901/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010007757693529129, 0.9899922013282776]
+Batch 902/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990691542625427, 0.0009308471926487982]
+Batch 903/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01182105578482151, 0.9881789684295654]
+Batch 904/1129
+Prediction class: 1 	Correct label: 1 	probs [0.10006578266620636, 0.8999342322349548]
+Batch 905/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012400084175169468, 0.9875999689102173]
+Batch 906/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011192835867404938, 0.988807201385498]
+Batch 907/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9932563304901123, 0.006743667181581259]
+Batch 908/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02000265382230282, 0.9799973964691162]
+Batch 909/1129
+Prediction class: 1 	Correct label: 1 	probs [0.022445112466812134, 0.9775549173355103]
+Batch 910/1129
+Prediction class: 1 	Correct label: 0 	probs [0.14263948798179626, 0.8573604822158813]
+Batch 911/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007427377160638571, 0.992572546005249]
+Batch 912/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01477210596203804, 0.9852279424667358]
+Batch 913/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008588798344135284, 0.9914112091064453]
+Batch 914/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008040063083171844, 0.9919598698616028]
+Batch 915/1129
+Prediction class: 1 	Correct label: 0 	probs [0.06929922103881836, 0.9307007789611816]
+Batch 916/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02049822174012661, 0.9795017838478088]
+Batch 917/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9979602098464966, 0.00203981576487422]
+Batch 918/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006558405701071024, 0.9934415817260742]
+Batch 919/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9957019686698914, 0.004297983832657337]
+Batch 920/1129
+Prediction class: 0 	Correct label: 0 	probs [0.998353123664856, 0.0016468717949464917]
+Batch 921/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985830783843994, 0.0014169403584674]
+Batch 922/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985873699188232, 0.0014126591850072145]
+Batch 923/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984803795814514, 0.0015195973683148623]
+Batch 924/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00761770224198699, 0.9923823475837708]
+Batch 925/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007519344333559275, 0.9924806356430054]
+Batch 926/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006971585564315319, 0.993028461933136]
+Batch 927/1129
+Prediction class: 1 	Correct label: 1 	probs [0.05590850114822388, 0.9440914988517761]
+Batch 928/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984338879585266, 0.0015660758363083005]
+Batch 929/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988701939582825, 0.0011297418968752027]
+Batch 930/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9685807824134827, 0.031419236212968826]
+Batch 931/1129
+Prediction class: 1 	Correct label: 1 	probs [0.1702115386724472, 0.8297884464263916]
+Batch 932/1129
+Prediction class: 1 	Correct label: 1 	probs [0.020004568621516228, 0.9799954295158386]
+Batch 933/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9683873653411865, 0.03161264955997467]
+Batch 934/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008975820615887642, 0.9910241365432739]
+Batch 935/1129
+Prediction class: 1 	Correct label: 1 	probs [0.06546854227781296, 0.9345315098762512]
+Batch 936/1129
+Prediction class: 1 	Correct label: 1 	probs [0.015303265303373337, 0.9846967458724976]
+Batch 937/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009718365035951138, 0.9902815818786621]
+Batch 938/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9577696323394775, 0.04223041236400604]
+Batch 939/1129
+Prediction class: 1 	Correct label: 1 	probs [0.019596615806221962, 0.9804034233093262]
+Batch 940/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01666264794766903, 0.9833373427391052]
+Batch 941/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012180103920400143, 0.9878199100494385]
+Batch 942/1129
+Prediction class: 0 	Correct label: 1 	probs [0.5716812610626221, 0.4283187985420227]
+Batch 943/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9975087642669678, 0.002491204533725977]
+Batch 944/1129
+Prediction class: 1 	Correct label: 1 	probs [0.0192034300416708, 0.9807965755462646]
+Batch 945/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9948194622993469, 0.0051805926486849785]
+Batch 946/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02752384915947914, 0.9724761247634888]
+Batch 947/1129
+Prediction class: 1 	Correct label: 1 	probs [0.015092194080352783, 0.984907865524292]
+Batch 948/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03365294635295868, 0.9663469791412354]
+Batch 949/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984568357467651, 0.0015431524952873588]
+Batch 950/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988031387329102, 0.001196820056065917]
+Batch 951/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9851304292678833, 0.01486954279243946]
+Batch 952/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010810011997818947, 0.9891899824142456]
+Batch 953/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985851049423218, 0.0014148865593597293]
+Batch 954/1129
+Prediction class: 1 	Correct label: 1 	probs [0.0069540319964289665, 0.9930459856987]
+Batch 955/1129
+Prediction class: 1 	Correct label: 1 	probs [0.04748523235321045, 0.9525147676467896]
+Batch 956/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9968373775482178, 0.0031626459676772356]
+Batch 957/1129
+Prediction class: 0 	Correct label: 0 	probs [0.5148093104362488, 0.48519062995910645]
+Batch 958/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009265623055398464, 0.990734338760376]
+Batch 959/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02243308164179325, 0.9775668978691101]
+Batch 960/1129
+Prediction class: 1 	Correct label: 1 	probs [0.046302493661642075, 0.9536975026130676]
+Batch 961/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9944455027580261, 0.005554490257054567]
+Batch 962/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010010318830609322, 0.9899896383285522]
+Batch 963/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989437460899353, 0.0010562449460849166]
+Batch 964/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011022616177797318, 0.9889773726463318]
+Batch 965/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008132698014378548, 0.9918673634529114]
+Batch 966/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988952279090881, 0.00110475008841604]
+Batch 967/1129
+Prediction class: 0 	Correct label: 0 	probs [0.998102605342865, 0.0018973750993609428]
+Batch 968/1129
+Prediction class: 0 	Correct label: 0 	probs [0.997931718826294, 0.002068331465125084]
+Batch 969/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9980973601341248, 0.0019026997033506632]
+Batch 970/1129
+Prediction class: 1 	Correct label: 1 	probs [0.050782930105924606, 0.9492170810699463]
+Batch 971/1129
+Prediction class: 1 	Correct label: 1 	probs [0.3448449671268463, 0.6551550626754761]
+Batch 972/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9789390563964844, 0.02106090821325779]
+Batch 973/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012289362028241158, 0.9877106547355652]
+Batch 974/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9977096319198608, 0.002290337346494198]
+Batch 975/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010100970044732094, 0.9898989796638489]
+Batch 976/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009256440214812756, 0.9907435774803162]
+Batch 977/1129
+Prediction class: 0 	Correct label: 0 	probs [0.999000608921051, 0.0009993878193199635]
+Batch 978/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990522265434265, 0.0009477431885898113]
+Batch 979/1129
+Prediction class: 0 	Correct label: 0 	probs [0.99608314037323, 0.0039168247021734715]
+Batch 980/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9926553964614868, 0.0073446170426905155]
+Batch 981/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00820719264447689, 0.9917927384376526]
+Batch 982/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03917073830962181, 0.9608292579650879]
+Batch 983/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990391731262207, 0.0009608283289708197]
+Batch 984/1129
+Prediction class: 0 	Correct label: 0 	probs [0.6470974087715149, 0.3529025614261627]
+Batch 985/1129
+Prediction class: 1 	Correct label: 0 	probs [0.3121269643306732, 0.6878730654716492]
+Batch 986/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013069615699350834, 0.9869303703308105]
+Batch 987/1129
+Prediction class: 1 	Correct label: 1 	probs [0.005687449127435684, 0.9943125247955322]
+Batch 988/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988538026809692, 0.0011461939429864287]
+Batch 989/1129
+Prediction class: 0 	Correct label: 0 	probs [0.975374162197113, 0.0246258731931448]
+Batch 990/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990039467811584, 0.0009960215538740158]
+Batch 991/1129
+Prediction class: 0 	Correct label: 0 	probs [0.5860258340835571, 0.4139741063117981]
+Batch 992/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9992595314979553, 0.0007404024945572019]
+Batch 993/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9967280626296997, 0.003271976253017783]
+Batch 994/1129
+Prediction class: 1 	Correct label: 1 	probs [0.027771947905421257, 0.9722280502319336]
+Batch 995/1129
+Prediction class: 1 	Correct label: 1 	probs [0.021059531718492508, 0.9789404273033142]
+Batch 996/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9977686405181885, 0.0022313431836664677]
+Batch 997/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9726476073265076, 0.027352407574653625]
+Batch 998/1129
+Prediction class: 0 	Correct label: 0 	probs [0.7967948913574219, 0.20320510864257812]
+Batch 999/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9977006316184998, 0.0022993762977421284]
+Batch 1000/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006131698843091726, 0.9938682913780212]
+Batch 1001/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006744363345205784, 0.993255615234375]
+Batch 1002/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010678734630346298, 0.989321231842041]
+Batch 1003/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009516335092484951, 0.9904836416244507]
+Batch 1004/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984801411628723, 0.0015199071494862437]
+Batch 1005/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9992102384567261, 0.0007897097966633737]
+Batch 1006/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991586208343506, 0.0008413264877162874]
+Batch 1007/1129
+Prediction class: 1 	Correct label: 1 	probs [0.00684500252828002, 0.9931550025939941]
+Batch 1008/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9963973164558411, 0.003602714743465185]
+Batch 1009/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989336133003235, 0.001066394615918398]
+Batch 1010/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01599711738526821, 0.9840028882026672]
+Batch 1011/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9980142116546631, 0.001985750859603286]
+Batch 1012/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9971287846565247, 0.002871260978281498]
+Batch 1013/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9881533980369568, 0.011846610344946384]
+Batch 1014/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990266561508179, 0.000973405665718019]
+Batch 1015/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008175991475582123, 0.9918239712715149]
+Batch 1016/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9984561204910278, 0.0015438210684806108]
+Batch 1017/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985699653625488, 0.0014299884205684066]
+Batch 1018/1129
+Prediction class: 0 	Correct label: 0 	probs [0.8910496830940247, 0.10895032435655594]
+Batch 1019/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02193622849881649, 0.978063702583313]
+Batch 1020/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013876541517674923, 0.9861234426498413]
+Batch 1021/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9921987652778625, 0.007801240310072899]
+Batch 1022/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9938643574714661, 0.00613561412319541]
+Batch 1023/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010508083738386631, 0.9894919395446777]
+Batch 1024/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007943883538246155, 0.9920560717582703]
+Batch 1025/1129
+Prediction class: 1 	Correct label: 1 	probs [0.023625927045941353, 0.976374089717865]
+Batch 1026/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990843534469604, 0.0009156085434369743]
+Batch 1027/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989556074142456, 0.0010444058571010828]
+Batch 1028/1129
+Prediction class: 1 	Correct label: 1 	probs [0.026346715167164803, 0.973653256893158]
+Batch 1029/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014286250807344913, 0.9857137203216553]
+Batch 1030/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014471637085080147, 0.9855284094810486]
+Batch 1031/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013722332194447517, 0.9862776398658752]
+Batch 1032/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9973892569541931, 0.002610758412629366]
+Batch 1033/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01830717921257019, 0.9816927909851074]
+Batch 1034/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01493758149445057, 0.9850623607635498]
+Batch 1035/1129
+Prediction class: 0 	Correct label: 0 	probs [0.992923378944397, 0.007076592184603214]
+Batch 1036/1129
+Prediction class: 0 	Correct label: 0 	probs [0.928260862827301, 0.07173915952444077]
+Batch 1037/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9663124680519104, 0.0336875319480896]
+Batch 1038/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01020614430308342, 0.9897938966751099]
+Batch 1039/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9981209635734558, 0.0018790657632052898]
+Batch 1040/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990328550338745, 0.0009671979350969195]
+Batch 1041/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991713762283325, 0.0008287099190056324]
+Batch 1042/1129
+Prediction class: 1 	Correct label: 1 	probs [0.014568544924259186, 0.985431432723999]
+Batch 1043/1129
+Prediction class: 1 	Correct label: 1 	probs [0.005772565025836229, 0.994227409362793]
+Batch 1044/1129
+Prediction class: 1 	Correct label: 1 	probs [0.028700124472379684, 0.9712998867034912]
+Batch 1045/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01257242914289236, 0.9874275922775269]
+Batch 1046/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988256096839905, 0.0011743460781872272]
+Batch 1047/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9973324537277222, 0.002667592605575919]
+Batch 1048/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989404082298279, 0.0010596278589218855]
+Batch 1049/1129
+Prediction class: 0 	Correct label: 0 	probs [0.932457447052002, 0.06754261255264282]
+Batch 1050/1129
+Prediction class: 1 	Correct label: 1 	probs [0.015873247757554054, 0.9841267466545105]
+Batch 1051/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007785043213516474, 0.9922149777412415]
+Batch 1052/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011677667498588562, 0.9883223176002502]
+Batch 1053/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988753199577332, 0.0011246358044445515]
+Batch 1054/1129
+Prediction class: 1 	Correct label: 1 	probs [0.005519556347280741, 0.9944804906845093]
+Batch 1055/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987196922302246, 0.0012803948484361172]
+Batch 1056/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01252906396985054, 0.9874709248542786]
+Batch 1057/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9986134767532349, 0.0013864723732694983]
+Batch 1058/1129
+Prediction class: 1 	Correct label: 1 	probs [0.0289528276771307, 0.9710472226142883]
+Batch 1059/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9981046915054321, 0.0018952577374875546]
+Batch 1060/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010381566360592842, 0.9896184802055359]
+Batch 1061/1129
+Prediction class: 1 	Correct label: 1 	probs [0.016172926872968674, 0.9838269948959351]
+Batch 1062/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008357818238437176, 0.9916422367095947]
+Batch 1063/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013636834919452667, 0.9863631129264832]
+Batch 1064/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9976425766944885, 0.0023574549704790115]
+Batch 1065/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988759160041809, 0.0011240124003961682]
+Batch 1066/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008112851530313492, 0.9918871521949768]
+Batch 1067/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010644382797181606, 0.9893556237220764]
+Batch 1068/1129
+Prediction class: 1 	Correct label: 1 	probs [0.06707087904214859, 0.9329291582107544]
+Batch 1069/1129
+Prediction class: 1 	Correct label: 1 	probs [0.015319756232202053, 0.9846802353858948]
+Batch 1070/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9953789710998535, 0.004621028900146484]
+Batch 1071/1129
+Prediction class: 1 	Correct label: 1 	probs [0.009961348958313465, 0.9900386333465576]
+Batch 1072/1129
+Prediction class: 0 	Correct label: 0 	probs [0.998685896396637, 0.0013141237432137132]
+Batch 1073/1129
+Prediction class: 1 	Correct label: 0 	probs [0.03933785855770111, 0.9606621861457825]
+Batch 1074/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9989556074142456, 0.0010443516075611115]
+Batch 1075/1129
+Prediction class: 1 	Correct label: 1 	probs [0.05382467433810234, 0.9461753368377686]
+Batch 1076/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013600241392850876, 0.98639976978302]
+Batch 1077/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006691424176096916, 0.9933085441589355]
+Batch 1078/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9985051155090332, 0.0014949413016438484]
+Batch 1079/1129
+Prediction class: 1 	Correct label: 1 	probs [0.020426511764526367, 0.9795734882354736]
+Batch 1080/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988208413124084, 0.0011791621800512075]
+Batch 1081/1129
+Prediction class: 1 	Correct label: 1 	probs [0.20468920469284058, 0.7953108549118042]
+Batch 1082/1129
+Prediction class: 1 	Correct label: 1 	probs [0.017024803906679153, 0.98297518491745]
+Batch 1083/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9850096106529236, 0.014990374445915222]
+Batch 1084/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988793730735779, 0.001120583270676434]
+Batch 1085/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9990184307098389, 0.0009815130615606904]
+Batch 1086/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9829773902893066, 0.01702258549630642]
+Batch 1087/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9991618394851685, 0.000838140316773206]
+Batch 1088/1129
+Prediction class: 1 	Correct label: 1 	probs [0.022077515721321106, 0.9779224395751953]
+Batch 1089/1129
+Prediction class: 0 	Correct label: 0 	probs [0.99257493019104, 0.007425110787153244]
+Batch 1090/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9964807629585266, 0.0035192808136343956]
+Batch 1091/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007791336625814438, 0.9922086000442505]
+Batch 1092/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9970130920410156, 0.002986920066177845]
+Batch 1093/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03952505812048912, 0.960474967956543]
+Batch 1094/1129
+Prediction class: 0 	Correct label: 0 	probs [0.993035614490509, 0.006964325904846191]
+Batch 1095/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011008772999048233, 0.9889912605285645]
+Batch 1096/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9988648891448975, 0.0011351596331223845]
+Batch 1097/1129
+Prediction class: 1 	Correct label: 1 	probs [0.03756130486726761, 0.962438702583313]
+Batch 1098/1129
+Prediction class: 1 	Correct label: 1 	probs [0.006846737116575241, 0.9931532144546509]
+Batch 1099/1129
+Prediction class: 1 	Correct label: 1 	probs [0.015745295211672783, 0.9842547178268433]
+Batch 1100/1129
+Prediction class: 1 	Correct label: 1 	probs [0.022154787555336952, 0.9778451323509216]
+Batch 1101/1129
+Prediction class: 1 	Correct label: 1 	probs [0.011867706663906574, 0.9881322979927063]
+Batch 1102/1129
+Prediction class: 1 	Correct label: 1 	probs [0.042592234909534454, 0.9574077725410461]
+Batch 1103/1129
+Prediction class: 1 	Correct label: 1 	probs [0.06769800186157227, 0.9323019981384277]
+Batch 1104/1129
+Prediction class: 0 	Correct label: 0 	probs [0.999106228351593, 0.000893712043762207]
+Batch 1105/1129
+Prediction class: 1 	Correct label: 1 	probs [0.026056397706270218, 0.9739435315132141]
+Batch 1106/1129
+Prediction class: 1 	Correct label: 1 	probs [0.019452936947345734, 0.9805471301078796]
+Batch 1107/1129
+Prediction class: 1 	Correct label: 0 	probs [0.01707480661571026, 0.9829251766204834]
+Batch 1108/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9987056255340576, 0.0012943705078214407]
+Batch 1109/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01641532965004444, 0.9835846424102783]
+Batch 1110/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9933672547340393, 0.006632699631154537]
+Batch 1111/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007068278267979622, 0.9929317235946655]
+Batch 1112/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013054505921900272, 0.9869454503059387]
+Batch 1113/1129
+Prediction class: 1 	Correct label: 1 	probs [0.012808438390493393, 0.9871915578842163]
+Batch 1114/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9955219030380249, 0.004478073213249445]
+Batch 1115/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9583937525749207, 0.041606176644563675]
+Batch 1116/1129
+Prediction class: 1 	Correct label: 1 	probs [0.013784455135464668, 0.9862154722213745]
+Batch 1117/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010605315677821636, 0.9893947243690491]
+Batch 1118/1129
+Prediction class: 1 	Correct label: 1 	probs [0.008362466469407082, 0.9916375279426575]
+Batch 1119/1129
+Prediction class: 1 	Correct label: 0 	probs [0.23481635749340057, 0.7651836276054382]
+Batch 1120/1129
+Prediction class: 0 	Correct label: 0 	probs [0.997498095035553, 0.0025018786545842886]
+Batch 1121/1129
+Prediction class: 0 	Correct label: 0 	probs [0.998975396156311, 0.0010246759047731757]
+Batch 1122/1129
+Prediction class: 1 	Correct label: 1 	probs [0.01853581704199314, 0.9814642071723938]
+Batch 1123/1129
+Prediction class: 1 	Correct label: 1 	probs [0.007853020913898945, 0.9921470284461975]
+Batch 1124/1129
+Prediction class: 1 	Correct label: 1 	probs [0.028470264747738838, 0.9715296626091003]
+Batch 1125/1129
+Prediction class: 1 	Correct label: 1 	probs [0.010495675727725029, 0.989504337310791]
+Batch 1126/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9949833154678345, 0.005016687326133251]
+Batch 1127/1129
+Prediction class: 0 	Correct label: 0 	probs [0.9973102807998657, 0.0026897001080214977]
+Batch 1128/1129
+Prediction class: 1 	Correct label: 1 	probs [0.02902170456945896, 0.970978319644928]
+Batch 1129/1129
+Prediction class: 1 	Correct label: 1 	probs [0.25897207856178284, 0.7410279512405396]
+Accuracy: 94.33%
+Time elapsed in this session: 695.4471666666667 minutes
