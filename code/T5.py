@@ -24,7 +24,7 @@ def read_file(filepath, tokenizer):
         if not line:
             continue
         text, label = line.split("\t")
-        encoding = tokenizer(text, return_tensors="pt", truncation=True, max_length='max_length')
+        encoding = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
         input_ids = encoding["input_ids"].squeeze()
         attention_mask = encoding["attention_mask"].squeeze()
         label = int(label)
