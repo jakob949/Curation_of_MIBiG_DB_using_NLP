@@ -55,7 +55,6 @@ train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=3e-5)
-acc = []
 with open(args.logfile, 'w') as f:
     f.write(f"Model name: {model_name}, Train file: {args.trainfile}, Test file: {args.testfile}, Batch size: {batch_size}, Epochs: {epochs}, Device: {device}\n\n")
 
@@ -92,9 +91,7 @@ for epoch in range(epochs):
     with open(args.logfile, 'a') as f:
         print(f"Epoch {epoch + 1}/{epochs}", file=f)
         print(f"Accuracy: {round(correct_predictions / total_predictions, 3)}", file=f)
-    acc.append(correct_predictions / total_predictions)
 model.save_pretrained("fine_tuned_flan-t5-base")
 end_time = time.time()
 with open(args.logfile, 'a') as f:
-    print(f"Mean accuracy: {round(sum(acc)/len(acc), 3)}", file=f")
     print(f"Total time: {round((end_time - start_time)/60, 2)} minutes", file=f)
