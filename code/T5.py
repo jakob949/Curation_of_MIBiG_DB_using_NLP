@@ -5,6 +5,7 @@ from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config
 import argparse
 import time
 
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-l', '--logfile', type=str, help='name of the log file')
 parser.add_argument('-tr', '--trainfile', type=str, help='name of the training file')
@@ -90,9 +91,9 @@ for epoch in range(epochs):
                 correct_predictions += 1
     with open(args.logfile, 'a') as f:
         print(f"Epoch {epoch + 1}/{epochs}", file=f)
-        print(f"Accuracy: {correct_predictions / total_predictions:.2f}", file=f)
+        print(f"Accuracy: {correct_predictions / total_predictions:.3f}", file=f)
 
 model.save_pretrained("fine_tuned_flan-t5-base")
 end_time = time.time()
 with open(args.logfile, 'a') as f:
-    print(f"Total time: {round(end_time - start_time, 2)/60} minutes", file=f)
+    print(f"Total time: {round((end_time - start_time)/60, 2)} minutes", file=f)
