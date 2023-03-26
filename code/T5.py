@@ -1,129 +1,98 @@
+import os
 import torch
-from torch.utils.data import DataLoader, Dataset
-from transformers import T5ForConditionalGeneration, AutoTokenizer, AdamW
+from torch.utils.data import Dataset, DataLoader
+from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config
+import argparse
 
-# Initialize tokenizer
-tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
+parser = argparse.ArgumentParser()
+parser.add_argument('-l', '--logfile', type=str, help='name of the log file')
+parser.add_argument('-tr', '--trainfile', type=str, help='name of the training file')
+parser.add_argument('-te', '--testfile', type=str, help='name of the test file')
+args = parser.parse_args()
 
+class SpacyDataset(Dataset):
+    def __init__(self, filename, tokenizer, max_length=512):
+        self.tokenizer = tokenizer
+        self.data = []
+        with open(filename, "r", encoding="utf-8") as f:
+            for line in f.readlines():
+                text, label = line.strip().split("\t")
+                self.data.append((text, label))
 
-# Define the dataset class
-class ClassificationDataset(Dataset):
-    def __init__(self, data):
-        self.data = data
+        self.max_length = max_length
 
     def __len__(self):
         return len(self.data)
 
     def __getitem__(self, idx):
-        input_ids, attention_mask, label = self.data[idx]
-        return input_ids, attention_mask, label
+        text, label = self.data[idx]
+        input_encoding = self.tokenizer(text, return_tensors="pt", max_length=self.max_length, padding="max_length", truncation=True)
+        target_encoding = self.tokenizer(label, return_tensors="pt", max_length=2, padding="max_length", truncation=True)
+
+        return {
+            "input_ids": input_encoding["input_ids"].squeeze(),
+            "attention_mask": input_encoding["attention_mask"].squeeze(),
+            "labels": target_encoding["input_ids"].squeeze(),
+        }
 
 
-# Function to read and process data from file
-def read_file(filepath, tokenizer):
-    with open(filepath, "r", encoding="utf-8") as f:
-        lines = f.readlines()
-    data = []
-    for line in lines:
-        line = line.strip()
-        if not line:
-            continue
-        text, label = line.split("\t")
-        encoding = tokenizer(text, return_tensors="pt", truncation=True, max_length=2500)
-        input_ids = encoding["input_ids"].squeeze()
-        attention_mask = encoding["attention_mask"].squeeze()
-        label = int(label)
-        data.append((input_ids, attention_mask, label))
-    return data
 
+model_name = "google/flan-t5-base"
+tokenizer = T5TokenizerFast.from_pretrained(model_name)
+config = T5Config.from_pretrained(model_name)
+model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
 
-# Function to pad sequences in a batch
-def collate_fn(batch):
-    input_ids, attention_masks, labels = zip(*batch)
-    input_ids = torch.nn.utils.rnn.pad_sequence(input_ids, batch_first=True, padding_value=tokenizer.pad_token_id)
-    attention_masks = torch.nn.utils.rnn.pad_sequence(attention_masks, batch_first=True, padding_value=0)
-    labels = torch.tensor(labels, dtype=torch.long)
-    return input_ids, attention_masks, labels
+train_dataset = SpacyDataset(args.trainfile, tokenizer)
+test_dataset = SpacyDataset(args.testfile, tokenizer)
 
-
-# Function to evaluate the model
-def evaluate(model, dataloader):
-    model.eval()
-    total_loss = 0
-    total_correct = 0
-    with torch.no_grad():
-        for input_ids, attention_mask, labels in dataloader:
-            input_ids = input_ids.to(device)
-            attention_mask = attention_mask.to(device)
-            labels = labels.to(device)
-
-            outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
-            loss = outputs.loss
-            total_loss += loss.item()
-
-            logits = outputs.logits
-            preds = torch.argmax(logits, dim=-1)
-            correct = (preds == labels).sum().item()
-            total_correct += correct
-
-    return total_loss / len(dataloader), total_correct / len(dataloader.dataset)
-
-
-# Read and process data
-train_data = read_file("spacy_train.txt", tokenizer)
-test_data = read_file("spacy_test.txt", tokenizer)
-
-# Create datasets and dataloaders
-train_dataset = ClassificationDataset(train_data)
-test_dataset = ClassificationDataset(test_data)
-
-train_dataloader = DataLoader(train_dataset, batch_size=1, shuffle=True, collate_fn=collate_fn)
-test_dataloader = DataLoader(test_dataset, batch_size=1, collate_fn=collate_fn)
-
-# Initialize the model, optimizer, and device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-base").to(device)
-optimizer = AdamW(model.parameters(), lr=5e-5)
-num_epochs = 1
+model.to(device)
 
-# Fine-tune the model and log results
-with open('log_T5_test.txt', "w") as file:
-    print(f'Start of fine-tune\n{device}\nnum of epochs{num_epochs}', file=file)
+batch_size = 2
+train_loader = DataLoader(train_dataset, batch_size= batch_size, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=1)
 
+optimizer = torch.optim.AdamW(model.parameters(), lr=3e-5)
 
-for epoch in range(num_epochs):
+epochs = 4
+
+with open(args.logfile, "w") as f:
+    f.write(f"Model: {model_name}, Train: {args.trainfile}, Test: {args.testfile}, Epochs: {epochs}, Batch Size: {batch_size}, Device: {device}\n")
+
+for epoch in range(epochs):
     model.train()
-    for input_ids, attention_mask, labels in train_dataloader:
-        input_ids = input_ids.to(device)
-        attention_mask = attention_mask.to(device)
-        labels = labels.to(device)
-
+    for batch in train_loader:
         optimizer.zero_grad()
-        outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
+        input_ids = batch["input_ids"].to(device)
+        attention_mask = batch["attention_mask"].to(device)
+        labels = batch["labels"].to(device)
+
+        outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
         loss = outputs.loss
         loss.backward()
         optimizer.step()
-        with open('log_T5_test.txt', "a") as file:
-            print('-', end='', file=file)
-    # Evaluate the model on the test set
-    val_loss, val_acc = evaluate(model, test_dataloader)
-    with open('log_T5_test.txt', "a") as file:
-        print(f"Epoch {epoch+1}/{num_epochs}, Train Loss: {loss.item()}, Test Loss: {val_loss}, Test Acc: {val_acc}", file=file)
 
-# # Save the fine-tuned model
-# model.save_pretrained("t5_finetuned_classification")
-#
-# # Load the saved model for further use
-# loaded_model = T5ForConditionalGeneration.from_pretrained("t5_finetuned_classification").to(device)
-#
-# # Test the loaded model with a sample input
-# sample_input = "This is a sample input text for classification."
-# encoding = tokenizer(sample_input, return_tensors="pt", padding=True, truncation=True, max_length=2500)
-# input_ids = encoding["input_ids"].to(device)
-# attention_mask = encoding["attention_mask"].to(device)
-#
-# with torch.no_grad():
-#     logits = loaded_model(input_ids=input_ids, attention_mask=attention_mask).logits
-#     prediction = torch.argmax(logits, dim=-1).item()
-# with open('log_T5_test.txt', "a") as file:
-#     print(f"Sample input classification: {prediction}", file=file)
+    model.eval()
+    correct_predictions = 0
+    total_predictions = 0
+    for batch in test_loader:
+        input_ids = batch["input_ids"].to(device)
+        attention_mask = batch["attention_mask"].to(device)
+        labels = batch["labels"].to(device)
+
+        with torch.no_grad():
+            outputs = model.generate(input_ids, attention_mask=attention_mask)
+            predicted_labels = [tokenizer.decode(pred, skip_special_tokens=True) for pred in outputs]
+            true_labels = [tokenizer.decode(label, skip_special_tokens=True) for label in labels]
+
+        for pred, true in zip(predicted_labels, true_labels):
+            total_predictions += 1
+            if pred == true:
+                correct_predictions += 1
+    with open(args.logfile, "a") as f:
+
+        print(f"Epoch {epoch + 1}/{epochs}", file=f)
+        print(f"Accuracy: {correct_predictions / total_predictions:.2f}", file=f)
+if args.trainfile == 'train_fold_0.txt':
+    model.save_pretrained("fine_tuned_flan-t5-base")
+
