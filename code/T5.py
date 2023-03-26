@@ -2,7 +2,13 @@ import os
 import torch
 from torch.utils.data import Dataset, DataLoader
 from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config
+import argparse
 
+parser = argparse.ArgumentParser()
+parser.add_argument('-l', '--logfile', type=str, help='name of the log file')
+parser.add_argument('-tr', '--trainfile', type=str, help='name of the training file')
+parser.add_argument('-te', '--testfile', type=str, help='name of the test file')
+args = parser.parse_args()
 class SpacyDataset(Dataset):
     def __init__(self, filename, tokenizer, max_length=512):
         self.tokenizer = tokenizer
@@ -33,8 +39,8 @@ tokenizer = T5TokenizerFast.from_pretrained(model_name)
 config = T5Config.from_pretrained(model_name)
 model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
 
-train_dataset = SpacyDataset("spacy_train.txt", tokenizer)
-test_dataset = SpacyDataset("spacy_test.txt", tokenizer)
+train_dataset = SpacyDataset(args.trainfile, tokenizer)
+test_dataset = SpacyDataset(args.testfile, tokenizer)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
@@ -43,6 +49,9 @@ train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=2)
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=3e-5)
+
+with open(args.logfile, 'w') as f:
+    f.write(f"Model name: {model_name}, Train file: {args.trainfile}, Test file: {args.testfile}, Batch size: 2, Epochs: 3, Learning rate: 3e-5, Device: {device}")
 
 epochs = 3
 for epoch in range(epochs):
@@ -75,9 +84,9 @@ for epoch in range(epochs):
             total_predictions += 1
             if pred == true:
                 correct_predictions += 1
-
-    print(f"Epoch {epoch + 1}/{epochs}")
-    print(f"Accuracy: {correct_predictions / total_predictions:.2f}")
+    with open(args.logfile, 'a') as f:
+        print(f"Epoch {epoch + 1}/{epochs}", file=f)
+        print(f"Accuracy: {correct_predictions / total_predictions:.2f}", file=f)
 
 model.save_pretrained("fine_tuned_flan-t5-base")
 
