@@ -9,7 +9,7 @@ parser.add_argument('-l', '--logfile', type=str, help='name of the log file')
 parser.add_argument('-tr', '--trainfile', type=str, help='name of the training file')
 parser.add_argument('-te', '--testfile', type=str, help='name of the test file')
 args = parser.parse_args()
-class SpacyDataset(Dataset):
+class Dataset(Dataset):
     def __init__(self, filename, tokenizer, max_length=512):
         self.tokenizer = tokenizer
         self.data = []
@@ -39,21 +39,22 @@ tokenizer = T5TokenizerFast.from_pretrained(model_name)
 config = T5Config.from_pretrained(model_name)
 model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
 
-train_dataset = SpacyDataset(args.trainfile, tokenizer)
-test_dataset = SpacyDataset(args.testfile, tokenizer)
+train_dataset = Dataset(args.trainfile, tokenizer)
+test_dataset = Dataset(args.testfile, tokenizer)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
-train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=2)
+batch_size = 12
+epochs = 4
+train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=3e-5)
 
 with open(args.logfile, 'w') as f:
-    f.write(f"Model name: {model_name}, Train file: {args.trainfile}, Test file: {args.testfile}, Batch size: 2, Epochs: 3, Learning rate: 3e-5, Device: {device}")
+    f.write(f"Model name: {model_name}, Train file: {args.trainfile}, Test file: {args.testfile}, Batch size: {batch_size}, Epochs: {epochs}, Device: {device}\n\n")
 
-epochs = 3
 for epoch in range(epochs):
     model.train()
     for batch in train_loader:
