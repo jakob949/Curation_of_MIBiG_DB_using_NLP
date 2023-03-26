@@ -3,7 +3,7 @@ from torch.utils.data import DataLoader, Dataset
 from transformers import T5ForConditionalGeneration, AutoTokenizer, AdamW
 
 # Initialize tokenizer
-tokenizer = AutoTokenizer.from_pretrained("t5-base")
+tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
 
 
 # Define the dataset class
@@ -82,7 +82,7 @@ test_dataloader = DataLoader(test_dataset, batch_size=1, collate_fn=collate_fn)
 
 # Initialize the model, optimizer, and device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = T5ForConditionalGeneration.from_pretrained("t5-base").to(device)
+model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-base").to(device)
 optimizer = AdamW(model.parameters(), lr=5e-5)
 num_epochs = 1
 
