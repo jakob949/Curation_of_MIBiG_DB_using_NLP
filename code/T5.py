@@ -3,6 +3,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config
 import argparse
+import time
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-l', '--logfile', type=str, help='name of the log file')
@@ -33,6 +34,8 @@ class Dataset(Dataset):
             "attention_mask": input_encoding["attention_mask"].squeeze(),
             "labels": target_encoding["input_ids"].squeeze(),
         }
+
+start_time = time.time()
 
 model_name = "google/flan-t5-base"
 tokenizer = T5TokenizerFast.from_pretrained(model_name)
@@ -90,4 +93,6 @@ for epoch in range(epochs):
         print(f"Accuracy: {correct_predictions / total_predictions:.2f}", file=f)
 
 model.save_pretrained("fine_tuned_flan-t5-base")
-
+end_time = time.time()
+with open(args.logfile, 'a') as f:
+    print(f"Total time: {round(end_time - start_time, 2)/60} minutes", file=f)
