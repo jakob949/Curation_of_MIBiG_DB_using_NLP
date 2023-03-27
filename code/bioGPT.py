@@ -20,7 +20,7 @@ class Dataset(torch.utils.data.Dataset):
             for line in f.readlines():
                 text, label = line.strip().split("\t")
                 binary_label = 1 if label == "1" else 0
-                self.data.append((text, binary_label))
+                self.data.append((text, label))
 
 
     def __len__(self):
@@ -52,7 +52,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
 batch_size = 6
-epochs = 4
+epochs = 25
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
