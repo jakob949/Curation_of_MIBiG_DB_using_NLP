@@ -50,14 +50,15 @@ test_dataset = Dataset(args.testfile, tokenizer)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
-batch_size = 2
+batch_size = 20
 epochs = 4
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=3e-5)
+
 with open(args.logfile, 'w') as f:
-    f.write(f"Model name: {model_name}, Batch size: {batch_size}, Epochs: {epochs}, Device: {device}\n\n")
+    f.write(f"Model name: {model_name}, Train file: {args.trainfile}, Test file: {args.testfile}, Batch size: {batch_size}, Epochs: {epochs}, Device: {device}\n\n")
 
 for epoch in range(epochs):
     model.train()
@@ -92,7 +93,10 @@ for epoch in range(epochs):
     with open(args.logfile, 'a') as f:
         print(f"Epoch {epoch + 1}/{epochs}", file=f)
         print(f"Accuracy: {round(correct_predictions / total_predictions, 3)}", file=f)
-model.save_pretrained("fine_tuned_flan-t5-base")
+
+if args.trainfile == "train_fold_0.txt":
+    model.save_pretrained(f"fine_tuned_{model_name}_epoch{epochs}")
+
 end_time = time.time()
 with open(args.logfile, 'a') as f:
     print(f"Total time: {round((end_time - start_time)/60, 2)} minutes", file=f)
