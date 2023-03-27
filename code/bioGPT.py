@@ -1,61 +1,99 @@
+import argparse
+import time
 import torch
 from torch.utils.data import Dataset, DataLoader
-from transformers import GPT2Tokenizer, GPT2ForSequenceClassification, AdamW
+from transformers import GPT2ForSequenceClassification, GPT2Tokenizer, AdamW
 
-class BinaryClassificationDataset(Dataset):
-    def __init__(self, file_path, tokenizer):
+parser = argparse.ArgumentParser()
+parser.add_argument('-l', '--logfile', type=str, help='name of the log file')
+parser.add_argument('-tr', '--trainfile', type=str, help='name of the training file')
+parser.add_argument('-te', '--testfile', type=str, help='name of the test file')
+args = parser.parse_args()
+
+class Dataset(torch.utils.data.Dataset):
+    def __init__(self, filename, tokenizer, max_length=512):
         self.tokenizer = tokenizer
-        self.lines = open(file_path, 'r', encoding='utf-8').readlines()
+        self.data = []
+        with open(filename, "r", encoding="utf-8") as f:
+            for line in f.readlines():
+                text, label = line.strip().split("\t")
+                binary_label = 1 if label == "positive" else 0  # Convert label to binary
+                self.data.append((text, binary_label))
+
+        self.max_length = max_length
 
     def __len__(self):
-        return len(self.lines)
+        return len(self.data)
 
     def __getitem__(self, idx):
-        line = self.lines[idx].strip()
-        text, label = line.split('\t')
-        encoding = self.tokenizer(text, return_tensors='pt', padding='max_length', truncation=True, max_length=512)
-        return {**encoding, 'labels': torch.tensor(int(label))}
+        text, binary_label = self.data[idx]
+        input_encoding = self.tokenizer("classify: " + text, return_tensors="pt", max_length=self.max_length, padding="max_length", truncation=True)
+        target_encoding = torch.tensor(binary_label, dtype=torch.long)  # Modified this line
 
-def train(model, dataloader, optimizer, device):
+        return {
+            "input_ids": input_encoding["input_ids"].squeeze(),
+            "attention_mask": input_encoding["attention_mask"].squeeze(),
+            "labels": target_encoding,
+        }
+
+start_time = time.time()
+model_name = 'gpt2'
+
+tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+tokenizer.pad_token = GPT2Tokenizer.eos_token
+model = GPT2ForSequenceClassification.from_pretrained(model_name, num_labels=2)
+model.config.pad_token_id = model.config.eos_token_id
+
+train_dataset = Dataset(args.trainfile, tokenizer)
+test_dataset = Dataset(args.testfile, tokenizer)
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
+
+batch_size = 2
+epochs = 4
+train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+
+optimizer = torch.optim.AdamW(model.parameters(), lr=3e-5)
+with open(args.logfile, 'w') as f:
+    f.write(f"Model name: {model_name}, Batch size: {batch_size}, Epochs: {epochs}, Device: {device}\n\n")
+
+for epoch in range(epochs):
     model.train()
-    for batch in dataloader:
+    for batch in train_loader:
         optimizer.zero_grad()
-        input_ids = batch['input_ids'].to(device)
-        attention_mask = batch['attention_mask'].to(device)
-        labels = batch['labels'].to(device)
+        input_ids = batch["input_ids"].to(device)
+        attention_mask = batch["attention_mask"].to(device)
+        labels = batch["labels"].to(device)
+
         outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
+
         loss = outputs.loss
         loss.backward()
         optimizer.step()
 
-def main():
-    # Config
-    train_file = 'spacy_train.txt'
-    test_file = 'spacy_test.txt'
-    epochs = 3
-    batch_size = 8
-    learning_rate = 5e-5
+    model.eval()
+    correct_predictions = 0
+    total_predictions = 0
+    for batch in test_loader:
+        input_ids = batch["input_ids"].to(device)
+        attention_mask = batch["attention_mask"].to(device)
+        labels = batch["labels"].to(device)
 
-    # Setup
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-    tokenizer.pad_token = tokenizer.eos_token  # Set the padding token
-    model = GPT2ForSequenceClassification.from_pretrained('gpt2', num_labels=2).to(device)
-    optimizer = AdamW(model.parameters(), lr=learning_rate)
+        with torch.no_grad():
+            outputs = model(input_ids, attention_mask = attention_mask)
+            logits = outputs.logits
+            predicted_labels = torch.argmax(logits, dim=-1)
 
-    # Load data
-    train_dataset = BinaryClassificationDataset(train_file, tokenizer)
-    test_dataset = BinaryClassificationDataset(test_file, tokenizer)
-    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+        correct_predictions += (predicted_labels == labels).sum().item()
+        total_predictions += labels.size(0)
 
-    # Train
-    for epoch in range(epochs):
-        print(f"Epoch {epoch + 1}/{epochs}")
-        train(model, train_dataloader, optimizer, device)
+    with open(args.logfile, 'a') as f:
+        print(f"Epoch {epoch + 1}/{epochs}", file=f)
+        print(f"Accuracy: {round(correct_predictions / total_predictions, 3)}", file=f)
+model.save_pretrained("fine_tuned_flan-t5-base")
+end_time = time.time()
+with open(args.logfile, 'a') as f:
+    print(f"Total time: {round((end_time - start_time)/60, 2)} minutes", file=f)
 
-    # Save model
-    model.save_pretrained("fine_tuned_gpt2")
-
-if __name__ == '__main__':
-    main()
