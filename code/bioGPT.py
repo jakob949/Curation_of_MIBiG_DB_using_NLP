@@ -14,13 +14,14 @@ class Dataset(torch.utils.data.Dataset):
     def __init__(self, filename, tokenizer, max_length=512):
         self.tokenizer = tokenizer
         self.data = []
+        self.max_length = max_length
+
         with open(filename, "r", encoding="utf-8") as f:
             for line in f.readlines():
                 text, label = line.strip().split("\t")
-                binary_label = 1 if label == "positive" else 0  # Convert label to binary
+                binary_label = 1 if label == "1" else 0
                 self.data.append((text, binary_label))
 
-        self.max_length = max_length
 
     def __len__(self):
         return len(self.data)
@@ -28,7 +29,7 @@ class Dataset(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         text, binary_label = self.data[idx]
         input_encoding = self.tokenizer("classify: " + text, return_tensors="pt", max_length=self.max_length, padding="max_length", truncation=True)
-        target_encoding = torch.tensor(binary_label, dtype=torch.long)  # Modified this line
+        target_encoding = torch.tensor(binary_label, dtype=torch.long)
 
         return {
             "input_ids": input_encoding["input_ids"].squeeze(),
