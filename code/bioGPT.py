@@ -20,7 +20,7 @@ class Dataset(torch.utils.data.Dataset):
             for line in f.readlines():
                 text, label = line.strip().split("\t")
                 binary_label = 1 if label == "1" else 0
-                self.data.append((text, label))
+                self.data.append((text, binary_label))
 
 
     def __len__(self):
