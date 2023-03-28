@@ -55,6 +55,7 @@ train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=3e-5)
+
 with open(args.logfile, 'w') as f:
     f.write(f"Model name: {model_name}, Train file: {args.trainfile}, Test file: {args.testfile}, Batch size: {batch_size}, Epochs: {epochs}, Device: {device}\n\n")
 
@@ -82,6 +83,8 @@ for epoch in range(epochs):
         with torch.no_grad():
             outputs = model.generate(input_ids, attention_mask=attention_mask)
             predicted_labels = [tokenizer.decode(pred, skip_special_tokens=True) for pred in outputs]
+            print('outputs: ', outputs)
+            print('Predicted labels: ', predicted_labels)
             true_labels = [tokenizer.decode(label, skip_special_tokens=True) for label in labels]
 
         for pred, true in zip(predicted_labels, true_labels):
