@@ -18,6 +18,7 @@ class Dataset(Dataset):
         with open(filename, "r") as f:
             for line in f:
                 text, label = line.strip().split("\t")
+                label = "1" if label == "1" else "0"
                 self.data.append((text, label))
 
         self.max_length = max_length
