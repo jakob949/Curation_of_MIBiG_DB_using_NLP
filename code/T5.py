@@ -91,7 +91,7 @@ for epoch in range(epochs):
         for pred, true in zip(predicted_labels, true_labels):
             total_predictions += 1
             if pred == true:
-                print('\npred: ',pred,'\ntrue: ' true)
+                print('\npred: ',pred,'\ntrue: ', true)
                 correct_predictions += 1
         break
     with open(args.logfile, 'a') as f:
