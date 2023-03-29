@@ -87,12 +87,13 @@ for epoch in range(epochs):
             print('Predicted labels: ', predicted_labels)
             true_labels = [tokenizer.decode(label, skip_special_tokens=True) for label in labels]
             print('True labels: ', true_labels)
-        break
+
         for pred, true in zip(predicted_labels, true_labels):
             total_predictions += 1
             if pred == true:
                 print('\npred: ',pred,'\ntrue: ' true)
                 correct_predictions += 1
+        break
     with open(args.logfile, 'a') as f:
         print(f"Epoch {epoch + 1}/{epochs}", file=f)
         print(f"Accuracy: {round(correct_predictions / total_predictions, 3)}", file=f)
