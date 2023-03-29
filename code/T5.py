@@ -18,8 +18,9 @@ class Dataset(Dataset):
         with open(filename, "r", encoding="utf-8") as f:
             for line in f.readlines():
                 text, label = line.strip().split("\t")
-                self.data.append((text, label))
-
+                #self.data.append((text, label))
+                binary_label = 1 if label == "1" else 0
+                self.data.append((text, binary_label))
         self.max_length = max_length
 
     def __len__(self):
