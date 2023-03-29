@@ -19,7 +19,7 @@ class Dataset(Dataset):
             for line in f.readlines():
                 text, label = line.strip().split("\t")
                 #self.data.append((text, label))
-                binary_label = 1 if label == "1" else 0
+                binary_label = 1 if label == "1" else "0"
                 self.data.append((text, binary_label))
         self.max_length = max_length
 
