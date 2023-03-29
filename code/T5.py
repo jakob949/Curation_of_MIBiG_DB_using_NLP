@@ -15,8 +15,8 @@ class Dataset(Dataset):
     def __init__(self, filename, tokenizer, max_length=512):
         self.tokenizer = tokenizer
         self.data = []
-        with open(filename, "r", encoding="utf-8") as f:
-            for line in f.readlines():
+        with open(filename, "r") as f:
+            for line in f:
                 text, label = line.strip().split("\t")
                 self.data.append((text, label))
 
