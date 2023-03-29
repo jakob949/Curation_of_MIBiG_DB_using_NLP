@@ -93,7 +93,7 @@ for epoch in range(epochs):
             if pred == true:
                 print('\npred: ',pred,'\ntrue: ', true)
                 correct_predictions += 1
-        break
+
     with open(args.logfile, 'a') as f:
         print(f"Epoch {epoch + 1}/{epochs}", file=f)
         print(f"Accuracy: {round(correct_predictions / total_predictions, 3)}", file=f)
