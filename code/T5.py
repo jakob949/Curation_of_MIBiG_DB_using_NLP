@@ -86,7 +86,8 @@ for epoch in range(epochs):
             print('outputs: ', outputs)
             print('Predicted labels: ', predicted_labels)
             true_labels = [tokenizer.decode(label, skip_special_tokens=True) for label in labels]
-
+            print('True labels: ', true_labels)
+        break
         for pred, true in zip(predicted_labels, true_labels):
             total_predictions += 1
             if pred == true:
