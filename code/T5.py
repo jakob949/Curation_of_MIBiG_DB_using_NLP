@@ -50,7 +50,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
 batch_size = 8
-epochs = 2
+epochs = 5
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
