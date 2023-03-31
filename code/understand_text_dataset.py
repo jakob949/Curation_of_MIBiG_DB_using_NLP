@@ -241,8 +241,8 @@ def plot_histogram(list1, list2, label1, label2):
     plt.savefig('histogram.pdf', bbox_inches='tight', dpi=300, format='pdf')
     plt.show()
 
-def PCA_last_classification_layer(file_paths = ['dataset_positives_titles_abstracts.txt', 'dataset_negatives_titles_abstracts.txt'], model_path = 'finetuned_model_roberta_4'):
-
+def PCA_last_classification_layer(file_paths=['dataset_positives_titles_abstracts.txt', 'dataset_negatives_titles_abstracts.txt'],
+                                  model_path='finetuned_model_roberta_4'):
     import torch
     from torch.utils.data import Dataset, DataLoader
     from transformers import RobertaModel, RobertaTokenizer
@@ -250,6 +250,7 @@ def PCA_last_classification_layer(file_paths = ['dataset_positives_titles_abstra
     import argparse
     from sklearn.decomposition import PCA
     import matplotlib.pyplot as plt
+    import numpy as np
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--datafile', type=str, help='name of the data file')
@@ -306,18 +307,151 @@ def PCA_last_classification_layer(file_paths = ['dataset_positives_titles_abstra
         plt.scatter(embeddings_2d[idx, 0], embeddings_2d[idx, 1], label=label)
 
     plt.legend()
-    plt.xlabel("PCA 1")
-    plt.ylabel("PCA 2")
-    plt.title("PCA Plot")
+    plt.xlabel("Principal component 1")
+    plt.ylabel("Principal component 2")
+    plt.title("PCA of the last classification layer")
     plt.savefig('PCA_embeddings_hard_dataset.pdf', bbox_inches='tight', dpi=300, format='pdf')
+
+    # Plot PCA results
+    plt.figure(figsize=(10, 10))
+
+    # Separate embeddings based on labels
+    embeddings_2d_pos = np.array([embeddings_2d[i, 0] for i, label in enumerate(labels) if label == 1])
+    embeddings_2d_neg = np.array([embeddings_2d[i, 0] for i, label in enumerate(labels) if label == 0])
+
+    # Calculate histogram data
+    bins = np.arange(min(embeddings_2d[:, 0]), max(embeddings_2d[:, 0]) + 0.25, 0.25)
+    plt.hist([embeddings_2d_pos, embeddings_2d_neg], bins=bins, alpha=0.75,
+             label=['Positives', 'Negatives'], color=['blue', 'orange'])
+    # Customize plot
+    plt.xlabel("Principal component 1")
+    plt.ylabel("Frequency")
+    plt.title("Distribution of the first principal component")
+    plt.legend()
+    plt.savefig('PCA_histogram_hard_dataset.pdf', bbox_inches='tight', dpi=300, format='pdf')
+    plt.show()
 
     time_end = time.time()
     print(f"Time elapsed in this session: {round(time_end - time_start, 2) / 60} minutes")
 
-PCA_last_classification_layer(file_paths=['hard_dataset.txt'])
+
+# PCA_last_classification_layer(file_paths=['hard_dataset.txt'])
+
+def PCA_variance_histogram(file_paths = ['dataset_positives_titles_abstracts.txt', 'dataset_negatives_titles_abstracts.txt'], model_path = 'finetuned_model_roberta_4'):
+
+    import torch
+    from torch.utils.data import Dataset, DataLoader
+    from transformers import RobertaModel, RobertaTokenizer
+    import time
+    import argparse
+    from sklearn.decomposition import PCA
+    import matplotlib.pyplot as plt
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--datafile', type=str, help='name of the data file')
+    args = parser.parse_args()
+
+    # Define the dataset
+    class Dataset(Dataset):
+        def __init__(self, file_paths):
+            self.data = []
+            for file_path in file_paths:
+                with open(file_path, "r") as f:
+                    for line in f:
+                        text, label = line.strip().split("\t")
+                        self.data.append((text, int(label)))
+
+        def __getitem__(self, index):
+            return self.data[index]
+
+        def __len__(self):
+            return len(self.data)
+
+    time_start = time.time()
+
+    # Loading pre-trained model
+    model = RobertaModel.from_pretrained(model_path)
+    tokenizer = RobertaTokenizer.from_pretrained(model_path)
+
+    # Define the dataloader
+    file_paths = ['test_fold_0.txt']
+    dataset = Dataset(file_paths)
+    dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
+
+    # Extract embeddings from the pre-trained model
+    model.eval()
+    embeddings = []
+    labels = []
+
+    with torch.no_grad():
+        for i, batch in enumerate(dataloader):
+            texts, batch_labels = batch
+            inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
+            outputs = model(inputs["input_ids"], inputs["attention_mask"])
+            embeddings.extend(outputs.last_hidden_state[:, 0, :].detach().numpy())
+            labels.extend(batch_labels.numpy())
+
+    # Apply PCA
+    pca = PCA()
+    pca.fit(embeddings)
+
+    # Plot explained variance ratio
+    plt.figure(figsize=(10, 6))
+    plt.bar(range(1, 9), pca.explained_variance_ratio_[:8])
+
+    plt.xlabel("Principal Components")
+    plt.ylabel("Variance")
+    plt.title("Explained Variance of Principal Components")
+    plt.savefig('PCA_variance_histogram.pdf', bbox_inches='tight', dpi=300, format='pdf')
 
 
-# plot_histogram([('gene', 0.029301070159098254), ('cluster', 0.015529662225094566), ('biosynthesis', 0.012079682183656789), ('biosynthetic', 0.010213715017075659), ('produce', 0.006633845919899637), ('acid', 0.006168146134691783), ('production', 0.006050929181952391), ('sequence', 0.005667598066237082), ('analysis', 0.00557889334524511), ('product', 0.0054933566500028515)], [('protein', 0.008742150924138542), ('cell', 0.008577324293226576), ('gene', 0.006802268268020781), ('activity', 0.004732426152914737), ('study', 0.004434470320112335), ('acid', 0.003978027342202274), ('result', 0.003965348370593661), ('bind', 0.0037085991955192513), ('high', 0.0036737320235955663), ('strain', 0.003496226421074987)], "Positive dataset", "Negative dataset")
+
+def plot_accuracy_histogram(model_accuracies):
+    """
+    Plots a histogram comparing different models' accuracy.
+
+    :param model_accuracies: A list of lists with each sublist containing a model name and its accuracy score
+                             [['model_name', accuracy_score], ['model_name_2', accuracy_score],...]
+    """
+    # Set the figure size and adjust the bottom margin
+    plt.figure(figsize=(10, 6))
+    plt.subplots_adjust(bottom=0.55)
+
+    # Separate the model names and accuracy scores
+    model_names, accuracy_scores = zip(*model_accuracies)
+
+    # Create the histogram with distinct colors
+    colors = plt.cm.viridis(np.linspace(0, 1, len(model_names)))
+    plt.bar(model_names, accuracy_scores, color=colors)
+
+    # Set title and labels
+    plt.title('Different Models Accuracy')
+    plt.ylabel('Accuracy')
+
+    # Rotate x-ticks by 90 degrees
+    plt.xticks(rotation=45)
+    plt.yticks(np.arange(0.9, 1.1, step=0.1))
+    plt.ylim(0.90, 1.0)
+
+    # Add grid for improved readability
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+    # Annotate bars with accuracy scores
+    for i, v in enumerate(accuracy_scores):
+        plt.text(i, v + 0.01, f'{v:.3f}', horizontalalignment='center', fontweight='bold')
+
+    # Save the plot before showing it
+    plt.savefig('accuracy_histogram_top10.pdf', bbox_inches='tight', dpi=300, format='pdf')
+
+    # Show the plot
+    plt.show()
+
+# plot_accuracy_histogram([['Freqs of words', 0.909], ['SVM', 0.944], ['Roberta-encoder classifier', 0.948], ['Flan T5', 0.948], ['GPT-2', 0.950], ['Bio Roberta-encoder classifier', 0.954]])
+
+    # plot_histogram([('gene', 0.029301070159098254), ('cluster', 0.015529662225094566), ('biosynthesis', 0.012079682183656789), ('biosynthetic', 0.010213715017075659), ('produce', 0.006633845919899637), ('acid', 0.006168146134691783), ('production', 0.006050929181952391), ('sequence', 0.005667598066237082), ('analysis', 0.00557889334524511), ('product', 0.0054933566500028515)], [('protein', 0.008742150924138542), ('cell', 0.008577324293226576), ('gene', 0.006802268268020781), ('activity', 0.004732426152914737), ('study', 0.004434470320112335), ('acid', 0.003978027342202274), ('result', 0.003965348370593661), ('bind', 0.0037085991955192513), ('high', 0.0036737320235955663), ('strain', 0.003496226421074987)], "Positive dataset", "Negative dataset")
+PCA_last_classification_layer()
+
+
 
 # nlp = spacy.load("en_core_web_sm")
 #

@@ -5,10 +5,10 @@ from torch.utils.data import Dataset, DataLoader
 from transformers import AutoModel, AutoTokenizer
 from torch.optim import AdamW
 
-parser = argparse.ArgumentParser(description="Text Classification")
-parser.add_argument("-tr", type=str, required=True, help="Path to the training file.")
-parser.add_argument("-te", type=str, required=True, help="Path to the test file.")
-parser.add_argument("-l", type=str, default="log.txt", help="Path to the log file.")
+parser = argparse.ArgumentParser()
+parser.add_argument('-l', '--logfile', type=str, help='name of the log file')
+parser.add_argument('-tr', '--trainfile', type=str, help='name of the training file')
+parser.add_argument('-te', '--testfile', type=str, help='name of the test file')
 args = parser.parse_args()
 
 class ClassificationModel(nn.Module):

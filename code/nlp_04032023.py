@@ -53,7 +53,7 @@ dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
 ## Fine-tune the model ##
 save_model = False
 model.train()
-num_of_epochs = 4
+num_of_epochs = 1
 optimizer = AdamW(model.parameters(), lr=1e-5) # weight_decay=0.01
 with open(args.logfile, 'w') as f:
     print(f"Training for {num_of_epochs} epochs", file=f)
