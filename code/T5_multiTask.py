@@ -103,7 +103,7 @@ test_dataset = ConcatDataset(task1_test_dataset, task2_test_dataset)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
-batch_size = 5
+batch_size = 1
 epochs = 1
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
