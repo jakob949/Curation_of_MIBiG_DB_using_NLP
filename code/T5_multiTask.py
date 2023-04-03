@@ -52,21 +52,21 @@ class Task2Dataset(Dataset):
 
             self.max_length = max_length
 
-            def __len__(self):
-                return len(self.data)
+    def __len__(self):
+        return len(self.data)
 
-            def __getitem__(self, idx):
-                text, label = self.data[idx]
-                input_encoding = self.tokenizer(text, return_tensors="pt", max_length=self.max_length,
-                                                padding="max_length", truncation=True)
-                target_encoding = self.tokenizer(label, return_tensors="pt", max_length=200, padding="max_length",
-                                                 truncation=True)
+    def __getitem__(self, idx):
+        text, label = self.data[idx]
+        input_encoding = self.tokenizer(text, return_tensors="pt", max_length=self.max_length,
+                                        padding="max_length", truncation=True)
+        target_encoding = self.tokenizer(label, return_tensors="pt", max_length=200, padding="max_length",
+                                         truncation=True)
 
-                return {
-                    "input_ids": input_encoding["input_ids"].squeeze(),
-                    "attention_mask": input_encoding["attention_mask"].squeeze(),
-                    "labels": target_encoding["input_ids"].squeeze(),
-                }
+        return {
+            "input_ids": input_encoding["input_ids"].squeeze(),
+            "attention_mask": input_encoding["attention_mask"].squeeze(),
+            "labels": target_encoding["input_ids"].squeeze(),
+        }
 
 
 class ConcatDataset(Dataset):
