@@ -4,6 +4,7 @@ from torch.utils.data import Dataset, DataLoader
 from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config
 import argparse
 import time
+from torch.cuda.amp import GradScaler, autocast
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-l', '--logfile', type=str, help='name of the log file')
@@ -109,22 +110,29 @@ train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=3e-5)
+scaler = GradScaler()
 
 with open(args.logfile, 'w') as f:
     f.write(f"Model name: {model_name}, Task 1 Train file: {args.task1_trainfile}, Task 1 Test file: {args.task1_testfile}, Task 2 Train file: {args.task2_trainfile}, Task 2 Test file: {args.task2_testfile}, Batch size: {batch_size}, Epochs: {epochs}, Device: {device}\n\n")
+
+
 
 for epoch in range(epochs):
     model.train()
     for batch in train_loader:
         optimizer.zero_grad()
+
         input_ids = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
 
-        outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
-        loss = outputs.loss
-        loss.backward()
-        optimizer.step()
+        with autocast():
+            outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
+            loss = outputs.loss
+
+        scaler.scale(loss).backward()
+        scaler.step(optimizer)
+        scaler.update()
 
     model.eval()
     correct_predictions = 0
