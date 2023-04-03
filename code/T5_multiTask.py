@@ -46,7 +46,7 @@ class Task1Dataset(Dataset):
 
 
 class Task2Dataset(Dataset):
-    def __init__(self, filename, tokenizer, max_length=2600):
+    def __init__(self, filename, tokenizer, max_length=9000):
         self.tokenizer = tokenizer
         self.data = []
         with open(filename, "r") as f:
@@ -111,7 +111,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
 batch_size = 1
-epochs = 1
+epochs = 5
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
