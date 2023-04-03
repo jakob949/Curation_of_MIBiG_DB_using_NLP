@@ -446,7 +446,7 @@ def plot_accuracy_histogram(model_accuracies):
     # Show the plot
     plt.show()
 
-# plot_accuracy_histogram([['Freqs of words', 0.909], ['SVM', 0.944], ['Roberta-encoder classifier', 0.948], ['Flan T5', 0.948], ['GPT-2', 0.950], ['Bio Roberta-encoder classifier', 0.954]])
+plot_accuracy_histogram([['Freqs of words', 0.909], ['SVM', 0.944], ['Roberta-encoder classifier', 0.9381], ['GPT-2', 0.934], ['Flan T5', 0.936], ['Bio Roberta-encoder classifier', 0.954]])
 
     # plot_histogram([('gene', 0.029301070159098254), ('cluster', 0.015529662225094566), ('biosynthesis', 0.012079682183656789), ('biosynthetic', 0.010213715017075659), ('produce', 0.006633845919899637), ('acid', 0.006168146134691783), ('production', 0.006050929181952391), ('sequence', 0.005667598066237082), ('analysis', 0.00557889334524511), ('product', 0.0054933566500028515)], [('protein', 0.008742150924138542), ('cell', 0.008577324293226576), ('gene', 0.006802268268020781), ('activity', 0.004732426152914737), ('study', 0.004434470320112335), ('acid', 0.003978027342202274), ('result', 0.003965348370593661), ('bind', 0.0037085991955192513), ('high', 0.0036737320235955663), ('strain', 0.003496226421074987)], "Positive dataset", "Negative dataset")
 PCA_last_classification_layer()

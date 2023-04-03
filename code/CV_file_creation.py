@@ -8,6 +8,9 @@ with open('dataset_positives_titles_abstracts.txt', 'r') as f:
 
 data = data_0 + data_1
 
+with open ('dataset_protien_chem.txt', 'r') as f:
+    data = f.readlines()
+
 # Set the number of folds
 k = 5
 
@@ -27,7 +30,7 @@ for i in range(k):
     train_data = np.concatenate(train_folds)
 
     # Save the test and train data to text files
-    with open(f'test_fold_{i}.txt', 'w') as f:
+    with open(f'test_fold_protein_{i}.txt', 'w') as f:
         f.writelines(test_data)
-    with open(f'train_fold_{i}.txt', 'w') as f:
+    with open(f'train_fold_protein_{i}.txt', 'w') as f:
         f.writelines(train_data)
