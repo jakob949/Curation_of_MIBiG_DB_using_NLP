@@ -117,11 +117,13 @@ with open(args.logfile, 'w') as f:
 
 
 
+accumulation_steps = 4  # Update the model every 4 steps
+
 for epoch in range(epochs):
     model.train()
-    for batch in train_loader:
-        optimizer.zero_grad()
+    optimizer.zero_grad()
 
+    for step, batch in enumerate(train_loader):
         input_ids = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
@@ -131,8 +133,11 @@ for epoch in range(epochs):
             loss = outputs.loss
 
         scaler.scale(loss).backward()
-        scaler.step(optimizer)
-        scaler.update()
+
+        if (step + 1) % accumulation_steps == 0:
+            scaler.step(optimizer)
+            scaler.update()
+            optimizer.zero_grad()
 
     model.eval()
     correct_predictions = 0
