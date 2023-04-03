@@ -46,7 +46,7 @@ class Task1Dataset(Dataset):
 
 
 class Task2Dataset(Dataset):
-    def __init__(self, filename, tokenizer, max_length=9000):
+    def __init__(self, filename, tokenizer, max_length=8000):
         self.tokenizer = tokenizer
         self.data = []
         with open(filename, "r") as f:
