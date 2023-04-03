@@ -6,6 +6,9 @@ import argparse
 import time
 from torch.cuda.amp import GradScaler, autocast
 
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:32"
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-l', '--logfile', type=str, help='name of the log file')
 parser.add_argument('-t1tr', '--task1_trainfile', type=str, help='name of the task 1 training file')
@@ -100,6 +103,9 @@ task2_test_dataset = Task2Dataset(args.task2_testfile, tokenizer)
 
 train_dataset = ConcatDataset(task1_train_dataset, task2_train_dataset)
 test_dataset = ConcatDataset(task1_test_dataset, task2_test_dataset)
+
+if torch.cuda.device_count() > 1:
+    model = torch.nn.DataParallel(model)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
