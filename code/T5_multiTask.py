@@ -1,7 +1,7 @@
 import os
 import torch
 from torch.utils.data import Dataset, DataLoader
-from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config
+from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config, AutoModel, AutoTokenizer
 import argparse
 import time
 from torch.cuda.amp import GradScaler, autocast
@@ -43,23 +43,55 @@ class Task1Dataset(Dataset):
             "labels": target_encoding["input_ids"].squeeze(),
         }
 
+
 class Task2Dataset(Dataset):
-    def __init__(self, filename, tokenizer, max_length=8000):
+    def __init__(self, filename, tokenizer, esm_tokenizer, esm_model, max_length=8000):
         self.tokenizer = tokenizer
+        self.esm_tokenizer = esm_tokenizer
+        self.esm_model = esm_model
         self.data = []
         with open(filename, "r") as f:
             for line in f:
                 text, label = line.strip().split("\t")
                 self.data.append((text, label))
 
-            self.max_length = max_length
+        self.max_length = max_length
+
+    def _process_esm_output(self, text, max_chunk_length=4096):
+        # Tokenize the input text and get the number of tokens
+        esm_input_encoding = self.esm_tokenizer(text, return_tensors="pt", padding="max_length", truncation=True)
+        num_tokens = esm_input_encoding["input_ids"].size(1)
+
+        # Calculate the number of chunks needed
+        num_chunks = (num_tokens + max_chunk_length - 1) // max_chunk_length
+
+        # Process each chunk and aggregate the results
+        esm_output_reprs = []
+        for chunk_idx in range(num_chunks):
+            start_idx = chunk_idx * max_chunk_length
+            end_idx = min((chunk_idx + 1) * max_chunk_length, num_tokens)
+
+            # Get the input encoding for the current chunk
+            chunk_input_encoding = {k: v[:, start_idx:end_idx] for k, v in esm_input_encoding.items()}
+
+            # Process the chunk using the ESM model
+            esm_output = self.esm_model(**chunk_input_encoding)
+
+            # Compute the mean-pooling for the current chunk
+            chunk_esm_output_repr = torch.mean(esm_output[0], dim=1)
+            esm_output_reprs.append(chunk_esm_output_repr)
+
+        # Concatenate and average the mean-pooled representations of all chunks
+        esm_output_repr = torch.mean(torch.cat(esm_output_reprs, dim=0), dim=0, keepdim=True)
+        return esm_output_repr
 
     def __len__(self):
         return len(self.data)
 
     def __getitem__(self, idx):
         text, label = self.data[idx]
-        input_encoding = self.tokenizer(f"protein2Smile: {text}", return_tensors="pt", max_length=self.max_length,
+        esm_output_repr = self._process_esm_output(text)
+        input_encoding = self.tokenizer(f"protein2Smile: {esm_output_repr}", return_tensors="pt", max_length=self.max_length,
                                         padding="max_length", truncation=True)
         target_encoding = self.tokenizer(label, return_tensors="pt", max_length=200, padding="max_length",
                                          truncation=True)
@@ -87,6 +119,12 @@ class ConcatDataset(Dataset):
 
 start_time = time.time()
 
+# Load ESM model and tokenizer
+esm_model_name = "facebook/esm2_t6_8M_UR50D" # smallest model
+esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
+esm_model = AutoModel.from_pretrained(esm_model_name)
+
+
 model_name = "google/flan-t5-base"
 tokenizer = T5TokenizerFast.from_pretrained(model_name)
 config = T5Config.from_pretrained(model_name)
@@ -95,8 +133,8 @@ model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
 
 task1_train_dataset = Task1Dataset(args.task1_trainfile, tokenizer)
 task1_test_dataset = Task1Dataset(args.task1_testfile, tokenizer)
-task2_train_dataset = Task2Dataset(args.task2_trainfile, tokenizer)
-task2_test_dataset = Task2Dataset(args.task2_testfile, tokenizer)
+task2_train_dataset = Task2Dataset(args.task2_trainfile, tokenizer, esm_tokenizer, esm_model)
+task2_test_dataset = Task2Dataset(args.task2_testfile, tokenizer, esm_tokenizer, esm_model)
 
 train_dataset = ConcatDataset(task1_train_dataset, task2_train_dataset)
 test_dataset = ConcatDataset(task1_test_dataset, task2_test_dataset)
@@ -108,7 +146,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
 batch_size = 1
-epochs = 25
+epochs = 5
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
