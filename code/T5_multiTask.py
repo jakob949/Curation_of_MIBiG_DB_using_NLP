@@ -17,7 +17,6 @@ parser.add_argument('-t2tr', '--task2_trainfile', type=str, help='name of the ta
 parser.add_argument('-t2te', '--task2_testfile', type=str, help='name of the task 2 test file')
 args = parser.parse_args()
 
-
 class Task1Dataset(Dataset):
     def __init__(self, filename, tokenizer, max_length=512):
         self.tokenizer = tokenizer
@@ -35,7 +34,7 @@ class Task1Dataset(Dataset):
 
     def __getitem__(self, idx):
         text, label = self.data[idx]
-        input_encoding = self.tokenizer(text, return_tensors="pt", max_length=self.max_length, padding="max_length", truncation=True)
+        input_encoding = self.tokenizer(f"AbstractClassification: {text}", return_tensors="pt", max_length=self.max_length, padding="max_length", truncation=True)
         target_encoding = self.tokenizer(label, return_tensors="pt", max_length=2, padding="max_length", truncation=True)
 
         return {
@@ -43,7 +42,6 @@ class Task1Dataset(Dataset):
             "attention_mask": input_encoding["attention_mask"].squeeze(),
             "labels": target_encoding["input_ids"].squeeze(),
         }
-
 
 class Task2Dataset(Dataset):
     def __init__(self, filename, tokenizer, max_length=8000):
@@ -61,7 +59,7 @@ class Task2Dataset(Dataset):
 
     def __getitem__(self, idx):
         text, label = self.data[idx]
-        input_encoding = self.tokenizer(text, return_tensors="pt", max_length=self.max_length,
+        input_encoding = self.tokenizer(f"protein2Smile: {text}", return_tensors="pt", max_length=self.max_length,
                                         padding="max_length", truncation=True)
         target_encoding = self.tokenizer(label, return_tensors="pt", max_length=200, padding="max_length",
                                          truncation=True)
@@ -71,7 +69,6 @@ class Task2Dataset(Dataset):
             "attention_mask": input_encoding["attention_mask"].squeeze(),
             "labels": target_encoding["input_ids"].squeeze(),
         }
-
 
 class ConcatDataset(Dataset):
     def __init__(self, *datasets):
