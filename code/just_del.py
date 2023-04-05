@@ -116,28 +116,28 @@ class Dataset(Dataset):
         }
 start_time = time.time()
 
-esm_model_name = "facebook/esm2_t6_8M_UR50D" # smallest model
-esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
-esm_model = AutoModel.from_pretrained(esm_model_name)
 
+# Load the ESM model
+esm_model, esm_alphabet = esm.pretrained.esm1b_t33_650M_UR50S()
 
+# Load the T5 model
+t5_config = T5Config.from_pretrained("t5-small")
+t5_model = T5ForConditionalGeneration(t5_config)
 
+# Create the custom model with the ESM and T5 instances
+custom_model = CustomT5Model(esm_model, t5_model)
 
+# Tokenizer and config for T5 model
 model_name = "google/flan-t5-base"
 tokenizer = T5TokenizerFast.from_pretrained(model_name)
 config = T5Config.from_pretrained(model_name)
-config.n_positions = 26000 # max length needed for protein sequences > 25,000
-# model = CustomT5Model.from_pretrained(model_name, config=config)
-model = CustomT5Model(config)
-
+config.n_positions = 26000  # max length needed for protein sequences > 25,000
 
 train_dataset = Dataset(args.trainfile, tokenizer, esm_tokenizer, esm_model)
 test_dataset = Dataset(args.testfile, tokenizer, esm_tokenizer, esm_model)
 
-
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model.to(device)
+custom_model.to(device)
 
 batch_size = 1
 epochs = 7
