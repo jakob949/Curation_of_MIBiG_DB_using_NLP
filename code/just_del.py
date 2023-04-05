@@ -4,6 +4,8 @@ from torch.utils.data import Dataset, DataLoader
 from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config, AutoModel, AutoTokenizer, T5Model
 import argparse
 import time
+from transformers import T5EncoderModel, T5Decoder, T5PreTrainedModel
+
 from torch.cuda.amp import GradScaler, autocast
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:32"
@@ -14,6 +16,54 @@ parser.add_argument('-l', '--logfile', type=str, help='name of the log file')
 parser.add_argument('-tr', '--trainfile', type=str, help='name of the training file')
 parser.add_argument('-te', '--testfile', type=str, help='name of the test file')
 args = parser.parse_args()
+
+class CustomT5Model(T5PreTrainedModel):
+    def __init__(self, config):
+        super().__init__(config)
+        self.decoder = T5Decoder(config)
+        self.lm_head = torch.nn.Linear(config.d_model, config.vocab_size, bias=False)
+
+        self.init_weights()
+
+    def forward(
+        self,
+        input_ids=None,
+        attention_mask=None,
+        decoder_input_ids=None,
+        decoder_attention_mask=None,
+        encoder_outputs=None,
+        past_key_values=None,
+        head_mask=None,
+        inputs_embeds=None,
+        decoder_inputs_embeds=None,
+        use_cache=None,
+        output_attentions=None,
+        output_hidden_states=None,
+        return_dict=None,
+    ):
+        # ESM2 output is directly used as an input to the decoder
+        encoder_outputs = (encoder_outputs,)
+
+        decoder_outputs = self.decoder(
+            input_ids=decoder_input_ids,
+            attention_mask=decoder_attention_mask,
+            encoder_hidden_states=encoder_outputs[0],
+            encoder_attention_mask=attention_mask,
+            head_mask=head_mask,
+            past_key_values=past_key_values,
+            use_cache=use_cache,
+            output_attentions=output_attentions,
+            output_hidden_states=output_hidden_states,
+            return_dict=return_dict,
+            inputs_embeds=decoder_inputs_embeds,
+        )
+
+        sequence_output = decoder_outputs[0]
+        lm_logits = self.lm_head(sequence_output)
+
+        return (lm_logits,) + decoder_outputs[1:]
+
+
 class Dataset(Dataset):
     def __init__(self, filename, tokenizer, esm_tokenizer, esm_model, max_length=4000):
         self.tokenizer = tokenizer
@@ -107,14 +157,20 @@ for epoch in range(epochs):
     model.train()
     for batch in train_loader:
         optimizer.zero_grad()
-        input_ids = batch["input_ids"].to(device)
+        esm_output_repr = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
 
-        outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
-        loss = outputs.loss
+        lm_logits = model(
+            input_ids=None,
+            attention_mask=attention_mask,
+            encoder_outputs=esm_output_repr,
+            decoder_input_ids=labels)[0]
+
+        loss = torch.nn.functional.cross_entropy(lm_logits.view(-1, lm_logits.size(-1)), labels.view(-1), ignore_index=-100)
         loss.backward()
         optimizer.step()
+
 
     model.eval()
     correct_predictions = 0
