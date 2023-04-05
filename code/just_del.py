@@ -15,7 +15,7 @@ parser.add_argument('-tr', '--trainfile', type=str, help='name of the training f
 parser.add_argument('-te', '--testfile', type=str, help='name of the test file')
 args = parser.parse_args()
 class Dataset(Dataset):
-    def __init__(self, filename, tokenizer, esm_tokenizer, esm_model, max_length=8000):
+    def __init__(self, filename, tokenizer, esm_tokenizer, esm_model, max_length=4000):
         self.tokenizer = tokenizer
         self.esm_tokenizer = esm_tokenizer
         self.esm_model = esm_model
