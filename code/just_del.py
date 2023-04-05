@@ -148,7 +148,7 @@ for epoch in range(epochs):
     model.train()
     for batch in train_loader:
         optimizer.zero_grad()
-        esm_output_repr = batch["input_ids"].to(device)
+        esm_output_repr = batch["input_ids"].to(device).unsqueeze(1)  # Add sequence length dimension
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
 
@@ -162,6 +162,7 @@ for epoch in range(epochs):
         loss = outputs.loss
         loss.backward()
         optimizer.step()
+
 
 
     model.eval()
