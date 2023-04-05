@@ -16,7 +16,6 @@ parser.add_argument('-tr', '--trainfile', type=str, help='name of the training f
 parser.add_argument('-te', '--testfile', type=str, help='name of the test file')
 args = parser.parse_args()
 
-
 class CustomT5Model(T5ForConditionalGeneration):
     def __init__(self, config):
         super().__init__(config)
@@ -31,7 +30,7 @@ class CustomT5Model(T5ForConditionalGeneration):
     ):
         # Pass the ESM2 output directly to the T5 decoder
         decoder_outputs = self.decoder(
-            input_ids=None,
+            input_ids=decoder_input_ids,
             attention_mask=attention_mask,
             encoder_hidden_states=encoder_outputs,
             encoder_attention_mask=None,
@@ -46,6 +45,7 @@ class CustomT5Model(T5ForConditionalGeneration):
 
         lm_logits = self.lm_head(decoder_outputs[0])
         return lm_logits
+
 
 
 class Dataset(Dataset):
