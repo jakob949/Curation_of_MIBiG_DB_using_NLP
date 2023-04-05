@@ -1,7 +1,7 @@
 import os
 import torch
 from torch.utils.data import Dataset, DataLoader
-from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config, AutoModel, AutoTokenizer
+from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config, AutoModel, AutoTokenizer, T5Model
 import argparse
 import time
 from torch.cuda.amp import GradScaler, autocast
@@ -178,7 +178,7 @@ for epoch in range(epochs):
         if (step + 1) % accumulation_steps == 0:
             scaler.step(optimizer)
             scaler.update()
-            optimizer.zero_grad()
+            #optimizer.zero_grad()
 
     model.eval()
     correct_predictions = 0
