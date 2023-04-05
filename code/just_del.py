@@ -95,8 +95,8 @@ class Dataset(Dataset):
     def __getitem__(self, idx):
         text, label = self.data[idx]
         esm_output_repr = self._process_esm_output(text)
-        input_encoding = self.tokenizer(f"protein2Smile: {esm_output_repr}", return_tensors="pt", max_length=self.max_length,
-                                        padding="max_length", truncation=True)
+        input_encoding = self.tokenizer(f"protein2Smile: {esm_output_repr}", return_tensors="pt", max_length=200, padding="max_length", truncation=True)
+
         target_encoding = self.tokenizer(label, return_tensors="pt", max_length=200, padding="max_length",
                                          truncation=True)
 
