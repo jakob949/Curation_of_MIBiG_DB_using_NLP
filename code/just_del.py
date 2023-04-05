@@ -73,13 +73,22 @@ class Dataset(Dataset):
         }
 start_time = time.time()
 
+esm_model_name = "facebook/esm2_t6_8M_UR50D" # smallest model
+esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
+esm_model = AutoModel.from_pretrained(esm_model_name)
+
+
 model_name = "google/flan-t5-base"
 tokenizer = T5TokenizerFast.from_pretrained(model_name)
 config = T5Config.from_pretrained(model_name)
+config.n_positions = 26000 # max length needed for protein sequences > 25,000
 model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
 
-train_dataset = Dataset(args.trainfile, tokenizer)
-test_dataset = Dataset(args.testfile, tokenizer)
+
+train_dataset = Dataset(args.trainfile, tokenizer, esm_tokenizer, esm_model)
+test_dataset = Dataset(args.testfile, tokenizer, esm_tokenizer, esm_model)
+
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
