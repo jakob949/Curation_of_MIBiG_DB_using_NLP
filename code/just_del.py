@@ -1,5 +1,6 @@
 import os
 import torch
+import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config, AutoModel, AutoTokenizer, T5Model
 import argparse
@@ -16,35 +17,43 @@ parser.add_argument('-tr', '--trainfile', type=str, help='name of the training f
 parser.add_argument('-te', '--testfile', type=str, help='name of the test file')
 args = parser.parse_args()
 
-class CustomT5Model(T5ForConditionalGeneration):
-    def __init__(self, config):
-        super().__init__(config)
+class CustomT5Model(nn.Module):
+    def __init__(self, esm_model, t5_model):
+        super(CustomT5Model, self).__init__()
+        self.esm_model = esm_model
+        self.t5_model = t5_model
+        self.embedding_projection = nn.Linear(1280, 768)  # Create a linear layer to project ESM output to the desired dimension
 
-    def forward(
-            self,
+    def forward(self, input_ids, attention_mask=None, decoder_input_ids=None, decoder_attention_mask=None, head_mask=None, decoder_head_mask=None, cross_attn_head_mask=None, encoder_outputs=None, past_key_values=None, inputs_embeds=None, decoder_inputs_embeds=None, use_cache=None, output_attentions=None, output_hidden_states=None, return_dict=None):
+        # Pass the input_ids through the ESM model
+        esm_outputs = self.esm_model(input_ids)
+
+        # Extract the embeddings from the ESM outputs
+        esm_embeds = esm_outputs["representations"]
+
+        # Project the embeddings to the desired dimension
+        projected_embeds = self.embedding_projection(esm_embeds)
+
+        # Pass the projected embeddings and other arguments through the T5 model
+        t5_outputs = self.t5_model(
             input_ids=None,
-            attention_mask=None,
-            encoder_outputs=None,
-            decoder_input_ids=None,
-            **kwargs,
-    ):
-        # Pass the ESM2 output directly to the T5 decoder
-        decoder_outputs = self.decoder(
-            input_ids=decoder_input_ids,
             attention_mask=attention_mask,
-            encoder_hidden_states=encoder_outputs,
-            encoder_attention_mask=None,
-            inputs_embeds=None,
-            head_mask=None,
-            past_key_values=None,
-            use_cache=None,
-            output_attentions=None,
-            output_hidden_states=None,
-            return_dict=None,
+            decoder_input_ids=decoder_input_ids,
+            decoder_attention_mask=decoder_attention_mask,
+            head_mask=head_mask,
+            decoder_head_mask=decoder_head_mask,
+            cross_attn_head_mask=cross_attn_head_mask,
+            encoder_outputs=(projected_embeds, ),
+            past_key_values=past_key_values,
+            inputs_embeds=projected_embeds,
+            decoder_inputs_embeds=decoder_inputs_embeds,
+            use_cache=use_cache,
+            output_attentions=output_attentions,
+            output_hidden_states=output_hidden_states,
+            return_dict=return_dict
         )
 
-        lm_logits = self.lm_head(decoder_outputs[0])
-        return lm_logits
+        return t5_outputs
 
 
 
