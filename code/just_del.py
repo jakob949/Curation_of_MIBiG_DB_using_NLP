@@ -84,8 +84,8 @@ class Dataset(Dataset):
             start_idx = chunk_idx * max_chunk_length
             end_idx = min((chunk_idx + 1) * max_chunk_length, num_tokens)
 
-            # Get the input encoding for the current chunk
-            chunk_input_encoding = {k: v[:, start_idx:end_idx] for k, v in esm_input_encoding.items()}
+            # Get the input encoding for the current chunk and move it to the device
+            chunk_input_encoding = {k: v[:, start_idx:end_idx].to(device) for k, v in esm_input_encoding.items()}
 
             # Process the chunk using the ESM model
             esm_output = self.esm_model(**chunk_input_encoding)
