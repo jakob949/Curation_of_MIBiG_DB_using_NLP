@@ -119,7 +119,7 @@ tokenizer = T5TokenizerFast.from_pretrained(model_name)
 config = T5Config.from_pretrained(model_name)
 config.n_positions = 26000 # max length needed for protein sequences > 25,000
 # model = CustomT5Model.from_pretrained(model_name, config=config)
-custom_model = CustomT5Model(config)
+model = CustomT5Model(config)
 
 
 train_dataset = Dataset(args.trainfile, tokenizer, esm_tokenizer, esm_model)
@@ -128,7 +128,7 @@ test_dataset = Dataset(args.testfile, tokenizer, esm_tokenizer, esm_model)
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-custom_model.to(device)
+model.to(device)
 
 batch_size = 1
 epochs = 7
