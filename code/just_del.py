@@ -58,7 +58,7 @@ class CustomT5Model(nn.Module):
 
 
 class Dataset(Dataset):
-    def __init__(self, filename, tokenizer, esm_tokenizer, esm_model, max_length=4000):
+    def __init__(self, filename, tokenizer, esm_tokenizer, esm_model, max_length=8000):
         self.tokenizer = tokenizer
         self.esm_tokenizer = esm_tokenizer
         self.esm_model = esm_model
