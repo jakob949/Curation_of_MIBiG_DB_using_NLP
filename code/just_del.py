@@ -117,8 +117,10 @@ class Dataset(Dataset):
 start_time = time.time()
 
 
-# Load the ESM model
-esm_model, esm_alphabet = esm.pretrained.esm1b_t33_650M_UR50S()
+# Load ESM model and tokenizer
+esm_model_name = "facebook/esm2_t6_8M_UR50D" # smallest model
+esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
+esm_model = AutoModel.from_pretrained(esm_model_name)
 
 # Load the T5 model
 t5_config = T5Config.from_pretrained("t5-small")
@@ -144,20 +146,20 @@ epochs = 7
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
-optimizer = torch.optim.AdamW(model.parameters(), lr=3e-5)
+optimizer = torch.optim.AdamW(custom_model.parameters(), lr=3e-5)
 
 with open(args.logfile, 'w') as f:
     f.write(f"Model name: {model_name}, Train file: {args.trainfile}, Test file: {args.testfile}, Batch size: {batch_size}, Epochs: {epochs}, Device: {device}\n\n")
 
 for epoch in range(epochs):
-    model.train()
+    custom_model.train()
     for batch in train_loader:
         optimizer.zero_grad()
         esm_output_repr = batch["input_ids"].to(device).unsqueeze(1)  # Add sequence length dimension
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
 
-        outputs = model(
+        outputs = custom_model(
             input_ids=None,
             attention_mask=attention_mask,
             encoder_outputs=esm_output_repr,
@@ -170,7 +172,7 @@ for epoch in range(epochs):
 
 
 
-    model.eval()
+    custom_model.eval()
     correct_predictions = 0
     total_predictions = 0
     for batch in test_loader:
@@ -179,7 +181,7 @@ for epoch in range(epochs):
         labels = batch["labels"].to(device)
 
         with torch.no_grad():
-            outputs = model.generate(input_ids, attention_mask=attention_mask)
+            outputs = custom_model.generate(input_ids, attention_mask=attention_mask)
             predicted_labels = [tokenizer.decode(pred, skip_special_tokens=True) for pred in outputs]
             print('outputs: ', outputs)
             print('Predicted labels: ', predicted_labels)
@@ -195,7 +197,7 @@ for epoch in range(epochs):
     with open(args.logfile, 'a') as f:
         print(f"Epoch {epoch + 1}/{epochs}", file=f)
         print(f"Accuracy: {round(correct_predictions / total_predictions, 3)}", file=f)
-model.save_pretrained("fine_tuned_flan-t5-base")
+custom_model.save_pretrained("fine_tuned_flan-t5-base")
 end_time = time.time()
 with open(args.logfile, 'a') as f:
     print(f"Total time: {round((end_time - start_time)/60, 2)} minutes", file=f)
