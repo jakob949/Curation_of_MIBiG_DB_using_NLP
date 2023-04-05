@@ -4,8 +4,7 @@ from torch.utils.data import Dataset, DataLoader
 from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config, AutoModel, AutoTokenizer, T5Model
 import argparse
 import time
-from transformers import T5EncoderModel, T5Decoder, T5PreTrainedModel
-
+from transformers import T5ForConditionalGeneration, T5PreTrainedModel
 from torch.cuda.amp import GradScaler, autocast
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:32"
@@ -17,14 +16,7 @@ parser.add_argument('-tr', '--trainfile', type=str, help='name of the training f
 parser.add_argument('-te', '--testfile', type=str, help='name of the test file')
 args = parser.parse_args()
 
-class CustomT5Model(T5PreTrainedModel):
-    def __init__(self, config):
-        super().__init__(config)
-        self.decoder = T5Decoder(config)
-        self.lm_head = torch.nn.Linear(config.d_model, config.vocab_size, bias=False)
-
-        self.init_weights()
-
+class CustomT5Model(T5ForConditionalGeneration):
     def forward(
         self,
         input_ids=None,
@@ -41,27 +33,27 @@ class CustomT5Model(T5PreTrainedModel):
         output_hidden_states=None,
         return_dict=None,
     ):
-        # ESM2 output is directly used as an input to the decoder
-        encoder_outputs = (encoder_outputs,)
+        # Set the encoder outputs to the ESM2 output
+        if encoder_outputs is None:
+            raise ValueError("encoder_outputs must be provided for CustomT5Model")
+        else:
+            encoder_outputs = (encoder_outputs,)
 
-        decoder_outputs = self.decoder(
-            input_ids=decoder_input_ids,
-            attention_mask=decoder_attention_mask,
-            encoder_hidden_states=encoder_outputs[0],
-            encoder_attention_mask=attention_mask,
-            head_mask=head_mask,
+        return super().forward(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            decoder_input_ids=decoder_input_ids,
+            decoder_attention_mask=decoder_attention_mask,
+            encoder_outputs=encoder_outputs,
             past_key_values=past_key_values,
+            head_mask=head_mask,
+            inputs_embeds=inputs_embeds,
+            decoder_inputs_embeds=decoder_inputs_embeds,
             use_cache=use_cache,
             output_attentions=output_attentions,
             output_hidden_states=output_hidden_states,
             return_dict=return_dict,
-            inputs_embeds=decoder_inputs_embeds,
         )
-
-        sequence_output = decoder_outputs[0]
-        lm_logits = self.lm_head(sequence_output)
-
-        return (lm_logits,) + decoder_outputs[1:]
 
 
 class Dataset(Dataset):
@@ -132,8 +124,7 @@ model_name = "google/flan-t5-base"
 tokenizer = T5TokenizerFast.from_pretrained(model_name)
 config = T5Config.from_pretrained(model_name)
 config.n_positions = 26000 # max length needed for protein sequences > 25,000
-model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
-
+model = CustomT5Model.from_pretrained(model_name, config=config)
 
 train_dataset = Dataset(args.trainfile, tokenizer, esm_tokenizer, esm_model)
 test_dataset = Dataset(args.testfile, tokenizer, esm_tokenizer, esm_model)
@@ -161,13 +152,14 @@ for epoch in range(epochs):
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
 
-        lm_logits = model(
+        outputs = model(
             input_ids=None,
             attention_mask=attention_mask,
             encoder_outputs=esm_output_repr,
-            decoder_input_ids=labels)[0]
+            decoder_input_ids=labels,
+        )
 
-        loss = torch.nn.functional.cross_entropy(lm_logits.view(-1, lm_logits.size(-1)), labels.view(-1), ignore_index=-100)
+        loss = outputs.loss
         loss.backward()
         optimizer.step()
 
