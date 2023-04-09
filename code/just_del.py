@@ -1,147 +1,77 @@
-import os
 import torch
-from torch.utils.data import Dataset, DataLoader
-from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config, AutoModel, AutoTokenizer, T5Model
-import argparse
-import time
-from torch.cuda.amp import GradScaler, autocast
+from torch import nn
+from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, AutoModel
 
-os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:32"
+T5_model_name = 't5-small'
+t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
+t5_config = T5Config.from_pretrained(T5_model_name)
+t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
 
-
-parser = argparse.ArgumentParser()
-parser.add_argument('-l', '--logfile', type=str, help='name of the log file')
-parser.add_argument('-tr', '--trainfile', type=str, help='name of the training file')
-parser.add_argument('-te', '--testfile', type=str, help='name of the test file')
-args = parser.parse_args()
-class Dataset(Dataset):
-    def __init__(self, filename, tokenizer, esm_tokenizer, esm_model, max_length=4000):
-        self.tokenizer = tokenizer
-        self.esm_tokenizer = esm_tokenizer
-        self.esm_model = esm_model
-        self.data = []
-        with open(filename, "r") as f:
-            for line in f:
-                text, label = line.strip().split("\t")
-                self.data.append((text, label))
-
-        self.max_length = max_length
-
-    def _process_esm_output(self, text, max_chunk_length=4096):
-        # Tokenize the input text and get the number of tokens
-        esm_input_encoding = self.esm_tokenizer(text, return_tensors="pt", padding="max_length", truncation=True)
-        num_tokens = esm_input_encoding["input_ids"].size(1)
-
-        # Calculate the number of chunks needed
-        num_chunks = (num_tokens + max_chunk_length - 1) // max_chunk_length
-
-        # Process each chunk and aggregate the results
-        esm_output_reprs = []
-        for chunk_idx in range(num_chunks):
-            start_idx = chunk_idx * max_chunk_length
-            end_idx = min((chunk_idx + 1) * max_chunk_length, num_tokens)
-
-            # Get the input encoding for the current chunk
-            chunk_input_encoding = {k: v[:, start_idx:end_idx] for k, v in esm_input_encoding.items()}
-
-            # Process the chunk using the ESM model
-            esm_output = self.esm_model(**chunk_input_encoding)
-
-            # Compute the mean-pooling for the current chunk
-            chunk_esm_output_repr = torch.mean(esm_output[0], dim=1)
-            esm_output_reprs.append(chunk_esm_output_repr)
-
-        # Concatenate and average the mean-pooled representations of all chunks
-        esm_output_repr = torch.mean(torch.cat(esm_output_reprs, dim=0), dim=0, keepdim=True)
-        return esm_output_repr
-
-    def __len__(self):
-        return len(self.data)
-
-    def __getitem__(self, idx):
-        text, label = self.data[idx]
-        esm_output_repr = self._process_esm_output(text)
-        input_encoding = self.tokenizer(f"protein2Smile: {esm_output_repr}", return_tensors="pt", max_length=self.max_length,
-                                        padding="max_length", truncation=True)
-        target_encoding = self.tokenizer(label, return_tensors="pt", max_length=200, padding="max_length",
-                                         truncation=True)
-
-        return {
-            "input_ids": input_encoding["input_ids"].squeeze(),
-            "attention_mask": input_encoding["attention_mask"].squeeze(),
-            "labels": target_encoding["input_ids"].squeeze(),
-        }
-start_time = time.time()
-
-esm_model_name = "facebook/esm2_t6_8M_UR50D" # smallest model
+esm_model_name = "facebook/esm2_t6_8M_UR50D"
 esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
 esm_model = AutoModel.from_pretrained(esm_model_name)
 
+# Resamples a protein sequence
+input_text = "ULLI"
 
-model_name = "google/flan-t5-base"
-tokenizer = T5TokenizerFast.from_pretrained(model_name)
-config = T5Config.from_pretrained(model_name)
-config.n_positions = 26000 # max length needed for protein sequences > 25,000
-model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
+esm_input_tokens = esm_tokenizer(input_text, return_tensors='pt', padding=True, truncation=True)
+esm_input_ids = esm_input_tokens['input_ids']
+esm_attention_mask = esm_input_tokens['attention_mask']
+
+# saves the hidden states of the ESM2 model
+esm_outputs = esm_model(input_ids=esm_input_ids, attention_mask=esm_attention_mask)
+esm_hidden_states = esm_outputs[0]
+
+# projects the hidden states to the same dimension as the T5 model
+projection = nn.Linear(esm_hidden_states.shape[-1], t5_config.d_model)
+projected_hidden_states = projection(esm_hidden_states)
+
+print(f"ESM hidden states shape: {esm_hidden_states.shape}\nhidden states shape: {projected_hidden_states.shape}")
+
+# Prepare the T5 decoder inputs
+decoder_start_token = t5_tokenizer.pad_token_id
+decoder_input_ids = torch.tensor([[decoder_start_token]], dtype=torch.long)
+
+# Call the T5 model with the projected_hidden_states as encoder_outputs
+t5_outputs = t5_model(
+    input_ids=None,
+    attention_mask=None,
+    decoder_input_ids=decoder_input_ids,
+    encoder_outputs=(projected_hidden_states, esm_attention_mask),
+)
+
+# Get the predicted logits
+predicted_logits = t5_outputs.logits
+print(f"Predicted logits shape: {predicted_logits.shape}")
+
+# Convert logits to token ids
+predicted_token_ids = torch.argmax(predicted_logits, dim=-1)
+
+# Decode the token ids to get the generated text
+generated_text = t5_tokenizer.decode(predicted_token_ids[0], skip_special_tokens=True)
+print(f"Generated text: {generated_text}")
+
+# should the ESM2 Tokens be used for the T5 model?
+# here we use the T5 tokenizer to tokenize the original input text
+t5_input_tokens = t5_tokenizer(input_text, return_tensors='pt', padding=True, truncation=True)
+t5_input_ids = t5_input_tokens['input_ids']
+print(f"T5 input ids: {t5_input_ids}")
+
+# Maybe restrict the T5 tokenizer vocabulary to the same as ESM2 vocabulary? To avoid biological arbitrary tokens
+decoded_text = t5_tokenizer.decode(t5_input_ids[0], skip_special_tokens=True)
+print(f"Decoded text: {decoded_text}")
 
 
-train_dataset = Dataset(args.trainfile, tokenizer, esm_tokenizer, esm_model)
-test_dataset = Dataset(args.testfile, tokenizer, esm_tokenizer, esm_model)
 
+t5_outputs = t5_model(input_ids=None, attention_mask=None, decoder_input_ids=t5_input_ids,
+                      decoder_attention_mask=None, encoder_outputs=(projected_hidden_states,))
+t5_logits = t5_outputs.logits
 
+print(f"T5 logits shape: {t5_logits.shape}")
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model.to(device)
+t5_output_ids = torch.argmax(t5_logits, dim=-1)
+t5_decoded_output = t5_tokenizer.decode(t5_output_ids[0], skip_special_tokens=True)
 
-batch_size = 1
-epochs = 7
-train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+print(f"Input: {input_text}")
+print(f"Output: {t5_decoded_output}")
 
-optimizer = torch.optim.AdamW(model.parameters(), lr=3e-5)
-
-with open(args.logfile, 'w') as f:
-    f.write(f"Model name: {model_name}, Train file: {args.trainfile}, Test file: {args.testfile}, Batch size: {batch_size}, Epochs: {epochs}, Device: {device}\n\n")
-
-for epoch in range(epochs):
-    model.train()
-    for batch in train_loader:
-        optimizer.zero_grad()
-        input_ids = batch["input_ids"].to(device)
-        attention_mask = batch["attention_mask"].to(device)
-        labels = batch["labels"].to(device)
-
-        outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
-        loss = outputs.loss
-        loss.backward()
-        optimizer.step()
-
-    model.eval()
-    correct_predictions = 0
-    total_predictions = 0
-    for batch in test_loader:
-        input_ids = batch["input_ids"].to(device)
-        attention_mask = batch["attention_mask"].to(device)
-        labels = batch["labels"].to(device)
-
-        with torch.no_grad():
-            outputs = model.generate(input_ids, attention_mask=attention_mask)
-            predicted_labels = [tokenizer.decode(pred, skip_special_tokens=True) for pred in outputs]
-            print('outputs: ', outputs)
-            print('Predicted labels: ', predicted_labels)
-            true_labels = [tokenizer.decode(label, skip_special_tokens=True) for label in labels]
-            print('True labels: ', true_labels)
-
-        for pred, true in zip(predicted_labels, true_labels):
-            total_predictions += 1
-            if pred == true:
-                print('\npred: ',pred,'\ntrue: ', true)
-                correct_predictions += 1
-
-    with open(args.logfile, 'a') as f:
-        print(f"Epoch {epoch + 1}/{epochs}", file=f)
-        print(f"Accuracy: {round(correct_predictions / total_predictions, 3)}", file=f)
-model.save_pretrained("fine_tuned_flan-t5-base")
-end_time = time.time()
-with open(args.logfile, 'a') as f:
-    print(f"Total time: {round((end_time - start_time)/60, 2)} minutes", file=f)

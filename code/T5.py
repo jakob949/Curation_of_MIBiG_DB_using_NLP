@@ -11,6 +11,7 @@ parser.add_argument('-l', '--logfile', type=str, help='name of the log file')
 parser.add_argument('-tr', '--trainfile', type=str, help='name of the training file')
 parser.add_argument('-te', '--testfile', type=str, help='name of the test file')
 args = parser.parse_args()
+
 class Dataset(Dataset):
     def __init__(self, filename, tokenizer, max_length=512):
         self.tokenizer = tokenizer
@@ -18,7 +19,7 @@ class Dataset(Dataset):
         with open(filename, "r") as f:
             for line in f:
                 text, label = line.strip().split("\t")
-                label = "1" if label == "1" else "0"
+                # label = "1" if label == "1" else "0"
                 self.data.append((text, label))
 
         self.max_length = max_length
@@ -50,8 +51,8 @@ test_dataset = Dataset(args.testfile, tokenizer)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
-batch_size = 5
-epochs = 1
+batch_size = 4
+epochs = 7
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
