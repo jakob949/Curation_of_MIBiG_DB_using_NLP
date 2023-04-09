@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, AutoModel
 
-T5_model_name = 't5-small'
+T5_model_name = 'google/flan-t5-small'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)

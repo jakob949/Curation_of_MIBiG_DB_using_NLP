@@ -40,7 +40,7 @@ class Dataset(Dataset):
 
 start_time = time.time()
 
-model_name = "google/flan-t5-base"
+model_name = "google/flan-t5-xl"
 tokenizer = T5TokenizerFast.from_pretrained(model_name)
 config = T5Config.from_pretrained(model_name)
 model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
@@ -52,7 +52,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
 batch_size = 4
-epochs = 7
+epochs = 10
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
