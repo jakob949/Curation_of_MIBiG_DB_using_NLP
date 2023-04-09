@@ -30,7 +30,7 @@ class Dataset(Dataset):
     def __getitem__(self, idx):
         text, label = self.data[idx]
         input_encoding = self.tokenizer(text, return_tensors="pt", max_length=self.max_length, padding="max_length", truncation=True)
-        target_encoding = self.tokenizer(label, return_tensors="pt", max_length=2, padding="max_length", truncation=True)
+        target_encoding = self.tokenizer(label, return_tensors="pt", max_length=200, padding="max_length", truncation=True)
 
         return {
             "input_ids": input_encoding["input_ids"].squeeze(),
