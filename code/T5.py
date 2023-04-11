@@ -40,7 +40,7 @@ class Dataset(Dataset):
 
 start_time = time.time()
 
-model_name = "google/flan-t5-large"
+model_name = "google/flan-t5-base"
 tokenizer = T5TokenizerFast.from_pretrained(model_name)
 config = T5Config.from_pretrained(model_name)
 model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
