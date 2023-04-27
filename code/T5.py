@@ -9,7 +9,7 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 
 
 class Dataset(Dataset):
-    def __init__(self, filename, tokenizer, max_length=1250):
+    def __init__(self, filename, tokenizer, max_length=1750):
         self.tokenizer = tokenizer
         self.data = []
         with open(filename, "r") as f:
@@ -19,7 +19,7 @@ class Dataset(Dataset):
                     text = line.split('\t')[1]
                     label = line.split('\t')[2].strip('\n')
                     # label = "1" if label == "1" else "0"
-                    if len(text) < 1250:
+                    if len(text) < 1750:
                         self.data.append((text, label))
         print(len(self.data))
         self.max_length = max_length
@@ -42,7 +42,7 @@ class Dataset(Dataset):
 
 start_time = time.time()
 
-model_name = "google/flan-t5-small"
+model_name = "google/flan-t5-base"
 tokenizer = T5TokenizerFast.from_pretrained(model_name)
 config = T5Config.from_pretrained(model_name)
 model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
