@@ -53,7 +53,7 @@ test_dataset = Dataset("test_dataset_protein_text_v2_shorten_0.txt", tokenizer)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
-batch_size = 12
+batch_size = 6
 
 epochs = 35
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
