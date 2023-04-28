@@ -5,7 +5,7 @@ from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, Auto
 from torchmetrics.text.rouge import ROUGEScore
 
 class ProteinDataset(torch.utils.data.Dataset):
-    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=2750):
+    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=1750):
         self.file_path = file_path
         self.data = self.load_data()
         self.T5_tokenizer = T5_tokenizer
@@ -21,7 +21,7 @@ class ProteinDataset(torch.utils.data.Dataset):
                 text_list = text.split('_')
 
                 # Check if any element in text_list is longer than 2000 characters
-                if all(len(element) <= 2750 for element in text_list):
+                if all(len(element) <= 1750 for element in text_list):
                     data.append((text_list, label))
         print(len(data))
         return data
