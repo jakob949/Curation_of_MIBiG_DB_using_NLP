@@ -5,7 +5,7 @@ from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, Auto
 from torchmetrics.text.rouge import ROUGEScore
 
 class ProteinDataset(torch.utils.data.Dataset):
-    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=1750):
+    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=2750):
         self.file_path = file_path
         self.data = self.load_data()
         self.T5_tokenizer = T5_tokenizer
@@ -21,7 +21,7 @@ class ProteinDataset(torch.utils.data.Dataset):
                 text_list = text.split('_')
 
                 # Check if any element in text_list is longer than 2000 characters
-                if all(len(element) <= 1750 for element in text_list):
+                if all(len(element) <= 2750 for element in text_list):
                     data.append((text_list, label))
         print(len(data))
         return data
@@ -93,7 +93,7 @@ t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
 
-esm_model_name = "facebook/esm2_t6_8M_UR50D"
+esm_model_name = "facebook/esm2_t12_35M_UR50D"
 esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
 esm_model = AutoModel.from_pretrained(esm_model_name)
 
@@ -108,8 +108,8 @@ print(device)
 train_dataset = ProteinDataset("train_dataset_protein_v2_0.txt", t5_tokenizer, esm_tokenizer)
 test_dataset = ProteinDataset("test_dataset_protein_v2_0.txt", t5_tokenizer, esm_tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=3, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=3, shuffle=False)
+train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 optimizer = AdamW(list(t5_model.parameters()) + list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
 
