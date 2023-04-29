@@ -21,7 +21,7 @@ class ProteinDataset(torch.utils.data.Dataset):
                 text_list = text.split('_')
 
                 # Check if any element in text_list is longer than 2000 characters
-                if all(len(element) <= 1050 for element in text_list):
+                if all(len(element) <= 1750 for element in text_list):
                     data.append((text_list, label))
         print(len(data))
         return data
@@ -88,12 +88,12 @@ def concat_seqs(text):
 num_epochs = 12
 learning_rate = 5e-5
 
-T5_model_name = 'google/flan-t5-small'
+T5_model_name = 'google/flan-t5-base'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
 
-esm_model_name = "facebook/esm2_t12_35M_UR50D"
+esm_model_name = "facebook/esm2_t6_8M_UR50D"
 esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
 esm_model = AutoModel.from_pretrained(esm_model_name)
 
