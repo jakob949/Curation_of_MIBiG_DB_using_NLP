@@ -148,7 +148,7 @@ for epoch in range(num_epochs):
         )
 
         with torch.no_grad():
-            train_predicted_labels = t5_tokenizer.decode(t5_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True)
+            train_predicted_labels = t5_tokenizer.decode(t5_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=5)
             train_true_labels = [batch["label"][0]]
             train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
             rouge_train_accumulated += train_rouge_score
