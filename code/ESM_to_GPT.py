@@ -57,6 +57,7 @@ def get_esm_hidden_states(input_text):
     return esm_outputs[0]
 
 
+
 def pad_to_match(tensor1, tensor2, dim):
     size1 = tensor1.size(dim)
     size2 = tensor2.size(dim)
@@ -154,7 +155,8 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()
 
         input_embeddings = projected_hidden_states
-        bos_embedding = gpt2_model.transformer.wte(torch.tensor([[gpt2_tokenizer.bos_token_id]], device=device))
+        bos_embedding = gpt2_model.transformer.wte(torch.tensor([[gpt2_tokenizer.bos_token_id]], device=device).to(device))
+
         input_embeddings = torch.cat([bos_embedding, input_embeddings], dim=1)
 
         # Generate position_ids explicitly
