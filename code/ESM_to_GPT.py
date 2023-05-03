@@ -112,7 +112,7 @@ projection = nn.Linear(esm_model.config.hidden_size, gpt2_config.n_embd)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 gpt2_model.to(device)
-gpt2_model.transformer.wpe.weight.data = gpt2_model.transformer.wpe.weight.data.to(device)
+gpt2_model.transformer.wpe.weight = nn.Parameter(gpt2_model.transformer.wpe.weight.data.to(device))
 
 esm_model.to(device)
 projection.to(device)
