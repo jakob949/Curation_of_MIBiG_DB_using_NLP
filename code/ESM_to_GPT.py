@@ -163,7 +163,7 @@ for epoch in range(num_epochs):
 
         # Generate position_ids explicitly
         position_ids = torch.arange(0, input_embeddings.size(1), dtype=torch.long,
-                                    device=input_embeddings.device).unsqueeze(0)
+                                    device=input_embeddings.device).unsqueeze(0).to(device)
 
         gpt2_outputs = gpt2_model(
             inputs_embeds=input_embeddings,
