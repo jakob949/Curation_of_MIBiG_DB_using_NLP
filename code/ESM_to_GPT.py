@@ -112,6 +112,8 @@ projection = nn.Linear(esm_model.config.hidden_size, gpt2_config.n_embd)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 gpt2_model.to(device)
+gpt2_model.transformer.wpe.weight.data = gpt2_model.transformer.wpe.weight.data.to(device)
+
 esm_model.to(device)
 projection.to(device)
 print(device)
@@ -161,7 +163,7 @@ for epoch in range(num_epochs):
 
         # Generate position_ids explicitly
         position_ids = torch.arange(0, input_embeddings.size(1), dtype=torch.long,
-                                    device=input_embeddings.device).unsqueeze(0).to(device)
+                                    device=input_embeddings.device).unsqueeze(0)
 
         gpt2_outputs = gpt2_model(
             inputs_embeds=input_embeddings,
