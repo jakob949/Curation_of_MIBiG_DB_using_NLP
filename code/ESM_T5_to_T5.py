@@ -3,7 +3,7 @@ import torch
 from torch import nn
 from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, AutoModel, AdamW
 from torchmetrics.text.rouge import ROUGEScore
-
+import os
 
 class ProteinDataset(torch.utils.data.Dataset):
     def __init__(self, file_paths_1, file_paths_2, T5_tokenizer, esm_tokenizer, max_length=250):
@@ -148,7 +148,7 @@ def concat_seqs_T5(text, t5_encoder, projection):
     return concat_hidden_states
 
 
-import os
+
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:512"
 
