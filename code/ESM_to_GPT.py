@@ -185,7 +185,7 @@ for epoch in range(num_epochs):
             test_outputs = t5_model(
                 input_ids=None,
                 attention_mask=None,
-                decoder_input_ids=decoder_input_ids,
+                decoder_input_ids=None,
                 encoder_outputs=(projected_hidden_states, None),
                 labels=labels,
             )
@@ -195,5 +195,6 @@ for epoch in range(num_epochs):
             test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
             rouge_test_accumulated += test_rouge_score
             #print(f"test_true_labels: {test_true_labels}, test_predicted_labels: {test_predicted_labels}, test_rouge_score: {test_rouge_score}")
-    print(f"Epoch {epoch + 1}/{num_epochs}, Avg Train ROUGE-1 F1 Score: {rouge_train_accumulated / num_train_batches}")
-    print(f"Epoch {epoch + 1}/{num_epochs}, Avg Test ROUGE-1 F1 Score: {rouge_test_accumulated / num_test_batches}")
+    with open("rouge_scores.txt", "a") as f:
+        print(f"Epoch {epoch + 1}/{num_epochs}, Avg Train ROUGE-1 F1 Score: {rouge_train_accumulated / num_train_batches}", file=f)
+        print(f"Epoch {epoch + 1}/{num_epochs}, Avg Test ROUGE-1 F1 Score: {rouge_test_accumulated / num_test_batches}", file=f)
