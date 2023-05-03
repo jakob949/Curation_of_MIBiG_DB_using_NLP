@@ -109,18 +109,18 @@ esm_model = AutoModel.from_pretrained(esm_model_name)
 projection = nn.Linear(esm_model.config.hidden_size, gpt2_config.n_embd)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-device = 'cpu'
+
 gpt2_model.to(device)
 esm_model.to(device)
 projection.to(device)
 print(device)
-
+learning_rate = 5e-5
 new_max_position_embeddings = 1024
 resize_position_embeddings(gpt2_model, new_max_position_embeddings)
 
-train_dataset = ProteinDataset("/kaggle/input/correct-protein-data/train_protein_peptides_complete_0.txt",
+train_dataset = ProteinDataset("train_dataset_protein_v2_0.txt",
                                gpt2_tokenizer, esm_tokenizer)
-test_dataset = ProteinDataset("/kaggle/input/correct-protein-data/test_protein_peptides_complete_0.txt", gpt2_tokenizer,
+test_dataset = ProteinDataset("test_dataset_protein_v2_0.txt", gpt2_tokenizer,
                               esm_tokenizer)
 
 train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
@@ -132,7 +132,7 @@ optimizer = AdamW(list(gpt2_model.parameters()) + list(esm_model.parameters()) +
 rouge = ROUGEScore()
 
 num_epochs = 12
-learning_rate = 5e-5
+
 
 for epoch in range(num_epochs):
     gpt2_model.train()
