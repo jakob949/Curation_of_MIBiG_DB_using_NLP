@@ -110,7 +110,7 @@ esm_model = AutoModel.from_pretrained(esm_model_name)
 projection = nn.Linear(esm_model.config.hidden_size, gpt2_config.n_embd)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+device = 'cpu'
 gpt2_model.to(device)
 gpt2_model.transformer.wpe.weight = nn.Parameter(gpt2_model.transformer.wpe.weight.data.to(device))
 
