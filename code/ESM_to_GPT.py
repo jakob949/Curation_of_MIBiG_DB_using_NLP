@@ -194,7 +194,10 @@ for epoch in range(num_epochs):
             test_true_labels = [batch["label"][0]]
             test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
             rouge_test_accumulated += test_rouge_score
+            with open("outputs and rouge_scores.txt", "a") as f:
+                print(f"predicted_labels: {test_predicted_labels}, true_labels: {test_true_labels}", file=f)
+
             #print(f"test_true_labels: {test_true_labels}, test_predicted_labels: {test_predicted_labels}, test_rouge_score: {test_rouge_score}")
-    with open("rouge_scores.txt", "a") as f:
+    with open("outputs and rouge_scores.txt", "a") as f:
         print(f"Epoch {epoch + 1}/{num_epochs}, Avg Train ROUGE-1 F1 Score: {rouge_train_accumulated / num_train_batches}", file=f)
         print(f"Epoch {epoch + 1}/{num_epochs}, Avg Test ROUGE-1 F1 Score: {rouge_test_accumulated / num_test_batches}", file=f)
