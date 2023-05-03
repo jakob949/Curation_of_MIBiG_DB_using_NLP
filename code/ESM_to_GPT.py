@@ -156,7 +156,7 @@ for epoch in range(num_epochs):
 
         optimizer.zero_grad()
 
-        input_embeddings = input_embeddings.to(device)  # Add this line to move input_embeddings to the correct device
+        input_embeddings = projected_hidden_states.to(device)
 
         bos_embedding = gpt2_model.transformer.wte(
             torch.tensor([[gpt2_tokenizer.bos_token_id]], device=device).to(device))
