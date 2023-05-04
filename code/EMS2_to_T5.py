@@ -117,48 +117,48 @@ rouge = ROUGEScore()
 
 # Training loop
 for epoch in range(num_epochs):
-    t5_model.train()
-    esm_model.train()
-    projection.train()
-
-    rouge_train_accumulated = 0.0
-    num_train_batches = 0
-
-    for batch in train_loader:
-        # Should be fixed - This only works for batch size 1...
-        #
-        num_train_batches += 1
-
-        text = batch["text_list"]
-        labels = batch["labels"].to(device)
-
-        concat_hidden_states = concat_seqs(text)
-
-        projected_hidden_states = projection(concat_hidden_states)
-        optimizer.zero_grad()
-
-        decoder_input_ids = torch.cat((torch.full((labels.size(0), 1), 0, dtype=torch.long, device=device), labels[:, :-1]), dim=-1)
-
-        t5_outputs = t5_model(
-            input_ids=None,
-            attention_mask=None,
-            decoder_input_ids=decoder_input_ids,
-            encoder_outputs=(projected_hidden_states, None),
-            labels=labels,
-        )
-
-        with torch.no_grad():
-            train_predicted_labels = t5_tokenizer.decode(t5_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=5)
-            train_true_labels = [batch["label"][0]]
-            train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
-            rouge_train_accumulated += train_rouge_score
-            #print(f"train_rouge_score: {train_rouge_score}")
-            #print(f"train_true_labels: {train_true_labels},train_predicted_labels: {train_predicted_labels} ")
-
-        loss = t5_outputs.loss
-        loss.backward()
-        optimizer.step()
-
+    # t5_model.train()
+    # esm_model.train()
+    # projection.train()
+    #
+    # rouge_train_accumulated = 0.0
+    # num_train_batches = 0
+    #
+    # for batch in train_loader:
+    #     # Should be fixed - This only works for batch size 1...
+    #     #
+    #     num_train_batches += 1
+    #
+    #     text = batch["text_list"]
+    #     labels = batch["labels"].to(device)
+    #
+    #     concat_hidden_states = concat_seqs(text)
+    #
+    #     projected_hidden_states = projection(concat_hidden_states)
+    #     optimizer.zero_grad()
+    #
+    #     decoder_input_ids = torch.cat((torch.full((labels.size(0), 1), 0, dtype=torch.long, device=device), labels[:, :-1]), dim=-1)
+    #
+    #     t5_outputs = t5_model(
+    #         input_ids=None,
+    #         attention_mask=None,
+    #         decoder_input_ids=decoder_input_ids,
+    #         encoder_outputs=(projected_hidden_states, None),
+    #         labels=labels,
+    #     )
+    #
+    #     with torch.no_grad():
+    #         train_predicted_labels = t5_tokenizer.decode(t5_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=5)
+    #         train_true_labels = [batch["label"][0]]
+    #         train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
+    #         rouge_train_accumulated += train_rouge_score
+    #         #print(f"train_rouge_score: {train_rouge_score}")
+    #         #print(f"train_true_labels: {train_true_labels},train_predicted_labels: {train_predicted_labels} ")
+    #
+    #     loss = t5_outputs.loss
+    #     loss.backward()
+    #     optimizer.step()
+    #
 
 
     # Test loop
@@ -195,5 +195,5 @@ for epoch in range(num_epochs):
             test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
             rouge_test_accumulated += test_rouge_score
             #print(f"test_true_labels: {test_true_labels}, test_predicted_labels: {test_predicted_labels}, test_rouge_score: {test_rouge_score}")
-    print(f"Epoch {epoch + 1}/{num_epochs}, Avg Train ROUGE-1 F1 Score: {rouge_train_accumulated / num_train_batches}")
+    # print(f"Epoch {epoch + 1}/{num_epochs}, Avg Train ROUGE-1 F1 Score: {rouge_train_accumulated / num_train_batches}")
     print(f"Epoch {epoch + 1}/{num_epochs}, Avg Test ROUGE-1 F1 Score: {rouge_test_accumulated / num_test_batches}")
