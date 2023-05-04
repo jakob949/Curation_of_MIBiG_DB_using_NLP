@@ -85,7 +85,7 @@ def concat_seqs(text):
 
 
 # Set up the training parameters
-num_epochs = 12
+num_epochs = 2
 learning_rate = 5e-5
 
 T5_model_name = 'google/flan-t5-base'
