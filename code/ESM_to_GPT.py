@@ -1,7 +1,7 @@
 from torch.utils.data import DataLoader
 import torch
 from torch import nn
-from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, AutoModel, AdamW
+from transformers import GPT2Config, GPT2Model, GPT2Tokenizer, AutoTokenizer, AutoModel, AdamW
 from torchmetrics.text.rouge import ROUGEScore
 
 class ProteinDataset(torch.utils.data.Dataset):
@@ -88,10 +88,10 @@ def concat_seqs(text):
 num_epochs = 12
 learning_rate = 5e-5
 
-T5_model_name = 'google/flan-t5-base'
-t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
-t5_config = T5Config.from_pretrained(T5_model_name)
-t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
+GPT2_model_name = 'gpt2'
+gpt2_tokenizer = GPT2Tokenizer.from_pretrained(GPT2_model_name)
+gpt2_config = GPT2Config.from_pretrained(GPT2_model_name)
+gpt2_model = GPT2Model.from_pretrained(GPT2_model_name, config=gpt2_config)
 
 esm_model_name = "facebook/esm2_t6_8M_UR50D"
 esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
@@ -101,7 +101,7 @@ projection = nn.Linear(esm_model.config.hidden_size, t5_config.d_model)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-t5_model.to(device)
+gpt2_model.to(device)
 esm_model.to(device)
 projection.to(device)
 print(device)
