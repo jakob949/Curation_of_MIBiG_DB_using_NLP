@@ -4,9 +4,7 @@ from torch import nn
 from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, AutoModel, AdamW
 from torchmetrics.text.rouge import ROUGEScore
 from rdkit import Chem
-from nltk.translate.bleu_score import sentence_bleu
-from nltk.translate.meteor_score import single_meteor_score
-
+from torchmetrics.text import BLEUScore
 def is_valid_smiles(smiles: str) -> bool:
     mol = Chem.MolFromSmiles(smiles)
     return mol is not None
@@ -121,6 +119,7 @@ test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
 
 rouge = ROUGEScore()
+bleu = BLEUScore()
 
 # Training loop
 for epoch in range(num_epochs):
@@ -129,7 +128,6 @@ for epoch in range(num_epochs):
     # projection.train()
     rouge_train_accumulated = 0.0
     bleu_train_accumulated = 0.0
-    meteor_train_accumulated = 0.0
     num_train_batches = 0
     Num_correct_val_mols_train = 0
 
@@ -164,12 +162,10 @@ for epoch in range(num_epochs):
             #print(f"train_rouge_score: {train_rouge_score}")
             #print(f"train_true_labels: {train_true_labels},train_predicted_labels: {train_predicted_labels} ")
             # Calculate BLEU and METEOR scores for training data
-            train_bleu_score = sentence_bleu([train_true_labels], train_predicted_labels.split())
-            train_meteor_score = single_meteor_score(train_true_labels, train_predicted_labels)
+            train_bleu_score = bleu(train_predicted_labels.split(), [train_true_labels[0].split()])
 
             rouge_train_accumulated += train_rouge_score
             bleu_train_accumulated += train_bleu_score
-            meteor_train_accumulated += train_meteor_score
 
             if is_valid_smiles(train_predicted_labels):
                 Num_correct_val_mols_train += 1
@@ -188,7 +184,6 @@ for epoch in range(num_epochs):
     rouge_test_accumulated = 0.0
     num_test_batches = 0
     bleu_test_accumulated = 0.0
-    meteor_test_accumulated = 0.0
 
     with torch.no_grad():
         Num_correct_val_mols_test = 0
@@ -215,13 +210,10 @@ for epoch in range(num_epochs):
             test_predicted_labels = t5_tokenizer.decode(test_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True)
             test_true_labels = [batch["label"][0]]
 
-            # Calculate BLEU and METEOR scores
-            test_bleu_score = sentence_bleu([test_true_labels], test_predicted_labels.split())
-            test_meteor_score = single_meteor_score(test_true_labels, test_predicted_labels)
+            test_bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
 
             rouge_test_accumulated += test_rouge_score
             bleu_test_accumulated += test_bleu_score
-            meteor_test_accumulated += test_meteor_score
 
             test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
             #print(f"test_true_labels: {test_true_labels}, test_predicted_labels: {test_predicted_labels}, test_rouge_score: {test_rouge_score}")
@@ -233,10 +225,10 @@ for epoch in range(num_epochs):
 
         with open("scores.txt", "a") as scores_file:
             print(
-                f"Epoch {epoch + 1}/{num_epochs}\t Avg Train ROUGE-1 F1 Score\t {round(rouge_train_accumulated / num_train_batches, 3)}\tAvg Train BLEU Score\t {round(bleu_train_accumulated / num_train_batches, 3)}\tAvg Train METEOR Score\t {round(meteor_train_accumulated / num_train_batches, 3)}\tNum correct val mols train: {Num_correct_val_mols_train}",
+                f"Epoch {epoch + 1}/{num_epochs}\t Avg Train ROUGE-1 F1 Score\t {rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t {bleu_train_accumulated / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
                 file=scores_file)
 
             print(
-                f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {round(rouge_test_accumulated / num_test_batches, 3)}\tAvg Test BLEU Score\t {round(bleu_test_accumulated / num_test_batches, 3)}\tAvg Test METEOR Score\t {round(meteor_test_accumulated / num_test_batches, 3)}\tNum correct val mols test: {Num_correct_val_mols_test}",
+                f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
                 file=scores_file)
 
