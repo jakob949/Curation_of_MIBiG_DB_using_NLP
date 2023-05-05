@@ -3,9 +3,15 @@ import torch
 from torch import nn
 from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, AutoModel, AdamW
 from torchmetrics.text.rouge import ROUGEScore
+from rdkit import Chem
+from nltk.translate.bleu_score import sentence_bleu
+from nltk.translate.meteor_score import single_meteor_score
 
+def is_valid_smiles(smiles: str) -> bool:
+    mol = Chem.MolFromSmiles(smiles)
+    return mol is not None
 class ProteinDataset(torch.utils.data.Dataset):
-    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=850):
+    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=900):
         self.file_path = file_path
         self.data = self.load_data()
         self.T5_tokenizer = T5_tokenizer
@@ -21,7 +27,7 @@ class ProteinDataset(torch.utils.data.Dataset):
                 text_list = text.split('_')
 
                 # Check if any element in text_list is longer than 2000 characters
-                if all(len(element) <= 850 for element in text_list):
+                if all(len(element) <= 900 for element in text_list):
                     data.append((text_list, label))
         print(len(data))
         return data
@@ -34,7 +40,7 @@ class ProteinDataset(torch.utils.data.Dataset):
         text, label = self.data[idx]
         input_encoding = self.T5_tokenizer(text, return_tensors="pt", max_length=self.max_length, padding="max_length",
                                            truncation=True)
-        target_encoding = self.T5_tokenizer(label, return_tensors="pt", max_length=200, padding="max_length",
+        target_encoding = self.T5_tokenizer(label, return_tensors="pt", max_length=250, padding="max_length",
                                             truncation=True)
 
         return {
@@ -85,7 +91,7 @@ def concat_seqs(text):
 
 
 # Set up the training parameters
-num_epochs = 32
+num_epochs = 50
 learning_rate = 5e-5
 
 T5_model_name = 'google/flan-t5-base'
@@ -121,9 +127,11 @@ for epoch in range(num_epochs):
     t5_model.train()
     # esm_model.train()
     # projection.train()
-
     rouge_train_accumulated = 0.0
+    bleu_train_accumulated = 0.0
+    meteor_train_accumulated = 0.0
     num_train_batches = 0
+    Num_correct_val_mols_train = 0
 
     for batch in train_loader:
         # Should be fixed - This only works for batch size 1...
@@ -155,6 +163,16 @@ for epoch in range(num_epochs):
             rouge_train_accumulated += train_rouge_score
             #print(f"train_rouge_score: {train_rouge_score}")
             #print(f"train_true_labels: {train_true_labels},train_predicted_labels: {train_predicted_labels} ")
+            # Calculate BLEU and METEOR scores for training data
+            train_bleu_score = sentence_bleu([train_true_labels], train_predicted_labels.split())
+            train_meteor_score = single_meteor_score(train_true_labels, train_predicted_labels)
+
+            rouge_train_accumulated += train_rouge_score
+            bleu_train_accumulated += train_bleu_score
+            meteor_train_accumulated += train_meteor_score
+
+            if is_valid_smiles(train_predicted_labels):
+                Num_correct_val_mols_train += 1
 
         loss = t5_outputs.loss
         loss.backward()
@@ -169,8 +187,11 @@ for epoch in range(num_epochs):
 
     rouge_test_accumulated = 0.0
     num_test_batches = 0
+    bleu_test_accumulated = 0.0
+    meteor_test_accumulated = 0.0
 
     with torch.no_grad():
+        Num_correct_val_mols_test = 0
         for batch in test_loader:
             num_test_batches += 1
 
@@ -193,8 +214,29 @@ for epoch in range(num_epochs):
 
             test_predicted_labels = t5_tokenizer.decode(test_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True)
             test_true_labels = [batch["label"][0]]
-            test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
+
+            # Calculate BLEU and METEOR scores
+            test_bleu_score = sentence_bleu([test_true_labels], test_predicted_labels.split())
+            test_meteor_score = single_meteor_score(test_true_labels, test_predicted_labels)
+
             rouge_test_accumulated += test_rouge_score
+            bleu_test_accumulated += test_bleu_score
+            meteor_test_accumulated += test_meteor_score
+
+            test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
             #print(f"test_true_labels: {test_true_labels}, test_predicted_labels: {test_predicted_labels}, test_rouge_score: {test_rouge_score}")
-    print(f"Epoch {epoch + 1}/{num_epochs}, Avg Train ROUGE-1 F1 Score: {rouge_train_accumulated / num_train_batches}")
-    print(f"Epoch {epoch + 1}/{num_epochs}, Avg Test ROUGE-1 F1 Score: {rouge_test_accumulated / num_test_batches}")
+            if is_valid_smiles(test_predicted_labels):
+                Num_correct_val_mols_test += 1
+            with open("predictions.txt", "a") as predictions_file:
+                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}", file=predictions_file)
+
+
+        with open("scores.txt", "a") as scores_file:
+            print(
+                f"Epoch {epoch + 1}/{num_epochs}\t Avg Train ROUGE-1 F1 Score\t {round(rouge_train_accumulated / num_train_batches, 3)}\tAvg Train BLEU Score\t {round(bleu_train_accumulated / num_train_batches, 3)}\tAvg Train METEOR Score\t {round(meteor_train_accumulated / num_train_batches, 3)}\tNum correct val mols train: {Num_correct_val_mols_train}",
+                file=scores_file)
+
+            print(
+                f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {round(rouge_test_accumulated / num_test_batches, 3)}\tAvg Test BLEU Score\t {round(bleu_test_accumulated / num_test_batches, 3)}\tAvg Test METEOR Score\t {round(meteor_test_accumulated / num_test_batches, 3)}\tNum correct val mols test: {Num_correct_val_mols_test}",
+                file=scores_file)
+
