@@ -158,12 +158,10 @@ for epoch in range(num_epochs):
             train_predicted_labels = t5_tokenizer.decode(t5_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=5)
             train_true_labels = [batch["label"][0]]
             train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
-            rouge_train_accumulated += train_rouge_score
             #print(f"train_rouge_score: {train_rouge_score}")
             #print(f"train_true_labels: {train_true_labels},train_predicted_labels: {train_predicted_labels} ")
             # Calculate BLEU and METEOR scores for training data
             train_bleu_score = bleu(train_predicted_labels.split(), [train_true_labels[0].split()])
-
             rouge_train_accumulated += train_rouge_score
             bleu_train_accumulated += train_bleu_score
 
@@ -211,11 +209,11 @@ for epoch in range(num_epochs):
             test_true_labels = [batch["label"][0]]
 
             test_bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
+            test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
 
             rouge_test_accumulated += test_rouge_score
             bleu_test_accumulated += test_bleu_score
 
-            test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
             #print(f"test_true_labels: {test_true_labels}, test_predicted_labels: {test_predicted_labels}, test_rouge_score: {test_rouge_score}")
             if is_valid_smiles(test_predicted_labels):
                 Num_correct_val_mols_test += 1
