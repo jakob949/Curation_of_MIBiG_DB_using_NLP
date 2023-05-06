@@ -5,6 +5,9 @@ from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, Auto
 from torchmetrics.text.rouge import ROUGEScore
 from rdkit import Chem
 from torchmetrics.text import BLEUScore
+from torchmetrics import CharErrorRate, ChrF, SacreBLEUScore, WER
+from torchmetrics.functional import extended_edit_distance
+
 def is_valid_smiles(smiles: str) -> bool:
     mol = Chem.MolFromSmiles(smiles)
     return mol is not None
@@ -116,24 +119,49 @@ train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # optimizer = AdamW(list(t5_model.parameters()) + list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
-optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
+optimizer = AdamW(list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
+# optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
 
 rouge = ROUGEScore()
 bleu = BLEUScore()
+chrf = ChrF()
+char_error_rate = CharErrorRate()
+sacre_bleu = SacreBLEUScore()
+wer = WER()
+
 
 # Training loop
 for epoch in range(num_epochs):
-    t5_model.train()
+    if epoch < 15:
+        t5_model.eval()
+        esm_model.train()
+        projection.train()
+        #optimizer = AdamW(list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
+    elif epoch == 16:
+        t5_model.train()
+        esm_model.eval()
+        projection.eval()
+        optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
+    elif epoch > 16:
+        t5_model.train()
+        esm_model.eval()
+        projection.eval()
+
+
     # esm_model.train()
     # projection.train()
     rouge_train_accumulated = 0.0
     bleu_train_accumulated = 0.0
     num_train_batches = 0
     Num_correct_val_mols_train = 0
+    chrf_train_accumulated = 0.0
+    char_error_rate_train_accumulated = 0.0
+    extended_edit_distance_train_accumulated = 0.0
+    wer_train_accumulated = 0.0
+    sacre_bleu_train_accumulated = 0.0
 
     for batch in train_loader:
         # Should be fixed - This only works for batch size 1...
-        #
         num_train_batches += 1
 
         text = batch["text_list"]
@@ -158,9 +186,21 @@ for epoch in range(num_epochs):
             train_predicted_labels = t5_tokenizer.decode(t5_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=5)
             train_true_labels = [batch["label"][0]]
             train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
-            #print(f"train_rouge_score: {train_rouge_score}")
-            #print(f"train_true_labels: {train_true_labels},train_predicted_labels: {train_predicted_labels} ")
-            # Calculate BLEU and METEOR scores for training data
+            # Inside the training loop, after calculating train_rouge_score and train_bleu_score
+
+            train_chrf_score = chrf(train_predicted_labels.split(), [train_true_labels[0].split()])
+            train_char_error_rate = char_error_rate(train_predicted_labels.split(), [train_true_labels[0].split()])
+            train_extended_edit_distance = extended_edit_distance(train_predicted_labels, train_true_labels[0])
+            train_wer = wer(train_predicted_labels.split(), [train_true_labels[0].split()])
+            train_sacre_bleu_score = sacre_bleu(train_predicted_labels.split(), [train_true_labels[0].split()])
+
+            # Accumulate the values of these metrics in separate variables
+            chrf_train_accumulated += train_chrf_score
+            char_error_rate_train_accumulated += train_char_error_rate
+            extended_edit_distance_train_accumulated += train_extended_edit_distance
+            wer_train_accumulated += train_wer
+            sacre_bleu_train_accumulated += train_sacre_bleu_score
+
             train_bleu_score = bleu(train_predicted_labels.split(), [train_true_labels[0].split()])
             rouge_train_accumulated += train_rouge_score
             bleu_train_accumulated += train_bleu_score
@@ -182,9 +222,14 @@ for epoch in range(num_epochs):
     rouge_test_accumulated = 0.0
     num_test_batches = 0
     bleu_test_accumulated = 0.0
+    chrf_test_accumulated = 0.0
+    char_error_rate_test_accumulated = 0.0
+    extended_edit_distance_test_accumulated = 0.0
+    wer_test_accumulated = 0.0
+    sacre_bleu_test_accumulated = 0.0
+    Num_correct_val_mols_test = 0
 
     with torch.no_grad():
-        Num_correct_val_mols_test = 0
         for batch in test_loader:
             num_test_batches += 1
 
@@ -210,6 +255,20 @@ for epoch in range(num_epochs):
 
             test_bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
             test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
+            # Inside the testing loop, after calculating test_rouge_score and test_bleu_score
+
+            test_chrf_score = chrf(test_predicted_labels.split(), [test_true_labels[0].split()])
+            test_char_error_rate = char_error_rate(test_predicted_labels.split(), [test_true_labels[0].split()])
+            test_extended_edit_distance = extended_edit_distance(test_predicted_labels, test_true_labels[0])
+            test_wer = wer(test_predicted_labels.split(), [test_true_labels[0].split()])
+            test_sacre_bleu_score = sacre_bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
+
+            # Accumulate the values of these metrics in separate variables
+            chrf_test_accumulated += test_chrf_score
+            char_error_rate_test_accumulated += test_char_error_rate
+            extended_edit_distance_test_accumulated += test_extended_edit_distance
+            wer_test_accumulated += test_wer
+            sacre_bleu_test_accumulated += test_sacre_bleu_score
 
             rouge_test_accumulated += test_rouge_score
             bleu_test_accumulated += test_bleu_score
@@ -222,11 +281,13 @@ for epoch in range(num_epochs):
 
 
         with open("scores.txt", "a") as scores_file:
-            print(
-                f"Epoch {epoch + 1}/{num_epochs}\t Avg Train ROUGE-1 F1 Score\t {rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t {bleu_train_accumulated / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
-                file=scores_file)
+            with open("scores.txt", "a") as scores_file:
+                print(
+                    f"Epoch {epoch + 1}/{num_epochs}\t Avg Train ROUGE-1 F1 Score\t {rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t {bleu_train_accumulated / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
+                    file=scores_file)
 
-            print(
-                f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
-                file=scores_file)
+                print(
+                    f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}\tAvg Test ChrF Score\t {chrf_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_test_accumulated / num_test_batches}\tAvg Test Extended Edit Distance\t {extended_edit_distance_test_accumulated / num_test_batches}\tAvg Test WER\t {wer_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_test_accumulated / num_test_batches}",
+                    file=scores_file)
+
 
