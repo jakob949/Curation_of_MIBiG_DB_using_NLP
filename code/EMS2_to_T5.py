@@ -5,8 +5,8 @@ from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, Auto
 from torchmetrics.text.rouge import ROUGEScore
 from rdkit import Chem
 from torchmetrics.text import BLEUScore
-from torchmetrics import CharErrorRate, ChrF, SacreBLEUScore, WER
-from torchmetrics.functional import extended_edit_distance
+from torchmetrics import CharErrorRate, SacreBLEUScore
+from torchmetrics.functional import extended_edit_distance, chrf_score, word_error_rate
 
 def is_valid_smiles(smiles: str) -> bool:
     mol = Chem.MolFromSmiles(smiles)
@@ -124,10 +124,10 @@ optimizer = AdamW(list(esm_model.parameters()) + list(projection.parameters()), 
 
 rouge = ROUGEScore()
 bleu = BLEUScore()
-chrf = ChrF()
+chrf = chrf_score()
 char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
-wer = WER()
+wer = word_error_rate()
 
 
 # Training loop
