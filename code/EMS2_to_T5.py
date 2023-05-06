@@ -97,7 +97,7 @@ def concat_seqs(text):
 num_epochs = 50
 learning_rate = 5e-5
 
-T5_model_name = 'google/flan-t5-base'
+T5_model_name = 'google/flan-t5-large'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
@@ -138,10 +138,10 @@ for epoch in range(num_epochs):
         projection.train()
         #optimizer = AdamW(list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
     elif epoch == 16:
+        optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
         t5_model.train()
         esm_model.eval()
         projection.eval()
-        optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
     elif epoch > 16:
         t5_model.train()
         esm_model.eval()
