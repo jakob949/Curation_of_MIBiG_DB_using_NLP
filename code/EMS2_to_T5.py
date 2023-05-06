@@ -126,7 +126,6 @@ optimizer = AdamW(list(esm_model.parameters()) + list(projection.parameters()), 
 
 rouge = ROUGEScore()
 bleu = BLEUScore()
-chrf = chrf_score()
 char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 wer = word_error_rate()
@@ -156,7 +155,6 @@ for epoch in range(num_epochs):
     bleu_train_accumulated = 0.0
     num_train_batches = 0
     Num_correct_val_mols_train = 0
-    chrf_train_accumulated = 0.0
     char_error_rate_train_accumulated = 0.0
     wer_train_accumulated = 0.0
     sacre_bleu_train_accumulated = 0.0
@@ -188,14 +186,12 @@ for epoch in range(num_epochs):
             train_true_labels = [batch["label"][0]]
             # Inside the training loop, after calculating train_rouge_score and train_bleu_score
             train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
-            train_chrf_score = chrf(train_predicted_labels, train_true_labels).item()
             train_char_error_rate_score = char_error_rate(train_predicted_labels, train_true_labels).item()
             train_wer_score = wer(train_predicted_labels, train_true_labels).item()
             train_sacre_bleu_score = sacre_bleu([train_predicted_labels], [train_true_labels]).item()
             train_bleu_score = bleu(train_predicted_labels.split(), [train_true_labels[0].split()])
 
             # Accumulate the values of these metrics in separate variables
-            chrf_train_accumulated += train_chrf_score
             char_error_rate_train_accumulated += train_char_error_rate_score
             wer_train_accumulated += train_wer_score
             sacre_bleu_train_accumulated += train_sacre_bleu_score
@@ -218,7 +214,6 @@ for epoch in range(num_epochs):
     rouge_test_accumulated = 0.0
     num_test_batches = 0
     bleu_test_accumulated = 0.0
-    chrf_test_accumulated = 0.0
     char_error_rate_test_accumulated = 0.0
     wer_test_accumulated = 0.0
     sacre_bleu_test_accumulated = 0.0
@@ -252,13 +247,11 @@ for epoch in range(num_epochs):
             test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
             # Inside the testing loop, after calculating test_rouge_score and test_bleu_score
 
-            test_chrf_score = chrf(test_predicted_labels, test_true_labels).item()
             test_char_error_rate_score = char_error_rate(test_predicted_labels, test_true_labels).item()
             test_wer_score = wer(test_predicted_labels, test_true_labels).item()
             test_sacre_bleu_score = sacre_bleu([test_predicted_labels], [test_true_labels]).item()
 
             # Accumulate the values of these metrics in separate variables
-            chrf_test_accumulated += test_chrf_score
             char_error_rate_test_accumulated += test_char_error_rate_score
             wer_test_accumulated += test_wer_score
             sacre_bleu_test_accumulated += test_sacre_bleu_score
@@ -274,11 +267,11 @@ for epoch in range(num_epochs):
 
         with open("scores.txt", "a") as scores_file:
             print(
-                f"Epoch {epoch + 1}/{num_epochs}\t Avg Train ROUGE-1 F1 Score\t {rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t {bleu_train_accumulated / num_train_batches}\tAvg Train ChrF Score\t {chrf_train_accumulated / num_train_batches}\tAvg Train Char Error Rate\t {char_error_rate_train_accumulated / num_train_batches}\tAvg Train WER\t {wer_train_accumulated / num_train_batches}\tAvg Train SacreBLEU Score\t {sacre_bleu_train_accumulated / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
+                f"Epoch {epoch + 1}/{num_epochs}\t Avg Train ROUGE-1 F1 Score\t {rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t {bleu_train_accumulated / num_train_batches}\tAvg Train Char Error Rate\t {char_error_rate_train_accumulated / num_train_batches}\tAvg Train WER\t {wer_train_accumulated / num_train_batches}\tAvg Train SacreBLEU Score\t {sacre_bleu_train_accumulated / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
                 file=scores_file)
 
             print(
-                f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tAvg Test ChrF Score\t {chrf_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_test_accumulated / num_test_batches}\tAvg Test WER\t {wer_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
+                f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_test_accumulated / num_test_batches}\tAvg Test WER\t {wer_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
                 file=scores_file)
 
 
