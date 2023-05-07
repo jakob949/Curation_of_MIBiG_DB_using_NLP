@@ -10,7 +10,7 @@ import argparse as arg
 
 parser = arg.ArgumentParser()
 parser.add_argument("-o", "--output_file_name", type=str, default="unknown", )
-
+args = parser.parse_args()
 
 def is_valid_smiles(smiles: str) -> bool:
     mol = Chem.MolFromSmiles(smiles)
@@ -256,10 +256,10 @@ for epoch in range(num_epochs):
             #print(f"test_true_labels: {test_true_labels}, test_predicted_labels: {test_predicted_labels}, test_rouge_score: {test_rouge_score}")
             if is_valid_smiles(test_predicted_labels):
                 Num_correct_val_mols_test += 1
-            with open(f"predictions_{parser.output_file_name}.txt", "a") as predictions_file:
+            with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}", file=predictions_file)
 
-        with open(f"scores_{parser.output_file_name}.txt", "a") as scores_file:
+        with open(f"scores_{args.output_file_name}.txt", "a") as scores_file:
             print(
                 f"Epoch {epoch + 1}/{num_epochs}\t Avg Train ROUGE-1 F1 Score\t {rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t {bleu_train_accumulated / num_train_batches}\tAvg Train Char Error Rate\t {char_error_rate_train_accumulated / num_train_batches}\tAvg Train SacreBLEU Score\t {sacre_bleu_train_accumulated / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
                 file=scores_file)
