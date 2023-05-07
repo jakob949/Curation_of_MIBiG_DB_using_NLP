@@ -99,7 +99,7 @@ def concat_seqs(text):
 num_epochs = 50
 learning_rate = 5e-5
 
-T5_model_name = 'google/flan-t5-large'
+T5_model_name = 'laituan245/molt5-large'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
