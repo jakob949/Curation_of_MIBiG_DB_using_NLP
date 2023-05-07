@@ -6,8 +6,10 @@ from torchmetrics.text.rouge import ROUGEScore
 from rdkit import Chem
 from torchmetrics.text import BLEUScore
 from torchmetrics import CharErrorRate, SacreBLEUScore
-from torchmetrics.functional import extended_edit_distance, chrf_score, word_error_rate
+import argparse as arg
 
+parser = arg.ArgumentParser()
+parser.add_argument("-o", "--output_file_name", type=str, default="unknown", )
 
 
 def is_valid_smiles(smiles: str) -> bool:
@@ -97,7 +99,7 @@ def concat_seqs(text):
 num_epochs = 50
 learning_rate = 5e-5
 
-T5_model_name = 'laituan245/molt5-small'
+T5_model_name = 'google/flan-t5-large'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
@@ -254,10 +256,10 @@ for epoch in range(num_epochs):
             #print(f"test_true_labels: {test_true_labels}, test_predicted_labels: {test_predicted_labels}, test_rouge_score: {test_rouge_score}")
             if is_valid_smiles(test_predicted_labels):
                 Num_correct_val_mols_test += 1
-            with open("predictions.txt", "a") as predictions_file:
+            with open(f"predictions_{parser.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}", file=predictions_file)
 
-        with open("scores.txt", "a") as scores_file:
+        with open(f"scores_{parser.output_file_name}.txt", "a") as scores_file:
             print(
                 f"Epoch {epoch + 1}/{num_epochs}\t Avg Train ROUGE-1 F1 Score\t {rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t {bleu_train_accumulated / num_train_batches}\tAvg Train Char Error Rate\t {char_error_rate_train_accumulated / num_train_batches}\tAvg Train SacreBLEU Score\t {sacre_bleu_train_accumulated / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
                 file=scores_file)
