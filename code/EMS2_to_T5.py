@@ -99,7 +99,7 @@ def concat_seqs(text):
 num_epochs = 50
 learning_rate = 5e-5
 
-T5_model_name = 'laituan245/molt5-large'
+T5_model_name = 'laituan245/molt5-base'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
@@ -123,8 +123,8 @@ train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # optimizer = AdamW(list(t5_model.parameters()) + list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
-optimizer = AdamW(list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
-# optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
+# optimizer = AdamW(list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
+optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
 
 rouge = ROUGEScore()
 bleu = BLEUScore()
@@ -134,20 +134,9 @@ sacre_bleu = SacreBLEUScore()
 
 # Training loop
 for epoch in range(num_epochs):
-    if epoch < 15:
-        t5_model.eval()
-        esm_model.train()
-        projection.train()
-        #optimizer = AdamW(list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
-    elif epoch == 16:
-        optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
-        t5_model.train()
-        esm_model.eval()
-        projection.eval()
-    elif epoch > 16:
-        t5_model.train()
-        esm_model.eval()
-        projection.eval()
+
+    t5_model.train()
+
 
 
     # esm_model.train()
