@@ -161,8 +161,10 @@ for epoch in range(epochs):
             rouge_test_accumulated += test_rouge_score
 
             # print(f"test_true_labels: {test_true_labels}, test_predicted_labels: {test_predicted_labels}, test_rouge_score: {test_rouge_score}")
-            if is_valid_smiles(test_predicted_labels):
-                Num_correct_val_mols_test += 1
+            for smiles in test_predicted_labels:
+                if is_valid_smiles(smiles):
+                    Num_correct_val_mols_test += 1
+
     with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
         print(f"Epoch {epoch + 1}/{epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}",
               file=predictions_file)
