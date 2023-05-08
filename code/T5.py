@@ -115,7 +115,7 @@ for epoch in range(epochs):
             # Inside the training loop, after calculating train_rouge_score and train_bleu_score
             train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
             train_char_error_rate_score = char_error_rate(train_predicted_labels, train_true_labels).item()
-            train_sacre_bleu_score = sacre_bleu([train_predicted_labels], [train_true_labels]).item()
+            train_sacre_bleu_score = sacre_bleu(train_predicted_labels, train_true_labels).item()
             train_bleu_score = bleu(train_predicted_labels.split(), [train_true_labels[0].split()])
 
             # Accumulate the values of these metrics in separate variables
