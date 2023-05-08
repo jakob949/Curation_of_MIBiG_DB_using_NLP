@@ -2,9 +2,8 @@ from torch.utils.data import DataLoader
 import torch
 from torch import nn
 from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, AutoModel, AdamW
-from torchmetrics.text.rouge import ROUGEScore
 from rdkit import Chem
-from torchmetrics.text import BLEUScore
+from torchmetrics.text import BLEUScore, ROUGEScore
 from torchmetrics import CharErrorRate, SacreBLEUScore
 import argparse as arg
 
