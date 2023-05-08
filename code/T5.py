@@ -116,7 +116,7 @@ for epoch in range(epochs):
             train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
             train_char_error_rate_score = char_error_rate(train_predicted_labels, train_true_labels).item()
             train_sacre_bleu_score = sacre_bleu(train_predicted_labels, train_true_labels).item()
-            train_bleu_score = bleu(train_predicted_labels.split(), [train_true_labels[0].split()])
+            train_bleu_score = bleu(train_predicted_labels, train_true_labels).item()
 
             # Accumulate the values of these metrics in separate variables
             char_error_rate_train_accumulated += train_char_error_rate_score
@@ -151,16 +151,14 @@ for epoch in range(epochs):
             rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
             print('Rouge: ', rouge_score)
 
-            test_bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
             test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
             test_char_error_rate_score = char_error_rate(test_predicted_labels, test_true_labels).item()
-            test_sacre_bleu_score = sacre_bleu([test_predicted_labels], [test_true_labels]).item()
+            test_sacre_bleu_score = sacre_bleu(test_predicted_labels, test_true_labels).item()
 
             # Accumulate the values of these metrics in separate variables
             char_error_rate_test_accumulated += test_char_error_rate_score
             sacre_bleu_test_accumulated += test_sacre_bleu_score
             rouge_test_accumulated += test_rouge_score
-            bleu_test_accumulated += test_bleu_score
 
             # print(f"test_true_labels: {test_true_labels}, test_predicted_labels: {test_predicted_labels}, test_rouge_score: {test_rouge_score}")
             if is_valid_smiles(test_predicted_labels):
