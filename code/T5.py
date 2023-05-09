@@ -139,7 +139,7 @@ for epoch in range(epochs):
             # Accumulate the values of these metrics in separate variables
             test_accuracy_accumulated += test_accuracy
             test_f1_accumulated += test_f1
-
+            #
             with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}",
                       file=predictions_file)
