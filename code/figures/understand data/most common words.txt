@@ -1,0 +1,29 @@
+Positive dataset
+Number of sentences: 22989
+Number of tokens: 616917
+Most common words:
+gene: 6222
+biosynthesis: 4156
+cluster: 3894
+biosynthetic: 3348
+genes: 3169
+production: 1941
+streptomyces: 1789
+acid: 1643
+polyketide: 1522
+analysis: 1511
+
+Negative dataset 
+Number of sentences: 23036
+Number of tokens: 621292
+Most common words:
+protein: 1922
+cells: 1403
+cell: 1352
+activity: 1292
+gene: 1227
+dna: 1057
+binding: 956
+acid: 954
+genes: 949
+proteins: 928
