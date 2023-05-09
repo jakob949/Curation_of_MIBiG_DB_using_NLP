@@ -68,7 +68,7 @@ test_dataset = Dataset("test_SMILE_activity_0.txt", tokenizer)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
-
+#
 batch_size = 6
 epochs = 50
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
