@@ -57,8 +57,8 @@ tokenizer = T5TokenizerFast.from_pretrained(model_name)
 config = T5Config.from_pretrained(model_name)
 model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
 
-train_dataset = Dataset("train_dataset_protein_text_v2_shorten_0.txt", tokenizer)
-test_dataset = Dataset("test_dataset_protein_text_v2_shorten_0.txt", tokenizer)
+train_dataset = Dataset("train_SMILE_activity_0.txt", tokenizer)
+test_dataset = Dataset("test_SMILE_activity_0.txt", tokenizer)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
