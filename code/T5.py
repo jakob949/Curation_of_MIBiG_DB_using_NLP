@@ -4,8 +4,7 @@ from torch.utils.data import Dataset, DataLoader
 from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config
 import time
 from rdkit import Chem
-from torchmetrics.text import BLEUScore, ROUGEScore
-from torchmetrics import CharErrorRate, SacreBLEUScore
+from sklearn.metrics import accuracy_score, f1_score
 from torch.optim.lr_scheduler import CosineAnnealingLR
 import argparse as arg
 
