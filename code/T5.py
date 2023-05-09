@@ -4,12 +4,51 @@ from torch.utils.data import Dataset, DataLoader
 from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config
 import time
 from rdkit import Chem
-from sklearn.metrics import accuracy_score, f1_score
+from torchmetrics.text import BLEUScore, ROUGEScore
+from torchmetrics import CharErrorRate, SacreBLEUScore
+from torch.optim.lr_scheduler import CosineAnnealingLR
 import argparse as arg
 
 parser = arg.ArgumentParser()
 parser.add_argument("-o", "--output_file_name", type=str, default="unknown", )
 args = parser.parse_args()
+
+
+def is_valid_smiles(smiles: str) -> bool:
+    mol = Chem.MolFromSmiles(smiles)
+    return mol is not None
+
+class Dataset(Dataset):
+    def __init__(self, filename, tokenizer, max_length=1750):
+        self.tokenizer = tokenizer
+        self.data = []
+        with open(filename, "r") as f:
+            for line in f:
+                if len(line.strip().split("\t")) == 3:
+
+                    text = line.split('\t')[1]
+                    label = line.split('\t')[2].strip('\n')
+                    # label = "1" if label == "1" else "0"
+                    if len(text) < 1750:
+                        self.data.append((text, label))
+        print(len(self.data))
+        self.max_length = max_length
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        text, label = self.data[idx]
+        input_encoding = self.tokenizer(text, return_tensors="pt", max_length=self.max_length, padding="max_length")
+        target_encoding = self.tokenizer(label, return_tensors="pt", max_length=400, padding="max_length",
+                                         truncation=True)
+
+        return {
+            "input_ids": input_encoding["input_ids"].squeeze(),
+            "attention_mask": input_encoding["attention_mask"].squeeze(),
+            "labels": target_encoding["input_ids"].squeeze(),
+        }
+
 
 def is_valid_smiles(smiles: str) -> bool:
     mol = Chem.MolFromSmiles(smiles)
