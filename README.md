@@ -8,6 +8,10 @@ This repository contains a collection of Python scripts that serve two main purp
 
 1. Data retrieval and processing
 2. Data understanding and visualization
+3. Models
+4. Fun and learning
+5. Datasets
+6. Figures
 
 ### Data Retrieval and Processing
 
@@ -32,6 +36,14 @@ This repository contains a collection of Python scripts that serve two main purp
 ### Fun and Learning
 
 - `Attention_made_simply.py`: A script that explains the self-attention mechanism in transformer models with simple base Python and NumPy implementations.
+
+### Datasets
+
+All datasets can be found in code/datasets. 
+
+### Figures
+
+Already maded figures can be found in code/figures
 
 ## Getting Started
 
