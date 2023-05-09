@@ -1,0 +1,12 @@
+torch
+numpy
+transformers
+sklearn
+spacy
+rdkit
+matplotlib
+bs4
+pybliometrics
+textwrap
+collections
+wordcloud
