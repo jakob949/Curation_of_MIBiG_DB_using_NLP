@@ -27,7 +27,7 @@ This repository contains a collection of Python scripts that serve two main purp
 - `journal_distribution_of_pos_data.py`: Produces a plot of journal distribution
 
 ### Models
-
+- `BERT_abstract.py`: BERT pre-trained on PubMed articles. Used to predict if new literature is relevant for inclusion in the MiBIG DB.
 - `bioGPT.py`: GPT-2 pre-trained on PubMed articles. Used to predict if new literature is relevant for inclusion in the MiBIG DB.
 - `simple_models_for_pos_neg_classifier.py`: Three simple models, majority voting, a novel model based on word frequencies in abstract, and Support Vector Machine. All three models are used to predict if new literature is relevant for inclusion in the MiBIG DB.
 - `T5.py`: T5 encoder-decoder model. Can be used to predict either SMILES based on the gene names or activity of secondary metabolite based on SMILES or whether literature should be included in MiBIG.
@@ -65,4 +65,4 @@ We welcome contributions to this project! If you would like to contribute, pleas
 
 ## License
 
-This project is released under the MIT License. Please see the [LICENSE.md](LICENSE) file for more information.
+This project is released under the MIT License. Please see the LICENSE file for more information.
