@@ -13,17 +13,13 @@ parser.add_argument("-o", "--output_file_name", type=str, default="unknown", )
 args = parser.parse_args()
 
 
-def is_valid_smiles(smiles: str) -> bool:
-    mol = Chem.MolFromSmiles(smiles)
-    return mol is not None
-
 class Dataset(Dataset):
     def __init__(self, filename, tokenizer, max_length=1750):
         self.tokenizer = tokenizer
         self.data = []
         with open(filename, "r") as f:
             for line in f:
-                if len(line.strip().split("\t")) == 3:
+                if len(line.strip().split("\t")) == 2:
 
                     text = line.split('\t')[0]
                     task = text.split(':')[0]
