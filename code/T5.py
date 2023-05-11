@@ -25,11 +25,12 @@ class Dataset(Dataset):
             for line in f:
                 if len(line.strip().split("\t")) == 3:
 
-                    text = line.split('\t')[1]
-                    label = line.split('\t')[2].strip('\n')
+                    text = line.split('\t')[0]
+                    task = text.split(':')[0]
+                    label = line.split('\t')[1].strip('\n')
                     # label = "1" if label == "1" else "0"
                     if len(text) < 1750:
-                        self.data.append((text, label))
+                        self.data.append((text, label, task))
         print(len(self.data))
         self.max_length = max_length
 
@@ -62,8 +63,8 @@ tokenizer = T5TokenizerFast.from_pretrained(model_name)
 config = T5Config.from_pretrained(model_name)
 model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
 
-train_dataset = Dataset("train_SMILE_activity_0.txt", tokenizer)
-test_dataset = Dataset("test_SMILE_activity_0.txt", tokenizer)
+train_dataset = Dataset("train_combined_multitask.txt", tokenizer)
+test_dataset = Dataset("test_combined_multitask.txt", tokenizer)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
