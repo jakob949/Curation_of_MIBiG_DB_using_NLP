@@ -28,19 +28,20 @@ class ProteinDataset(torch.utils.data.Dataset):
         data = []
         with open(self.file_path, 'r') as f:
             for line in f:
-                text = line.split('\t')[0]
-                task = text.split(':')[0]
-                label = line.split('\t')[1].strip('\n')
+                if line != '\n':
+                    text = line.split('\t')[0]
+                    task = text.split(':')[0]
+                    label = line.split('\t')[1].strip('\n')
 
-                if task == 'ProteinSeqs2SMILE':
-                    text_list = text.split('_')
-                    if all(len(element) <= 850 for element in text_list):
-                        data.append((text_list, label, task))
-                else:
-                    text_list = text
-                    # Check if any element in text_list is longer than 2000 characters
-                    if all(len(element) <= 1750 for element in text_list):
-                        data.append((text_list, label, task))
+                    if task == 'ProteinSeqs2SMILE':
+                        text_list = text.split('_')
+                        if all(len(element) <= 850 for element in text_list):
+                            data.append((text_list, label, task))
+                    else:
+                        text_list = text
+                        # Check if any element in text_list is longer than 2000 characters
+                        if all(len(element) <= 1750 for element in text_list):
+                            data.append((text_list, label, task))
 
         print(len(data))
         return data
