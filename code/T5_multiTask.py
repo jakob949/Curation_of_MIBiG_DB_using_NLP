@@ -1,212 +1,361 @@
-import os
+from torch.utils.data import DataLoader
 import torch
-from torch.utils.data import Dataset, DataLoader
-from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config, AutoModel, AutoTokenizer, T5Model
-import argparse
-import time
-from torch.cuda.amp import GradScaler, autocast
+from torch import nn
+from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, AutoModel, AdamW
+from rdkit import Chem
+from torchmetrics.text import BLEUScore, ROUGEScore
+from torchmetrics import CharErrorRate, SacreBLEUScore
+import argparse as arg
+from sklearn.metrics import accuracy_score, f1_score
 
-os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:32"
-
-
-parser = argparse.ArgumentParser()
-parser.add_argument('-l', '--logfile', type=str, help='name of the log file')
-parser.add_argument('-t1tr', '--task1_trainfile', type=str, help='name of the task 1 training file')
-parser.add_argument('-t1te', '--task1_testfile', type=str, help='name of the task 1 test file')
-parser.add_argument('-t2tr', '--task2_trainfile', type=str, help='name of the task 2 training file')
-parser.add_argument('-t2te', '--task2_testfile', type=str, help='name of the task 2 test file')
+parser = arg.ArgumentParser()
+parser.add_argument("-o", "--output_file_name", type=str, default="unknown", )
 args = parser.parse_args()
-
-class Task1Dataset(Dataset):
-    def __init__(self, filename, tokenizer, max_length=512):
-        self.tokenizer = tokenizer
-        self.data = []
-        with open(filename, "r") as f:
-            for line in f:
-                text, label = line.strip().split("\t")
-                label = "1" if label == "1" else "0"
-                self.data.append((text, label))
-
-        self.max_length = max_length
-
-    def __len__(self):
-        return len(self.data)
-
-    def __getitem__(self, idx):
-        text, label = self.data[idx]
-        input_encoding = self.tokenizer(f"AbstractClassification: {text}", return_tensors="pt", max_length=self.max_length, padding="max_length", truncation=True)
-        target_encoding = self.tokenizer(label, return_tensors="pt", max_length=2, padding="max_length", truncation=True)
-
-        return {
-            "input_ids": input_encoding["input_ids"].squeeze(),
-            "attention_mask": input_encoding["attention_mask"].squeeze(),
-            "labels": target_encoding["input_ids"].squeeze(),
-        }
+def is_valid_smiles(smiles: str) -> bool:
+    mol = Chem.MolFromSmiles(smiles)
+    return mol is not None
 
 
-class Task2Dataset(Dataset):
-    def __init__(self, filename, tokenizer, esm_tokenizer, esm_model, max_length=8000):
-        self.tokenizer = tokenizer
+class ProteinDataset(torch.utils.data.Dataset):
+    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=850):
+        self.file_path = file_path
+        self.data = self.load_data()
+        self.T5_tokenizer = T5_tokenizer
         self.esm_tokenizer = esm_tokenizer
-        self.esm_model = esm_model
-        self.data = []
-        with open(filename, "r") as f:
-            for line in f:
-                text, label = line.strip().split("\t")
-                self.data.append((text, label))
-
         self.max_length = max_length
 
-    def _process_esm_output(self, text, max_chunk_length=4096):
-        # Tokenize the input text and get the number of tokens
-        esm_input_encoding = self.esm_tokenizer(text, return_tensors="pt", padding="max_length", truncation=True)
-        num_tokens = esm_input_encoding["input_ids"].size(1)
+    def load_data(self):
+        data = []
+        with open(self.file_path, 'r') as f:
+            for line in f:
+                text = line.split('\t')[0]
+                task = text.split(':')[0]
+                label = line.split('\t')[1].strip('\n')
 
-        # Calculate the number of chunks needed
-        num_chunks = (num_tokens + max_chunk_length - 1) // max_chunk_length
+                if task == 'ProteinSeqs2SMILE':
+                    text_list = text.split('_')
+                    if all(len(element) <= 850 for element in text_list):
+                        data.append((text_list, label, task))
+                else:
+                    text_list = text
+                    # Check if any element in text_list is longer than 2000 characters
+                    if all(len(element) <= 1750 for element in text_list):
+                        data.append((text_list, label, task))
 
-        # Process each chunk and aggregate the results
-        esm_output_reprs = []
-        for chunk_idx in range(num_chunks):
-            start_idx = chunk_idx * max_chunk_length
-            end_idx = min((chunk_idx + 1) * max_chunk_length, num_tokens)
-
-            # Get the input encoding for the current chunk
-            chunk_input_encoding = {k: v[:, start_idx:end_idx] for k, v in esm_input_encoding.items()}
-
-            # Process the chunk using the ESM model
-            esm_output = self.esm_model(**chunk_input_encoding)
-
-            # Compute the mean-pooling for the current chunk
-            chunk_esm_output_repr = torch.mean(esm_output[0], dim=1)
-            esm_output_reprs.append(chunk_esm_output_repr)
-
-        # Concatenate and average the mean-pooled representations of all chunks
-        esm_output_repr = torch.mean(torch.cat(esm_output_reprs, dim=0), dim=0, keepdim=True)
-        return esm_output_repr
+        print(len(data))
+        return data
 
     def __len__(self):
         return len(self.data)
 
     def __getitem__(self, idx):
-        text, label = self.data[idx]
-        esm_output_repr = self._process_esm_output(text)
-        input_encoding = self.tokenizer(f"protein2Smile: {esm_output_repr}", return_tensors="pt", max_length=self.max_length,
-                                        padding="max_length", truncation=True)
-        target_encoding = self.tokenizer(label, return_tensors="pt", max_length=200, padding="max_length",
-                                         truncation=True)
+        text, label, task = self.data[idx]
+        input_encoding = self.T5_tokenizer(text, return_tensors="pt", max_length=self.max_length, padding="max_length",
+                                           truncation=True)
+        target_encoding = self.T5_tokenizer(label, return_tensors="pt", max_length=250, padding="max_length",
+                                            truncation=True)
 
         return {
             "input_ids": input_encoding["input_ids"].squeeze(),
             "attention_mask": input_encoding["attention_mask"].squeeze(),
             "labels": target_encoding["input_ids"].squeeze(),
+            "text_list": text,
+            "label": label,
+            "task": task
         }
 
-class ConcatDataset(Dataset):
-    def __init__(self, *datasets):
-        self.datasets = datasets
 
-    def __len__(self):
-        return sum(len(d) for d in self.datasets)
-
-    def __getitem__(self, idx):
-        for d in self.datasets:
-            if idx < len(d):
-                return d[idx]
-            idx -= len(d)
-        raise IndexError("Index out of range")
+# Function to process input sequences with the ESM2 model and return hidden states
+def get_esm_hidden_states(input_text):
+    esm_input_tokens = esm_tokenizer(input_text, return_tensors='pt', padding=True, truncation=True)
+    esm_input_ids = esm_input_tokens['input_ids'].to(device)  # Move to device
+    esm_attention_mask = esm_input_tokens['attention_mask'].to(device)  # Move to device
+    esm_outputs = esm_model(input_ids=esm_input_ids, attention_mask=esm_attention_mask)
+    return esm_outputs[0]
 
 
-start_time = time.time()
+def pad_to_match(tensor1, tensor2, dim):
+    size1 = tensor1.size(dim)
+    size2 = tensor2.size(dim)
+    diff = size1 - size2
 
-# Load ESM model and tokenizer
-esm_model_name = "facebook/esm2_t6_8M_UR50D" # smallest model
+    if diff > 0:
+        padding = (0, 0, 0, diff)  # (left, right, top, bottom) padding
+        tensor2 = nn.functional.pad(tensor2, padding)
+    elif diff < 0:
+        padding = (0, 0, 0, -diff)
+        tensor1 = nn.functional.pad(tensor1, padding)
+
+    return tensor1, tensor2
+
+
+def concat_seqs(text):
+    concat_hidden_states = None
+    hidden_states_list = []
+    # Pad all items to the maximum length and concatenate
+    for item in text:
+        # gets the ESM encoding/hidden_states for each protein sequence in the input list 'text'
+        hidden_states_list.append(get_esm_hidden_states(item))
+
+    max_length = max(item_hidden_states.size(1) for item_hidden_states in hidden_states_list)
+
+    padded_hidden_states_list = [
+        pad_to_match(item_hidden_states, torch.zeros(1, max_length, item_hidden_states.size(2)), dim=1)[0] for
+        item_hidden_states in hidden_states_list]
+    concat_hidden_states = torch.cat(padded_hidden_states_list, dim=1)
+    return concat_hidden_states
+
+
+# Set up the training parameters
+num_epochs = 5
+learning_rate = 5e-5
+
+T5_model_name = 'google/flan-t5-base'
+t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
+t5_config = T5Config.from_pretrained(T5_model_name)
+t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
+
+esm_model_name = "facebook/esm2_t6_8M_UR50D"
 esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
 esm_model = AutoModel.from_pretrained(esm_model_name)
 
-
-model_name = "google/flan-t5-base"
-tokenizer = T5TokenizerFast.from_pretrained(model_name)
-config = T5Config.from_pretrained(model_name)
-config.n_positions = 26000 # max length needed for protein sequences > 25,000
-model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
-
-task1_train_dataset = Task1Dataset(args.task1_trainfile, tokenizer)
-task1_test_dataset = Task1Dataset(args.task1_testfile, tokenizer)
-task2_train_dataset = Task2Dataset(args.task2_trainfile, tokenizer, esm_tokenizer, esm_model)
-task2_test_dataset = Task2Dataset(args.task2_testfile, tokenizer, esm_tokenizer, esm_model)
-
-train_dataset = ConcatDataset(task1_train_dataset, task2_train_dataset)
-test_dataset = ConcatDataset(task1_test_dataset, task2_test_dataset)
-
-if torch.cuda.device_count() > 1:
-    model = torch.nn.DataParallel(model)
+projection = nn.Linear(esm_model.config.hidden_size, t5_config.d_model)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model.to(device)
 
-batch_size = 1
-epochs = 5
-train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+t5_model.to(device)
+esm_model.to(device)
+projection.to(device)
+print(device)
+train_dataset = ProteinDataset("train_combined_multitask_incl_protein_seq.txt", t5_tokenizer, esm_tokenizer)
+test_dataset = ProteinDataset("test_combined_multitask_incl_protein_seq.txt", t5_tokenizer, esm_tokenizer)
 
-optimizer = torch.optim.AdamW(model.parameters(), lr=3e-5)
-scaler = GradScaler()
+train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
-with open(args.logfile, 'w') as f:
-    f.write(f"Model name: {model_name}, Task 1 Train file: {args.task1_trainfile}, Task 1 Test file: {args.task1_testfile}, Task 2 Train file: {args.task2_trainfile}, Task 2 Test file: {args.task2_testfile}, Batch size: {batch_size}, Epochs: {epochs}, Device: {device}\n\n")
+# optimizer = AdamW(list(t5_model.parameters()) + list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
+optimizer = torch.optim.AdamW(t5_model.parameters(), lr=learning_rate)
+
+rouge = ROUGEScore()
+bleu = BLEUScore()
+char_error_rate = CharErrorRate()
+sacre_bleu = SacreBLEUScore()
+
+file = 'lolol'
+output_lenght = 350
+evaluation_results = {}
+evaluation_results_train = {}
+names_of_eval = ["rouge_test_accumulated", "char_error_rate_test_accumulated", "sacre_bleu_test_accumulated",
+                 "test_accuracy_accumulated", "test_f1_accumulated"]
+train_eval_name = ["rouge_train_accumulated", "char_error_rate_train_accumulated", "sacre_bleu_train_accumulated",
+                   "train_accuracy_accumulated", "train_f1_accumulated"]
+
+# Training loop
+for epoch in range(num_epochs):
+    print("Epoch: ", epoch)
+
+    t5_model.train()
+
+    rouge_train_accumulated = 0.0
+    bleu_train_accumulated = 0.0
+    num_train_batches = 0
+    Num_correct_val_mols_train = 0
+    char_error_rate_train_accumulated = 0.0
+    sacre_bleu_train_accumulated = 0.0
+    train_accuracy_accumulated = 0.0
+    train_f1_accumulated = 0.0
+
+    for batch in train_loader:
+        # Should be fixed - This only works for batch size 1...
+        num_train_batches += 1
+
+        task = batch["task"][0]
+
+        if task not in evaluation_results:
+            evaluation_results[task] = {}
+        if epoch not in evaluation_results[task]:
+            evaluation_results[task][epoch] = {}
+        if task not in evaluation_results_train:
+            evaluation_results_train[task] = {}
+        if epoch not in evaluation_results_train[task]:
+            evaluation_results_train[task][epoch] = {}
+
+        if str(task) == 'ProteinSeqs2SMILE':
+            text = batch["text_list"]
+            labels = batch["labels"].to(device)
+
+            concat_hidden_states = concat_seqs(text)
+
+            projected_hidden_states = projection(concat_hidden_states)
+            optimizer.zero_grad()
+
+            decoder_input_ids = torch.cat(
+                (torch.full((labels.size(0), 1), 0, dtype=torch.long, device=device), labels[:, :-1]), dim=-1)
+
+            t5_outputs = t5_model(
+                input_ids=None,
+                attention_mask=None,
+                decoder_input_ids=decoder_input_ids,
+                encoder_outputs=(projected_hidden_states, None),
+                labels=labels,
+            )
+
+            with torch.no_grad():
+                train_predicted_labels = t5_tokenizer.decode(t5_outputs.logits[0].argmax(dim=-1).tolist(),
+                                                             skip_special_tokens=True, num_of_beams=5, max_new_tokens=output_lenght)
+                train_true_labels = [batch["label"][0]]
+                # Inside the training loop, after calculating train_rouge_score and train_bleu_score
+                train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
+                train_char_error_rate_score = char_error_rate(train_predicted_labels, train_true_labels).item()
+                train_sacre_bleu_score = sacre_bleu([train_predicted_labels], [train_true_labels]).item()
+                train_bleu_score = bleu(train_predicted_labels.split(), [train_true_labels[0].split()])
+
+                # Accumulate the values of these metrics in separate variables
+                char_error_rate_train_accumulated += train_char_error_rate_score
+                sacre_bleu_train_accumulated += train_sacre_bleu_score
+                rouge_train_accumulated += train_rouge_score
+                bleu_train_accumulated += train_bleu_score
+                train_accuracy_accumulated += accuracy_score([train_true_labels], [train_predicted_labels])
+                train_f1_accumulated += f1_score([train_true_labels], [train_predicted_labels], average='weighted')
+
+            loss = t5_outputs.loss
+            loss.backward()
+            optimizer.step()
+
+        else:
+            optimizer.zero_grad()
+
+            input_ids = batch["input_ids"].to(device)
+            attention_mask = batch["attention_mask"].to(device)
+            labels = batch["labels"].to(device)
+            train_true_labels = [batch["label"][0]]
+            if len(input_ids.shape) == 2:
+                outputs = t5_model(input_ids, attention_mask=attention_mask, labels=labels)
+                loss = outputs.loss
+                loss.backward()
+
+                with torch.no_grad():
+                    train_outputs = t5_model.generate(input_ids, attention_mask=attention_mask, num_beams=12, max_new_tokens=output_lenght)
+                    train_predicted_labels = [t5_tokenizer.decode(pred, skip_special_tokens=True) for pred in train_outputs]
+                    train_true_labels = [t5_tokenizer.decode(label, skip_special_tokens=True) for label in labels]
+
+                    # Calculate accuracy and f1 score
+                    train_accuracy = accuracy_score(train_true_labels, train_predicted_labels)
+                    train_f1 = f1_score(train_true_labels, train_predicted_labels, average='weighted')
+                    train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
+                    train_char_error_rate_score = char_error_rate(train_predicted_labels, train_true_labels).item()
+                    train_sacre_bleu_score = sacre_bleu(train_predicted_labels, train_true_labels).item()
+                    train_bleu_score = bleu(train_predicted_labels, train_true_labels)
+
+
+                    # Accumulate the values of these metrics in separate variables
+                    train_accuracy_accumulated += train_accuracy
+                    train_f1_accumulated += train_f1
+                    char_error_rate_train_accumulated += train_char_error_rate_score
+                    sacre_bleu_train_accumulated += train_sacre_bleu_score
+                    rouge_train_accumulated += train_rouge_score
+                    bleu_train_accumulated += train_bleu_score
+
+        train_eval_value = [rouge_train_accumulated, char_error_rate_train_accumulated, sacre_bleu_train_accumulated, train_accuracy_accumulated, train_f1_accumulated]
+
+        for name, value in zip(train_eval_name, train_eval_value):
+                if name not in evaluation_results_train[task][epoch]:
+                    evaluation_results_train[task][epoch][name] = value
+                else:
+                    evaluation_results_train[task][epoch][name] += value
+
+        # Test loop
+    t5_model.eval()
+    esm_model.eval()
+    projection.eval()
+
+    rouge_test_accumulated = 0.0
+    num_test_batches = 0
+    bleu_test_accumulated = 0.0
+    char_error_rate_test_accumulated = 0.0
+    sacre_bleu_test_accumulated = 0.0
+    Num_correct_val_mols_test = 0
+    test_accuracy_accumulated = 0.0
+    test_f1_accumulated = 0.0
+
+    with torch.no_grad():
+        for batch in test_loader:
+            num_test_batches += 1
+
+            text = batch["text_list"]
+            task = batch["task"][0]
+
+            labels = batch["labels"].to(device)
+            if str(task) == 'ProteinSeqs2SMILE':
+                concat_hidden_states = concat_seqs(text)
+
+                projected_hidden_states = projection(concat_hidden_states)
+
+                decoder_input_ids = torch.cat(
+                    (torch.full((labels.size(0), 1), 0, dtype=torch.long, device=device), labels[:, :-1]), dim=-1)
+
+                test_outputs = t5_model(
+                    input_ids=None,
+                    attention_mask=None,
+                    decoder_input_ids=decoder_input_ids,
+                    encoder_outputs=(projected_hidden_states, None),
+                    labels=labels,
+                )
+
+                test_predicted_labels = t5_tokenizer.decode(test_outputs.logits[0].argmax(dim=-1).tolist(),
+                                                            skip_special_tokens=True, max_new_tokens=output_lenght)
+                test_true_labels = [batch["label"][0]]
+
+                test_bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
+                test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
+                test_char_error_rate_score = char_error_rate(test_predicted_labels, test_true_labels).item()
+                test_sacre_bleu_score = sacre_bleu([test_predicted_labels], [test_true_labels]).item()
+
+                # Accumulate the values of these metrics in separate variables
+                char_error_rate_test_accumulated += test_char_error_rate_score
+                sacre_bleu_test_accumulated += test_sacre_bleu_score
+                rouge_test_accumulated += test_rouge_score
+                bleu_test_accumulated += test_bleu_score
+
+            else:
+                input_ids = batch["input_ids"].to(device)
+                attention_mask = batch["attention_mask"].to(device)
+                labels = batch["labels"].to(device)
+
+                with torch.no_grad():
+                    outputs = t5_model.generate(input_ids, attention_mask=attention_mask, num_beams=6,
+                                                max_new_tokens=output_lenght)
+                    test_predicted_labels = [t5_tokenizer.decode(pred, skip_special_tokens=True) for pred in outputs]
+                    test_true_labels = [t5_tokenizer.decode(label, skip_special_tokens=True) for label in labels]
+
+                    # Calculate accuracy and f1 score
+                    test_accuracy = accuracy_score(test_true_labels, test_predicted_labels)
+                    test_f1 = f1_score(test_true_labels, test_predicted_labels, average='weighted')
+
+                    # Accumulate the values of these metrics in separate variables
+                    test_accuracy_accumulated += test_accuracy
+                    test_f1_accumulated += test_f1
+
+            value_of_eval = [rouge_test_accumulated, char_error_rate_test_accumulated, sacre_bleu_test_accumulated,
+                             test_accuracy_accumulated, test_f1_accumulated]
+            for name, value in zip(names_of_eval, value_of_eval):
+                if name not in evaluation_results[task][epoch]:
+                    evaluation_results[task][epoch][name] = value
+                else:
+                    evaluation_results[task][epoch][name] += value
+
+            with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
+                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}",
+                      file=predictions_file)
+
+    with open(f"score_{args.output_file_name}.txt", "a") as scores_file:
+        print(f"Epoch {epoch + 1}/{num_epochs}\tTrain: {evaluation_results_train}\tTest: {evaluation_results}", file=scores_file)
 
 
 
-accumulation_steps = 4  # Update the model every 4 steps
-
-for epoch in range(epochs):
-    model.train()
-    optimizer.zero_grad()
-
-    for step, batch in enumerate(train_loader):
-        input_ids = batch["input_ids"].to(device)
-        attention_mask = batch["attention_mask"].to(device)
-        labels = batch["labels"].to(device)
-
-        with autocast():
-            outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
-            loss = outputs.loss
-
-        scaler.scale(loss).backward()
-
-        if (step + 1) % accumulation_steps == 0:
-            scaler.step(optimizer)
-            scaler.update()
-            #optimizer.zero_grad()
-
-    model.eval()
-    correct_predictions = 0
-    total_predictions = 0
-    for batch in test_loader:
-        input_ids = batch["input_ids"].to(device)
-        attention_mask = batch["attention_mask"].to(device)
-        labels = batch["labels"].to(device)
-
-        with torch.no_grad():
-            outputs = model.generate(input_ids, attention_mask=attention_mask)
-            predicted_labels = [tokenizer.decode(pred, skip_special_tokens=True) for pred in outputs]
-            print('outputs: ', outputs)
-            print('Predicted labels: ', predicted_labels)
-            true_labels = [tokenizer.decode(label, skip_special_tokens=True) for label in labels]
-            print('True labels: ', true_labels)
-
-        for pred, true in zip(predicted_labels, true_labels):
-            total_predictions += 1
-            if pred == true:
-                print('\npred: ',pred,'\ntrue: ', true)
-                correct_predictions += 1
-
-    with open(args.logfile, 'a') as f:
-        print(f"Epoch {epoch + 1}/{epochs}", file=f)
-        print(f"Accuracy: {round(correct_predictions / total_predictions, 3)}", file=f)
-model.save_pretrained("fine_tuned_flan-t5-base")
-end_time = time.time()
-with open(args.logfile, 'a') as f:
-    print(f"Total time: {round((end_time - start_time)/60, 2)} minutes", file=f)
-
+# save evaluation_results as a json file
+import json
+with open(f"evaluation_results_{args.output_file_name}.json", "w") as evaluation_results_file:
+    json.dump(evaluation_results, evaluation_results_file)
+with open(f"evaluation_results_train_{args.output_file_name}.json", "w") as evaluation_results_train_file:
+    json.dump(evaluation_results_train, evaluation_results_train_file)
