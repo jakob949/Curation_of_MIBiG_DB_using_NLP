@@ -86,6 +86,11 @@ for epoch in range(epochs):
     for batch in train_loader:
         num_train_batches += 1
         optimizer.zero_grad()
+        task = batch["task"]
+        if task == "ProteinSeqs2SMILE":
+            # USE ESM
+            pass
+
         input_ids = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)

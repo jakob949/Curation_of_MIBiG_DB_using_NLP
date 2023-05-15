@@ -34,7 +34,7 @@ class ProteinDataset(torch.utils.data.Dataset):
                     label = line.split('\t')[1].strip('\n')
 
                     if task == 'ProteinSeqs2SMILE':
-                        text_list = text.split('_')
+                        text_list = text.split('_')[1:]
                         if all(len(element) <= 850 for element in text_list):
                             data.append((text_list, label, task))
                     else:
@@ -108,8 +108,9 @@ def concat_seqs(text):
 
 
 # Set up the training parameters
-num_epochs = 5
+num_epochs = 4
 learning_rate = 5e-5
+batch_size = 1
 
 T5_model_name = 'google/flan-t5-base'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
@@ -128,14 +129,19 @@ t5_model.to(device)
 esm_model.to(device)
 projection.to(device)
 print(device)
-train_dataset = ProteinDataset("train_combined_multitask_incl_protein_seq.txt", t5_tokenizer, esm_tokenizer)
-test_dataset = ProteinDataset("test_combined_multitask_incl_protein_seq.txt", t5_tokenizer, esm_tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
+train_dataset = ProteinDataset("train_combined_multitask_incl_protein_seq_v3_0.txt", t5_tokenizer, esm_tokenizer)
+test_dataset = ProteinDataset("test_combined_multitask_incl_protein_seq_v3_0.txt", t5_tokenizer, esm_tokenizer)
+valid_dataset = ProteinDataset("validation_combined_multitask_incl_protein_seq_v3_0.txt", t5_tokenizer, esm_tokenizer)
+
+train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+valid_loader = DataLoader(valid_dataset, batch_size=batch_size, shuffle=False)
 
 # optimizer = AdamW(list(t5_model.parameters()) + list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
 optimizer = torch.optim.AdamW(t5_model.parameters(), lr=learning_rate)
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=1, factor=0.1)
+
 
 rouge = ROUGEScore()
 bleu = BLEUScore()
@@ -168,7 +174,7 @@ for epoch in range(num_epochs):
 
     for batch in train_loader:
         # Should be fixed - This only works for batch size 1...
-        num_train_batches += 1
+        num_train_batches += batch_size
 
         task = batch["task"][0]
 
@@ -265,10 +271,25 @@ for epoch in range(num_epochs):
                 else:
                     evaluation_results_train[task][epoch][name] += value
 
-        # Test loop
+    # validation loop
     t5_model.eval()
     esm_model.eval()
     projection.eval()
+
+    valid_loss = 0.0
+    valid_batches = 0
+    for batch in valid_loader:
+        # Similar to your training and test loops, calculate the loss for the validation set
+        # Be sure to call loss.item() to get a Python number, and not a one-element tensor
+        valid_loss += loss.item()
+        valid_batches += batch_size
+
+    # After the validation loop, calculate the average validation loss
+    valid_loss /= valid_batches
+
+    # Update the learning rate based on the validation loss
+    scheduler.step(valid_loss)
+
 
     rouge_test_accumulated = 0.0
     num_test_batches = 0
@@ -281,7 +302,7 @@ for epoch in range(num_epochs):
 
     with torch.no_grad():
         for batch in test_loader:
-            num_test_batches += 1
+            num_test_batches += batch_size
 
             text = batch["text_list"]
             task = batch["task"][0]
@@ -346,12 +367,13 @@ for epoch in range(num_epochs):
                     evaluation_results[task][epoch][name] += value
 
             with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
-                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}",
+                print(f"Epoch {epoch + 1}/{num_epochs}\ttask: {task}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}",
                       file=predictions_file)
 
     with open(f"score_{args.output_file_name}.txt", "a") as scores_file:
-        print(f"Epoch {epoch + 1}/{num_epochs}\tTrain: {evaluation_results_train}\tTest: {evaluation_results}", file=scores_file)
-
+        print(f"Epoch {epoch + 1}/{num_epochs}\tTrain: {evaluation_results_train}\nTest: {evaluation_results}", file=scores_file)
+    # save model
+    torch.save(t5_model.state_dict(), f"t5_model_{args.output_file_name}.pt")
 
 
 # save evaluation_results as a json file
