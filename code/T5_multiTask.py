@@ -106,16 +106,37 @@ def concat_seqs(text):
     concat_hidden_states = torch.cat(padded_hidden_states_list, dim=1)
     return concat_hidden_states
 
+load_model_continue_training = False
 
 # Set up the training parameters
-num_epochs = 4
+num_epochs = 8
 learning_rate = 5e-5
 batch_size = 1
 
+
+
 T5_model_name = 'google/flan-t5-base'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
-t5_config = T5Config.from_pretrained(T5_model_name)
-t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+if load_model_continue_training:
+    checkpoint = torch.load(f"t5_model_{args.output_file_name}.pt")
+
+    t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name)  # Initialize a new model
+    t5_model.load_state_dict(checkpoint['model_state_dict'])  # Load the model state dict
+
+    optimizer = torch.optim.Adam(t5_model.parameters())  # Initialize a new optimizer
+    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])  # Load the optimizer state dict
+
+    epoch = checkpoint['epoch']  # Load the number of epochs and loss completed so far
+    loss = checkpoint['loss']
+
+    checkpoint = torch.load(f"t5_model_{args.output_file_name}.pt", map_location=torch.device(device))
+else:
+
+    t5_config = T5Config.from_pretrained(T5_model_name)
+    t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
 
 esm_model_name = "facebook/esm2_t6_8M_UR50D"
 esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
@@ -123,7 +144,6 @@ esm_model = AutoModel.from_pretrained(esm_model_name)
 
 projection = nn.Linear(esm_model.config.hidden_size, t5_config.d_model)
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 t5_model.to(device)
 esm_model.to(device)
@@ -373,8 +393,12 @@ for epoch in range(num_epochs):
     with open(f"score_{args.output_file_name}.txt", "a") as scores_file:
         print(f"Epoch {epoch + 1}/{num_epochs}\tTrain: {evaluation_results_train}\nTest: {evaluation_results}", file=scores_file)
     # save model
-    torch.save(t5_model.state_dict(), f"t5_model_{args.output_file_name}.pt")
-
+    torch.save({
+        'epoch': epoch,
+        'model_state_dict': t5_model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'loss': loss,
+    }, f"t5_model_{args.output_file_name}.pt")
 
 # save evaluation_results as a json file
 import json
