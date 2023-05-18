@@ -106,7 +106,7 @@ def concat_seqs(text):
     concat_hidden_states = torch.cat(padded_hidden_states_list, dim=1)
     return concat_hidden_states
 
-load_model_continue_training = False
+load_model_continue_training = True
 
 # Set up the training parameters
 num_epochs = 8
