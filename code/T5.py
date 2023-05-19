@@ -55,7 +55,7 @@ def is_valid_smiles(smiles: str) -> bool:
 
 start_time = time.time()
 
-model_name = "google/flan-t5-base"
+model_name = "GT4SD/multitask-text-and-chemistry-t5-small-augm"
 tokenizer = T5TokenizerFast.from_pretrained(model_name)
 config = T5Config.from_pretrained(model_name)
 model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
