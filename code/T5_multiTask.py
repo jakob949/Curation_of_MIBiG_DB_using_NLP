@@ -119,6 +119,7 @@ def evaluate(pred, true):
         sacre_bleu_score = sacre_bleu(pred, true).item()
     except:
         print("pred", pred, type(pred), "true", true, type(true))
+    print("pred", pred, type(pred), "true", true, type(true))
 
     accuracy = accuracy_score(true, pred)
     f1 = f1_score(true, pred, average='weighted')
