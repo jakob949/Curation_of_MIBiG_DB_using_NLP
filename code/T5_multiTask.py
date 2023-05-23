@@ -108,6 +108,11 @@ def concat_seqs(text):
 
 
 def evaluate(pred, true):
+    if type(true) != list:
+        true = [true]
+    if type(pred) != list:
+        pred = [pred]
+
     if len(pred) == 0:
         pred = " "
     rouge_score = rouge(pred, true)["rouge1_fmeasure"]
