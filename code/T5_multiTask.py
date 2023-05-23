@@ -123,6 +123,7 @@ def evaluate(pred, true):
     accuracy = accuracy_score(true, pred)
     f1 = f1_score(true, pred, average='weighted')
     bleu_score = bleu(pred, true)  # WHY index 0?
+    print("rouge_score", rouge_score, "bleu_score", bleu_score, "char_error_rate_score", char_error_rate_score, "sacre_bleu_score", sacre_bleu_score, "accuracy", accuracy, "f1", f1)
     return rouge_score, bleu_score, char_error_rate_score, sacre_bleu_score, accuracy, f1
 
 
