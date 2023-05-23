@@ -53,8 +53,6 @@ class Dataset(Dataset):
         }
 
 
-
-
 start_time = time.time()
 
 # Assume you have a T5 model and tokenizer already
@@ -88,11 +86,12 @@ for epoch in range(num_epochs):
     num_train_batches = 0
     Num_correct_val_mols_train = 0
 
+
     for batch in train_loader:
-        num_train_batches += 1
         inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
+        num_train_batches += 1
 
         # compute the model output
         outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
