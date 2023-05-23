@@ -104,20 +104,17 @@ peft_config = LoraConfig(
     task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=8, lora_alpha=32, lora_dropout=0.1
 )
 
-esm_peft_config = LoraConfig(
-    task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=8, lora_alpha=32, lora_dropout=0.1
-)
 
-T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-small-augm'
+
+T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
 t5_model = get_peft_model(t5_model, peft_config)
 
-esm_model_name = "facebook/esm2_t33_650M_UR50D"
+esm_model_name = "facebook/esm2_t6_8M_UR50D"
 esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
 esm_model = AutoModel.from_pretrained(esm_model_name)
-esm_model = get_peft_model(esm_model, esm_peft_config)
 
 projection = nn.Linear(esm_model.config.hidden_size, t5_config.d_model)
 
