@@ -1,12 +1,18 @@
 import os
 import torch
 from torch.utils.data import Dataset, DataLoader
-from transformers import T5ForConditionalGeneration, T5TokenizerFast, T5Config
+from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, AutoModel, AdamW
 import time
-from rdkit import Chem
 from sklearn.metrics import accuracy_score, f1_score
 from torch.optim.lr_scheduler import CosineAnnealingLR
 import argparse as arg
+from torchmetrics.text import BLEUScore, ROUGEScore
+from torchmetrics import CharErrorRate, SacreBLEUScore
+from rdkit import Chem
+
+def is_valid_smiles(smiles: str) -> bool:
+    mol = Chem.MolFromSmiles(smiles)
+    return mol is not None
 
 parser = arg.ArgumentParser()
 parser.add_argument("-o", "--output_file_name", type=str, default="unknown", )
@@ -47,111 +53,121 @@ class Dataset(Dataset):
         }
 
 
-def is_valid_smiles(smiles: str) -> bool:
-    mol = Chem.MolFromSmiles(smiles)
-    return mol is not None
 
-# [Dataset class definition remains the same]
 
 start_time = time.time()
 
-model_name = "GT4SD/multitask-text-and-chemistry-t5-small-augm"
-tokenizer = T5TokenizerFast.from_pretrained(model_name)
-config = T5Config.from_pretrained(model_name)
-model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
-
-train_dataset = Dataset("train_combined_multitask.txt", tokenizer)
-test_dataset = Dataset("test_combined_multitask.txt", tokenizer)
-
+# Assume you have a T5 model and tokenizer already
+T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
+t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model.to(device)
-#
-batch_size = 6
-epochs = 20
-train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+t5_model.to(device)
 
-optimizer = torch.optim.AdamW(model.parameters(), lr=3e-5)
-scheduler = CosineAnnealingLR(optimizer, T_max=epochs)
+# Assume your datasets and dataloaders are setup
+train_loader = DataLoader("code/dataset/shorten/train_protein_text_shorten_v3_0.txt", batch_size=1, shuffle=True)
+test_loader = DataLoader("code/dataset/shorten/test_protein_text_shorten_v3_0.txt", batch_size=1, shuffle=False)
 
-with open("log.txt", 'w') as f:
-    f.write(f"Model name: {model_name}, Batch size: {batch_size}, Epochs: {epochs}, Device: {device}\n\n")
+learning_rate = 5e-5
+optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
 
-for epoch in range(epochs):
-    model.train()
-    train_accuracy_accumulated = 0.0
-    train_f1_accumulated = 0.0
+rouge = ROUGEScore()
+bleu = BLEUScore()
+char_error_rate = CharErrorRate()
+sacre_bleu = SacreBLEUScore()
+
+num_epochs = 50
+
+# Training loop
+for epoch in range(num_epochs):
+    t5_model.train()
+    rouge_train_accumulated = 0.0
+    bleu_train_accumulated = 0.0
+    char_error_rate_train_accumulated = 0.0
+    sacre_bleu_train_accumulated = 0.0
     num_train_batches = 0
+    Num_correct_val_mols_train = 0
 
     for batch in train_loader:
         num_train_batches += 1
-        optimizer.zero_grad()
-        task = batch["task"]
-        if task == "ProteinSeqs2SMILE":
-            # USE ESM
-            pass
-
-        input_ids = batch["input_ids"].to(device)
+        inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
 
-        outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
+        # compute the model output
+        outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
         loss = outputs.loss
         loss.backward()
-
-        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-
         optimizer.step()
+        optimizer.zero_grad()
 
+        # compute the metrics for each output
         with torch.no_grad():
-            train_outputs = model.generate(input_ids, attention_mask=attention_mask, num_beams=12)
-            train_predicted_labels = [tokenizer.decode(pred, skip_special_tokens=True) for pred in train_outputs]
-            train_true_labels = [tokenizer.decode(label, skip_special_tokens=True) for label in labels]
+            train_predicted_labels = t5_tokenizer.decode(outputs.logits[0].argmax(dim=-1).tolist(),
+                                                         skip_special_tokens=True)
+            train_true_labels = [batch["label"][0]]
+            if is_valid_smiles(train_predicted_labels):
+                Num_correct_val_mols_train += 1
 
-            # Calculate accuracy and f1 score
-            train_accuracy = accuracy_score(train_true_labels, train_predicted_labels)
-            train_f1 = f1_score(train_true_labels, train_predicted_labels, average='weighted')
+            with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
+                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}", file=predictions_file)
 
-            # Accumulate the values of these metrics in separate variables
-            train_accuracy_accumulated += train_accuracy
-            train_f1_accumulated += train_f1
+            train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
+            train_bleu_score = bleu(train_predicted_labels.split(), [train_true_labels[0].split()])
+            train_char_error_rate_score = char_error_rate(train_predicted_labels, train_true_labels).item()
+            train_sacre_bleu_score = sacre_bleu([train_predicted_labels], [train_true_labels]).item()
 
-    scheduler.step()
+            rouge_train_accumulated += train_rouge_score
+            bleu_train_accumulated += train_bleu_score
+            char_error_rate_train_accumulated += train_char_error_rate_score
+            sacre_bleu_train_accumulated += train_sacre_bleu_score
 
-    model.eval()
-
-    test_accuracy_accumulated = 0.0
-    test_f1_accumulated = 0.0
+    # Similar loop for testing
+    t5_model.eval()
+    rouge_test_accumulated = 0.0
+    bleu_test_accumulated = 0.0
+    char_error_rate_test_accumulated = 0.0
+    sacre_bleu_test_accumulated = 0.0
     num_test_batches = 0
+    Num_correct_val_mols_test = 0
+    test_outputs = []
 
     for batch in test_loader:
         num_test_batches += 1
-        input_ids = batch["input_ids"].to(device)
+        inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
 
         with torch.no_grad():
-            outputs = model.generate(input_ids, attention_mask=attention_mask, num_beams=6)
-            test_predicted_labels = [tokenizer.decode(pred, skip_special_tokens=True) for pred in outputs]
-            test_true_labels = [tokenizer.decode(label, skip_special_tokens=True) for label in labels]
+            outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
+            test_predicted_labels = t5_tokenizer.decode(outputs.logits[0].argmax(dim=-1).tolist(),
+                                                        skip_special_tokens=True)
+            test_true_labels = [batch["label"][0]]
+            test_outputs.append({"predicted_label": test_predicted_labels, "true_label": test_true_labels[0]})
 
-            # Calculate accuracy and f1 score
-            test_accuracy = accuracy_score(test_true_labels, test_predicted_labels)
-            test_f1 = f1_score(test_true_labels, test_predicted_labels, average='weighted')
+            if is_valid_smiles(test_predicted_labels):
+                Num_correct_val_mols_test += 1
 
-            # Accumulate the values of these metrics in separate variables
-            test_accuracy_accumulated += test_accuracy
-            test_f1_accumulated += test_f1
-            #
             with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
-                print(f"Epoch {epoch + 1}/{epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}",
+                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}",
                       file=predictions_file)
 
+            test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
+            test_bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
+            test_char_error_rate_score = char_error_rate(test_predicted_labels, test_true_labels).item()
+            test_sacre_bleu_score = sacre_bleu([test_predicted_labels], [test_true_labels]).item()
+
+            rouge_test_accumulated += test_rouge_score
+            bleu_test_accumulated += test_bleu_score
+            char_error_rate_test_accumulated += test_char_error_rate_score
+            sacre_bleu_test_accumulated += test_sacre_bleu_score
+
+    # Print and save results for this epoch
     with open(f"scores_{args.output_file_name}.txt", "a") as scores_file:
         print(
-            f"Epoch {epoch + 1}/{epochs}\tAvg Train Accuracy\t {train_accuracy_accumulated / num_train_batches}\tAvg Train F1 Score\t {train_f1_accumulated / num_train_batches}",
+            f"Epoch {epoch + 1}/{num_epochs}\t Avg Train ROUGE-1 F1 Score\t {rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t {bleu_train_accumulated / num_train_batches}\tAvg Train Char Error Rate\t {char_error_rate_train_accumulated / num_train_batches}\tAvg Train SacreBLEU Score\t {sacre_bleu_train_accumulated / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
             file=scores_file)
 
         print(
-            f"Epoch {epoch + 1}/{epochs}\tAvg Test Accuracy\t {test_accuracy_accumulated / num_test_batches}\tAvg Test F1 Score\t {test_f1_accumulated / num_test_batches}",
+            f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
             file=scores_file)
