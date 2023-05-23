@@ -110,7 +110,10 @@ def concat_seqs(text):
 def evaluate(pred, true):
     rouge_score = rouge(pred, true)["rouge1_fmeasure"]
     char_error_rate_score = char_error_rate(pred, true).item()
-    sacre_bleu_score = sacre_bleu([pred], [true]).item()
+    try:
+        sacre_bleu_score = sacre_bleu([pred], [true]).item()
+    except:
+        print("pred", pred, type(pred),"true", true, type(true))
     accuracy = accuracy_score(true, pred)
     f1 = f1_score(true, pred, average='weighted')
     bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
