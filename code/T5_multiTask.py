@@ -106,7 +106,18 @@ def concat_seqs(text):
     concat_hidden_states = torch.cat(padded_hidden_states_list, dim=1)
     return concat_hidden_states
 
-load_model_continue_training = True
+
+def evaluate(pred, true):
+    rouge_score = rouge(pred, true)["rouge1_fmeasure"]
+    char_error_rate_score = char_error_rate(pred, true).item()
+    sacre_bleu_score = sacre_bleu([pred], [true]).item()
+    accuracy = accuracy_score(true, pred)
+    f1 = f1_score(true, pred, average='weighted')
+    bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
+    return rouge_score, bleu_score, char_error_rate_score, sacre_bleu_score, accuracy, f1
+
+
+load_model_continue_training = False
 
 # Set up the training parameters
 num_epochs = 8
@@ -183,18 +194,10 @@ for epoch in range(num_epochs):
 
     t5_model.train()
 
-    rouge_train_accumulated = 0.0
-    bleu_train_accumulated = 0.0
     num_train_batches = 0
-    Num_correct_val_mols_train = 0
-    char_error_rate_train_accumulated = 0.0
-    sacre_bleu_train_accumulated = 0.0
-    train_accuracy_accumulated = 0.0
-    train_f1_accumulated = 0.0
-
     for batch in train_loader:
-        # Should be fixed - This only works for batch size 1...
-        num_train_batches += batch_size
+        num_train_batches += len(batch["labels"])
+        rouge_train_accumulated, bleu_train_accumulated, Num_correct_val_mols_train, char_error_rate_train_accumulated, sacre_bleu_train_accumulated, train_accuracy_accumulated, train_f1_accumulated = 0.0, 0.0, 0, 0.0, 0.0, 0.0, 0.0
 
         task = batch["task"][0]
 
@@ -230,20 +233,16 @@ for epoch in range(num_epochs):
             with torch.no_grad():
                 train_predicted_labels = t5_tokenizer.decode(t5_outputs.logits[0].argmax(dim=-1).tolist(),
                                                              skip_special_tokens=True, num_of_beams=5, max_new_tokens=output_lenght)
-                train_true_labels = [batch["label"][0]]
-                # Inside the training loop, after calculating train_rouge_score and train_bleu_score
-                train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
-                train_char_error_rate_score = char_error_rate(train_predicted_labels, train_true_labels).item()
-                train_sacre_bleu_score = sacre_bleu([train_predicted_labels], [train_true_labels]).item()
-                train_bleu_score = bleu(train_predicted_labels.split(), [train_true_labels[0].split()])
 
-                # Accumulate the values of these metrics in separate variables
-                char_error_rate_train_accumulated += train_char_error_rate_score
-                sacre_bleu_train_accumulated += train_sacre_bleu_score
-                rouge_train_accumulated += train_rouge_score
-                bleu_train_accumulated += train_bleu_score
-                train_accuracy_accumulated += accuracy_score([train_true_labels], [train_predicted_labels])
-                train_f1_accumulated += f1_score([train_true_labels], [train_predicted_labels], average='weighted')
+                train_rouge_score, train_bleu_score, train_char_error_rate_score, train_sacre_bleu_score, train_accuracy, train_f1 = evaluate(train_predicted_labels, train_true_labels)
+                train_eval_value = [train_rouge_score, train_bleu_score, train_char_error_rate_score,
+                                    train_sacre_bleu_score, train_accuracy, train_f1]
+
+                for name, value in zip(train_eval_name, train_eval_value):
+                    if name not in evaluation_results_train[task][epoch]:
+                        evaluation_results_train[task][epoch][name] = value
+                    else:
+                        evaluation_results_train[task][epoch][name] += value
 
             loss = t5_outputs.loss
             loss.backward()
@@ -266,32 +265,19 @@ for epoch in range(num_epochs):
                     train_predicted_labels = [t5_tokenizer.decode(pred, skip_special_tokens=True) for pred in train_outputs]
                     train_true_labels = [t5_tokenizer.decode(label, skip_special_tokens=True) for label in labels]
 
-                    # Calculate accuracy and f1 score
-                    train_accuracy = accuracy_score(train_true_labels, train_predicted_labels)
-                    train_f1 = f1_score(train_true_labels, train_predicted_labels, average='weighted')
-                    train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
-                    train_char_error_rate_score = char_error_rate(train_predicted_labels, train_true_labels).item()
-                    train_sacre_bleu_score = sacre_bleu(train_predicted_labels, train_true_labels).item()
-                    train_bleu_score = bleu(train_predicted_labels, train_true_labels)
+                    train_rouge_score, train_bleu_score, train_char_error_rate_score, train_sacre_bleu_score, train_accuracy, train_f1 = evaluate(train_predicted_labels, train_true_labels)
+                    train_eval_value = [train_rouge_score, train_bleu_score, train_char_error_rate_score, train_sacre_bleu_score, train_accuracy, train_f1]
 
+                    for name, value in zip(train_eval_name, train_eval_value):
+                        if name not in evaluation_results_train[task][epoch]:
+                            evaluation_results_train[task][epoch][name] = value
+                        else:
+                            evaluation_results_train[task][epoch][name] += value
 
-                    # Accumulate the values of these metrics in separate variables
-                    train_accuracy_accumulated += train_accuracy
-                    train_f1_accumulated += train_f1
-                    char_error_rate_train_accumulated += train_char_error_rate_score
-                    sacre_bleu_train_accumulated += train_sacre_bleu_score
-                    rouge_train_accumulated += train_rouge_score
-                    bleu_train_accumulated += train_bleu_score
+    for task in evaluation_results_train:
+        evaluation_results_train[task][epoch] = {name: value / num_train_batches for name, value in evaluation_results_train[task][epoch].items()}
 
-        train_eval_value = [rouge_train_accumulated, char_error_rate_train_accumulated, sacre_bleu_train_accumulated, train_accuracy_accumulated, train_f1_accumulated]
-
-        for name, value in zip(train_eval_name, train_eval_value):
-                if name not in evaluation_results_train[task][epoch]:
-                    evaluation_results_train[task][epoch][name] = value
-                else:
-                    evaluation_results_train[task][epoch][name] += value
-
-    # validation loop
+    ### validation loop
     t5_model.eval()
     esm_model.eval()
     projection.eval()
@@ -302,7 +288,7 @@ for epoch in range(num_epochs):
         # Similar to your training and test loops, calculate the loss for the validation set
         # Be sure to call loss.item() to get a Python number, and not a one-element tensor
         valid_loss += loss.item()
-        valid_batches += batch_size
+        valid_batches += len(batch["labels"])
 
     # After the validation loop, calculate the average validation loss
     valid_loss /= valid_batches
@@ -310,19 +296,11 @@ for epoch in range(num_epochs):
     # Update the learning rate based on the validation loss
     scheduler.step(valid_loss)
 
-
-    rouge_test_accumulated = 0.0
     num_test_batches = 0
-    bleu_test_accumulated = 0.0
-    char_error_rate_test_accumulated = 0.0
-    sacre_bleu_test_accumulated = 0.0
-    Num_correct_val_mols_test = 0
-    test_accuracy_accumulated = 0.0
-    test_f1_accumulated = 0.0
-
     with torch.no_grad():
         for batch in test_loader:
-            num_test_batches += batch_size
+            rouge_test_accumulated, bleu_test_accumulated, char_error_rate_test_accumulated, sacre_bleu_test_accumulated, Num_correct_val_mols_test, test_accuracy_accumulated, test_f1_accumulated = 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0
+            num_test_batches += len(batch["labels"])
 
             text = batch["text_list"]
             task = batch["task"][0]
@@ -348,16 +326,17 @@ for epoch in range(num_epochs):
                                                             skip_special_tokens=True, max_new_tokens=output_lenght)
                 test_true_labels = [batch["label"][0]]
 
-                test_bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
-                test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
-                test_char_error_rate_score = char_error_rate(test_predicted_labels, test_true_labels).item()
-                test_sacre_bleu_score = sacre_bleu([test_predicted_labels], [test_true_labels]).item()
+                test_rouge_score, test_bleu_score, test_char_error_rate_score, test_sacre_bleu_score, test_accuracy, test_f1 = evaluate(
+                    test_predicted_labels, test_true_labels)
 
-                # Accumulate the values of these metrics in separate variables
-                char_error_rate_test_accumulated += test_char_error_rate_score
-                sacre_bleu_test_accumulated += test_sacre_bleu_score
-                rouge_test_accumulated += test_rouge_score
-                bleu_test_accumulated += test_bleu_score
+                value_of_eval = [test_rouge_score, test_bleu_score, test_char_error_rate_score, test_sacre_bleu_score,
+                                 test_accuracy, test_f1]
+
+                for name, value in zip(names_of_eval, value_of_eval):
+                    if name not in evaluation_results[task][epoch]:
+                        evaluation_results[task][epoch][name] = value
+                    else:
+                        evaluation_results[task][epoch][name] += value
 
             else:
                 input_ids = batch["input_ids"].to(device)
@@ -370,25 +349,22 @@ for epoch in range(num_epochs):
                     test_predicted_labels = [t5_tokenizer.decode(pred, skip_special_tokens=True) for pred in outputs]
                     test_true_labels = [t5_tokenizer.decode(label, skip_special_tokens=True) for label in labels]
 
-                    # Calculate accuracy and f1 score
-                    test_accuracy = accuracy_score(test_true_labels, test_predicted_labels)
-                    test_f1 = f1_score(test_true_labels, test_predicted_labels, average='weighted')
+                    test_rouge_score, test_bleu_score, test_char_error_rate_score, test_sacre_bleu_score, test_accuracy, test_f1 = evaluate(test_predicted_labels, test_true_labels)
+                    value_of_eval = [test_rouge_score, test_bleu_score, test_char_error_rate_score, test_sacre_bleu_score, test_accuracy, test_f1]
 
-                    # Accumulate the values of these metrics in separate variables
-                    test_accuracy_accumulated += test_accuracy
-                    test_f1_accumulated += test_f1
-
-            value_of_eval = [rouge_test_accumulated, char_error_rate_test_accumulated, sacre_bleu_test_accumulated,
-                             test_accuracy_accumulated, test_f1_accumulated]
-            for name, value in zip(names_of_eval, value_of_eval):
-                if name not in evaluation_results[task][epoch]:
-                    evaluation_results[task][epoch][name] = value
-                else:
-                    evaluation_results[task][epoch][name] += value
+                    for name, value in zip(names_of_eval, value_of_eval):
+                        if name not in evaluation_results[task][epoch]:
+                            evaluation_results[task][epoch][name] = value
+                        else:
+                            evaluation_results[task][epoch][name] += value
 
             with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{num_epochs}\ttask: {task}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}",
                       file=predictions_file)
+    # divede by num_test_batches for each task and each name
+    for task in evaluation_results:
+        evaluation_results[task][epoch] = {name: value / num_test_batches for name, value in evaluation_results[task][epoch].items()}
+
 
     with open(f"score_{args.output_file_name}.txt", "a") as scores_file:
         print(f"Epoch {epoch + 1}/{num_epochs}\tTrain: {evaluation_results_train}\nTest: {evaluation_results}", file=scores_file)
