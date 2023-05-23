@@ -78,6 +78,7 @@ num_epochs = 50
 
 # Training loop
 for epoch in range(num_epochs):
+    print(f"Epoch {epoch + 1}/{num_epochs}")
     t5_model.train()
     rouge_train_accumulated = 0.0
     bleu_train_accumulated = 0.0
