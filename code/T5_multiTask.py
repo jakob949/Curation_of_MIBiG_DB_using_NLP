@@ -110,8 +110,10 @@ def concat_seqs(text):
 def evaluate(pred, true):
     if type(true) != list:
         true = [true]
+        print("\n\ntrue", true, type(true))
     if type(pred) != list:
         pred = [pred]
+        print("\n\npred", pred, type(pred))
 
     if len(pred) == 0:
         pred = " "
