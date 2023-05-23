@@ -118,7 +118,7 @@ def evaluate(pred, true):
         print("pred", pred, type(pred),"true", true, type(true))
     accuracy = accuracy_score(true, pred)
     f1 = f1_score(true, pred, average='weighted')
-    bleu_score = bleu(pred.split(), [true[0].split()])
+    bleu_score = bleu(pred, true) # WHY index 0?
     return rouge_score, bleu_score, char_error_rate_score, sacre_bleu_score, accuracy, f1
 
 
