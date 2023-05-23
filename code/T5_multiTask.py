@@ -112,13 +112,17 @@ def evaluate(pred, true):
         pred = " "
     rouge_score = rouge(pred, true)["rouge1_fmeasure"]
     char_error_rate_score = char_error_rate(pred, true).item()
+
+    # Assign a default value to sacre_bleu_score
+    sacre_bleu_score = None
     try:
         sacre_bleu_score = sacre_bleu([pred], [true]).item()
     except:
-        print("pred", pred, type(pred),"true", true, type(true))
+        print("pred", pred, type(pred), "true", true, type(true))
+
     accuracy = accuracy_score(true, pred)
     f1 = f1_score(true, pred, average='weighted')
-    bleu_score = bleu(pred, true) # WHY index 0?
+    bleu_score = bleu(pred, true)  # WHY index 0?
     return rouge_score, bleu_score, char_error_rate_score, sacre_bleu_score, accuracy, f1
 
 
