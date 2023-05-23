@@ -248,6 +248,8 @@ for epoch in range(num_epochs):
                                     train_sacre_bleu_score, train_accuracy, train_f1]
 
                 for name, value in zip(train_eval_name, train_eval_value):
+                    if value is None:
+                        value = 0.0
                     if name not in evaluation_results_train[task][epoch]:
                         evaluation_results_train[task][epoch][name] = value
                     else:
@@ -342,6 +344,8 @@ for epoch in range(num_epochs):
                                  test_accuracy, test_f1]
 
                 for name, value in zip(names_of_eval, value_of_eval):
+                    if value is None:
+                        value = 0.0
                     if name not in evaluation_results[task][epoch]:
                         evaluation_results[task][epoch][name] = value
                     else:
