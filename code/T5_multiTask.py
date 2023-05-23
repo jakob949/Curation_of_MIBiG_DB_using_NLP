@@ -108,6 +108,8 @@ def concat_seqs(text):
 
 
 def evaluate(pred, true):
+    if len(pred) == 0:
+        pred = " "
     rouge_score = rouge(pred, true)["rouge1_fmeasure"]
     char_error_rate_score = char_error_rate(pred, true).item()
     try:
