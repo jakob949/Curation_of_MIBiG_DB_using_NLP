@@ -32,7 +32,7 @@ class ProteinDataset(torch.utils.data.Dataset):
                 text_list = text.split('_')
 
                 # Check if any element in text_list is longer than 2000 characters
-                if all(len(element) <= 1850 for element in text_list):
+                if all(len(element) <= 1000 for element in text_list):
                     data.append((text_list, label))
         print(len(data))
         return data
@@ -103,8 +103,6 @@ learning_rate = 5e-5
 peft_config = LoraConfig(
     task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=8, lora_alpha=32, lora_dropout=0.1
 )
-
-
 
 T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
