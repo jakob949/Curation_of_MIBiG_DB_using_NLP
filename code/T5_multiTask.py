@@ -116,7 +116,7 @@ def evaluate(pred, true):
     # Assign a default value to sacre_bleu_score
     sacre_bleu_score = None
     try:
-        sacre_bleu_score = sacre_bleu([pred], [true]).item()
+        sacre_bleu_score = sacre_bleu(pred, true).item()
     except:
         print("pred", pred, type(pred), "true", true, type(true))
 
