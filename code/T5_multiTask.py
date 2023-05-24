@@ -172,7 +172,6 @@ else:
     t5_config = T5Config.from_pretrained(T5_model_name)
     t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
 
-t5_model = get_peft_model(t5_model, peft_config)
 
 esm_model_name = "facebook/esm2_t6_8M_UR50D"
 esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
@@ -212,6 +211,9 @@ names_of_eval = ["rouge_test_accumulated", "char_error_rate_test_accumulated", "
                  "test_accuracy_accumulated", "test_f1_accumulated"]
 train_eval_name = ["rouge_train_accumulated", "char_error_rate_train_accumulated", "sacre_bleu_train_accumulated",
                    "train_accuracy_accumulated", "train_f1_accumulated"]
+
+t5_model = get_peft_model(t5_model, peft_config)
+
 
 # Training loop
 for epoch in range(num_epochs):
