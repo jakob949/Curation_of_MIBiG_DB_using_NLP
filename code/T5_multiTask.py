@@ -213,7 +213,7 @@ train_eval_name = ["rouge_train_accumulated", "char_error_rate_train_accumulated
                    "train_accuracy_accumulated", "train_f1_accumulated"]
 
 t5_model = get_peft_model(t5_model, peft_config)
-
+esm_model = get_peft_model(esm_model, peft_config)
 
 # Training loop
 for epoch in range(num_epochs):
