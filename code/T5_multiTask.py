@@ -290,7 +290,7 @@ for epoch in range(num_epochs):
                 loss.backward()
 
                 with torch.no_grad():
-                    train_outputs = t5_model.generate(input_ids, attention_mask=attention_mask, num_beams=12, max_new_tokens=output_lenght)
+                    train_outputs = t5_model.generate(input_ids=input_ids, attention_mask=attention_mask, num_beams=12, max_new_tokens=output_lenght)
                     train_predicted_labels = [t5_tokenizer.decode(pred, skip_special_tokens=True) for pred in train_outputs]
                     train_true_labels = [t5_tokenizer.decode(label, skip_special_tokens=True) for label in labels]
 
@@ -375,7 +375,7 @@ for epoch in range(num_epochs):
                 labels = batch["labels"].to(device)
 
                 with torch.no_grad():
-                    outputs = t5_model.generate(input_ids, attention_mask=attention_mask, num_beams=6,
+                    outputs = t5_model.generate(input_ids=input_ids, attention_mask=attention_mask, num_beams=6,
                                                 max_new_tokens=output_lenght)
                     test_predicted_labels = [t5_tokenizer.decode(pred, skip_special_tokens=True) for pred in outputs]
                     test_true_labels = [t5_tokenizer.decode(label, skip_special_tokens=True) for label in labels]
