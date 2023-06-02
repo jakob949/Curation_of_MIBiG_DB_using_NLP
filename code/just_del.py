@@ -1,7 +1,7 @@
 # import matplotlib.pyplot as plt
 #
 # # List of file names
-# files = ["scores_070523_flan_base.txt", "scores_080523_plain_flan_base.txt"]
+# files = ["scores_160523_GT4SD_multitask-text-and-chemistry-t5-small-augm.txt", "scores_070523_molt5_base.txt"]
 #
 # # Initialize lists to store the extracted data
 # data = {}
@@ -56,35 +56,78 @@
 # def plot_metrics(data, metric_names):
 #     plt.figure(figsize=(12, 10))
 #
+#     legend_labels = {
+#         "scores_160523_GT4SD_multitask-text-and-chemistry-t5-small-augm.txt": "ESM2-chemistry-t5-small-augm",
+#         "scores_070523_molt5_base.txt": "ESM2-molt5_base"
+#     }
+#
 #     for i, metric_name in enumerate(metric_names):
 #         for file in data.keys():
 #             metric_name_key = metric_name.replace('-', '_')
 #             plt.subplot(2, 2, i+1)
-#             plt.plot(data[file]["epochs_train"], data[file][f"{metric_name_key}_train"], label=f'Train {file}')
-#             #plt.plot(data[file]["epochs_test"], data[file][f"{metric_name_key}_test"], label=f'Test {file}')
+#             # plt.plot(data[file]["epochs_train"], data[file][f"{metric_name_key}_train"], label=f'Train {file}')
+#             plt.plot(data[file]["epochs_test"], data[file][f"{metric_name_key}_test"], label=f'Test {legend_labels.get(file, file)}')
 #             plt.xlabel("Epoch")
 #             plt.ylabel(metric_name)
 #             plt.title(f"{metric_name} vs. Epoch")
 #             plt.legend()
 #
 #     plt.tight_layout()
-#     plt.suptitle("Plain T5 vs ESM2-T5 - Train data", fontsize=16, y=1.05)
-#     plt.savefig('Plain_T5_vs_ESM2_T5_Train_data.pdf', bbox_inches='tight', dpi=300, format='pdf')
+#     plt.suptitle("ESM_Chem T5 vs ESM2-T5 - Test data", fontsize=16, y=1.05)
+#     plt.savefig('Chem_T5_esm_vs_ESM2_T5_test_data.pdf', bbox_inches='tight', dpi=300, format='pdf')
 #
 #     plt.show()
+#
 #
 #
 # # Create a single plot with 4 subplots arranged in a 2x2 grid
 # plot_metrics(data, metric_names)
 
-with open("dataset_combined_multitask_incl_protein_seq.txt", "w") as out_file:
-    with open("dataset/test_combined_multitask_incl_protein_seq.txt", "r") as test_file:
-        with open("train_combined_multitask_incl_protein_seq.txt", "r") as file:
-            for line in file:
-                if line != '\n':
-                    out_file.write(line)
-            for line in test_file:
-                if line != '\n':
-                    out_file.write(line)
+from Bio.Blast import NCBIWWW
+from Bio import SeqIO
 
 
+import time
+from concurrent.futures import ThreadPoolExecutor
+from io import StringIO
+from Bio import SeqIO
+from Bio.Blast import NCBIWWW
+
+s = time.time()
+
+def search_homologous_sequences(args):
+    fasta_string, outname = args
+    database="nr"
+    e_value=0.01
+    fasta_io = StringIO(fasta_string)
+    try:
+        record = SeqIO.read(fasta_io, format="fasta")
+        result_handle = NCBIWWW.qblast("blastp", database, record.seq, expect=e_value)
+        with open(f"blastp_temp_files/{outname}.txt", "w") as out_handle:
+            out_handle.write(result_handle.read())
+        result_handle.close()
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return
+
+fasta_strings = []
+outnames = []
+
+with open("dataset_protein_peptides_complete_v2.txt", "r") as f:
+    for i, line in enumerate(f):
+        line = line.split('\t')[1]
+        data = line.split('_')[1:]
+        for j, seq in enumerate(data):
+            len_ = len(seq)
+            fasta_strings.append(seq)
+            outnames.append(f"seq_{i}_{j}_{len_}")
+
+args = zip(fasta_strings, outnames)
+
+num_workers = 32
+
+with ThreadPoolExecutor(max_workers=num_workers) as executor:
+    executor.map(search_homologous_sequences, args)
+
+e = time.time()
+print(e-s)
