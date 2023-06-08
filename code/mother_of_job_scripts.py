@@ -44,7 +44,7 @@ for file in file_list[start:end]:
     identifier = file.split(".")[0].replace("raw_", "")
 
     # Run the blastp command
-    command = f"blastp -task blastp-fast -query raw_{identifier}.fasta -db nr -num_threads 200 -max_target_seqs 8 -out blast/result_{identifier}.txt"
+    command = f"blastp -task blastp-fast -query raw/raw_{identifier}.fasta -db nr -num_threads 200 -max_target_seqs 8 -out blast/result_{identifier}.txt"
     os.system(command)
 
 
