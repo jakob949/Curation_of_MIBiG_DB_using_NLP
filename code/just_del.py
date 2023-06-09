@@ -97,37 +97,138 @@ s = time.time()
 
 def search_homologous_sequences(args):
     fasta_string, outname = args
-    database="nr"
-    e_value=0.01
-    fasta_io = StringIO(fasta_string)
-    try:
-        record = SeqIO.read(fasta_io, format="fasta")
-        result_handle = NCBIWWW.qblast("blastp", database, record.seq, expect=e_value)
-        with open(f"blastp_temp_files/{outname}.txt", "w") as out_handle:
-            out_handle.write(result_handle.read())
-        result_handle.close()
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return
+    if int(outname.split('_')[3]) >= 850:
+        database="nr"
+        e_value=0.01
+        fasta_string_with_header = f">seq\n{fasta_string}"
+        fasta_io = StringIO(fasta_string_with_header)
+        try:
+            record = SeqIO.read(fasta_io, format="fasta")
+            result_handle = NCBIWWW.qblast("blastp", database, record.seq, expect=e_value)
+            with open(f"blastp_temp_files/{outname}.txt", "w") as out_handle:
+                out_handle.write(result_handle.read())
+                print(out_handle)
+            result_handle.close()
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return
 
-fasta_strings = []
-outnames = []
+# fasta_strings = []
+# outnames = []
+#
+# with open("dataset/protein_SMILE/dataset_protein_peptides_complete_v2.txt", "r") as f:
+#     for i, line in enumerate(f):
+#         line = line.split('\t')[0]
+#         data = line.split('_')[1:]
+#
+#         for j, seq in enumerate(data):
+#             len_ = len(seq)
+#             if len_ >= 850:
+#                 fasta_strings.append(seq)
+#                 outnames.append(f"seq_{i}_{j}_{len_}")
+# print(len(fasta_strings))
+#
+# args = zip(fasta_strings, outnames)
 
-with open("dataset_protein_peptides_complete_v2.txt", "r") as f:
-    for i, line in enumerate(f):
-        line = line.split('\t')[1]
-        data = line.split('_')[1:]
-        for j, seq in enumerate(data):
-            len_ = len(seq)
-            fasta_strings.append(seq)
-            outnames.append(f"seq_{i}_{j}_{len_}")
+# num_workers = 10
+#
+# with ThreadPoolExecutor(max_workers=num_workers) as executor:
+#     executor.map(search_homologous_sequences, args)
+# e = time.time()
+# print(e-s, "seconds")
 
-args = zip(fasta_strings, outnames)
+import re
+import os
+from Bio.Align import AlignInfo
+from Bio import AlignIO
+import math
 
-num_workers = 32
+# loop through all files in the directory blast/
+for filename in os.listdir("/blast"):
 
-with ThreadPoolExecutor(max_workers=num_workers) as executor:
-    executor.map(search_homologous_sequences, args)
+    file_identifier = filename.split('_')[:1]
+    print(file_identifier)
+    break
 
-e = time.time()
-print(e-s)
+    with open(f"blast/{filename}", "r") as f:
+        query_list = []
+        subject_list = []
+        q_string, s_string = "", ""
+        for line in f:
+            if line.startswith('>'):
+                if q_string and s_string:
+                    if len(query_list) == 0:
+                        query_list.append(re.sub(r'\s', '', q_string))
+                    subject_list.append(re.sub(r'\s', '', s_string))
+                q_string, s_string = "", ""
+
+            if line.startswith('Query '):
+                query = line[10:].strip()
+                query = ''.join([i for i in query if not i.isdigit()])
+                q_string += query
+
+            elif line.startswith('Sbjct '):
+                subject = line[10:].strip()
+                subject = ''.join([i for i in subject if not i.isdigit()])
+                s_string += subject
+
+        if q_string and s_string:
+            if len(query_list) == 0:
+                query_list.append(re.sub(r'\s', '', q_string))
+            subject_list.append(re.sub(r'\s', '', s_string))
+
+        subject_list.append(query_list[0])
+
+        with open("input_sequences.txt", "w") as f:
+            for i, seq in enumerate(subject_list):
+                f.write(f">seq_{i}\n{seq}\n")
+
+        file_path = os.getcwd()
+        data_path = os.getcwd()
+
+        file = 'input_sequences.txt'
+        os.system(f"clustalo -i {file_path}/{file} -o {data_path}/{file[:-4]}.fasta")
+
+
+        alignment = AlignIO.read("input_sequences.fasta", "fasta")
+        summary_align = AlignInfo.SummaryInfo(alignment)
+
+
+        def shannon_entropy(list_input):
+            unique_base = set(list_input)
+            entropy = 0
+            for base in unique_base:
+                p_x = list_input.count(base) / len(list_input)
+                if p_x > 0:
+                    entropy += - p_x * math.log2(p_x)
+            return entropy
+
+        scores = []
+        for i in range(len(alignment[0])):
+            column_bases = alignment[:, i]
+            scores.append(shannon_entropy(column_bases))
+
+        print(len(scores))
+        print(scores)
+        print(len(query_list[0]), 'query')
+        print(query_list[0])
+
+        # Use the dumb_consensus method to get the consensus sequence
+        consensus = summary_align.dumb_consensus()
+        print(len(consensus))
+        print(consensus)
+
+        while len(consensus) > 850:
+            index = scores.index(max(scores))
+            print(scores[index])
+            consensus = consensus[:index] + consensus[index + 1:]
+            del scores[index]
+
+        print(len(consensus))
+        print(consensus)
+
+        shorten = consensus
+
+        # with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3.txt", "r") as infile:
+        #     with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "a") as f:
+        #
