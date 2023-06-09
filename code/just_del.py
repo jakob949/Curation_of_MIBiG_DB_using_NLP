@@ -146,7 +146,7 @@ import math
 # loop through all files in the directory blast/
 for filename in os.listdir("blast/"):
 
-    file_identifier = filename.split('_')[1:-1]
+    file_identifier = filename.split('_')[1:][-1][:-4]
     print(file_identifier)
     break
 
