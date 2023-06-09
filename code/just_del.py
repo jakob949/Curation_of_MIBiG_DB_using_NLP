@@ -144,7 +144,7 @@ from Bio import AlignIO
 import math
 
 # loop through all files in the directory blast/
-for filename in os.listdir("/blast"):
+for filename in os.listdir("blast/"):
 
     file_identifier = filename.split('_')[:1]
     print(file_identifier)
