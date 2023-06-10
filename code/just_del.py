@@ -206,19 +206,12 @@ for filename in os.listdir("blast/"):
             column_bases = alignment[:, i]
             scores.append(shannon_entropy(column_bases))
 
-        print(len(scores))
-        print(scores)
-        print(len(query_list[0]), 'query')
-        print(query_list[0])
-
         # Use the dumb_consensus method to get the consensus sequence
         consensus = summary_align.dumb_consensus()
-        print(len(consensus))
-        print(consensus)
+
 
         while len(consensus) > 850:
             index = scores.index(max(scores))
-            print(scores[index])
             consensus = consensus[:index] + consensus[index + 1:]
             del scores[index]
 
@@ -242,7 +235,7 @@ for filename in os.listdir("blast/"):
                     if len(data[int(file_identifier[1])]) == int(file_identifier[2]):
                         print("replaced it")
                         data[int(file_identifier[1])] = shorten
-
+                        print(type(d1), type(data))
                         # Recreate the string for the line
                         new_d1 = '_'.join([d1.split('_')[0]] + data)
                         line = '\t'.join([new_d1, smile])
