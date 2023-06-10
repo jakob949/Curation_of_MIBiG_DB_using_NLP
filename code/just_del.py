@@ -185,7 +185,7 @@ for filename in os.listdir("blast/"):
         data_path = os.getcwd()
 
         file = 'input_sequences.txt'
-        os.system(f"clustalo -i {file_path}/{file} -o {data_path}/{file[:-4]}.fasta")
+        os.system(f"clustalo -i {file_path}/{file} -o {data_path}/{file[:-4]}.fasta --force")
 
 
         alignment = AlignIO.read("input_sequences.fasta", "fasta")
