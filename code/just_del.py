@@ -143,13 +143,10 @@ from Bio.Align import AlignInfo
 from Bio import AlignIO
 import math
 
-# loop through all files in the directory blast/
 for filename in os.listdir("blast/"):
 
     file_identifier = filename.split('_')[2:]
     file_identifier[-1] = file_identifier[-1].split('.')[0]
-    print(file_identifier)
-    break
 
     with open(f"blast/{filename}", "r") as f:
         query_list = []
@@ -225,11 +222,32 @@ for filename in os.listdir("blast/"):
             consensus = consensus[:index] + consensus[index + 1:]
             del scores[index]
 
-        print(len(consensus))
-        print(consensus)
-
         shorten = consensus
 
-        # with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3.txt", "r") as infile:
-        #     with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "a") as f:
-        #
+
+        # First read all lines from the file and close it
+        with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "r") as infile:
+            lines = infile.readlines()
+
+        # Now open the file in write mode to write back the modified lines
+        with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "w") as outfile:
+            for i, line in enumerate(lines):
+                d1 = line.split('\t')[0]
+                smile = line.split('\t')[1]
+                data = d1.split('_')[1:]
+
+                if i == int(file_identifier[0]):
+
+                    # Check - To insure correct file
+                    if len(data[int(file_identifier[1])]) == int(file_identifier[2]):
+                        print("replaced it")
+                        data[int(file_identifier[1])] = shorten
+
+                        # Recreate the string for the line
+                        new_d1 = '_'.join([d1.split('_')[0]] + data)
+                        line = '\t'.join([new_d1, smile])
+
+                outfile.write(line)
+
+
+
