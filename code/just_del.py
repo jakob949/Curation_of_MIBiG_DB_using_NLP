@@ -165,7 +165,7 @@ for ii, filename in enumerate(os.listdir("blast/")):
     file_identifier = filename.split('_')[2:]
     file_identifier[-1] = file_identifier[-1].split('.')[0]
     print(ii)
-    with open(f"../blast/{filename}", "r") as f:
+    with open(f"blast/{filename}", "r") as f:
         query_list = []
         subject_list = []
         q_string, s_string = "", ""
