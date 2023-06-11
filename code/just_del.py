@@ -161,7 +161,7 @@ def shannon_entropy(list_input):
     return entropy
 
 def process_files(start, end):
-    file_list = sorted(os.listdir("../blast/"))
+    file_list = sorted(os.listdir("blast/"))
     file_list = file_list[start:end]
 
     for ii, filename in enumerate(file_list, start=start):
@@ -171,7 +171,7 @@ def process_files(start, end):
         print(ii)
         print(file_identifier)
 
-        with open(f"../blast/{filename}", "r") as f:
+        with open(f"blast/{filename}", "r") as f:
             query_list = []
             subject_list = []
             q_string, s_string = "", ""
