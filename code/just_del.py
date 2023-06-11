@@ -137,18 +137,35 @@ def search_homologous_sequences(args):
 # e = time.time()
 # print(e-s, "seconds")
 
+def contains_gap(filename):
+    with open(filename, "r") as f:
+        for line in f:
+            if "-" in line:
+                return True
+    return False
+
+
+def shannon_entropy(list_input):
+    unique_base = set(list_input)
+    entropy = 0
+    for base in unique_base:
+        p_x = list_input.count(base) / len(list_input)
+        if p_x > 0:
+            entropy += - p_x * math.log2(p_x)
+    return entropy
+
+
 import re
 import os
 from Bio.Align import AlignInfo
 from Bio import AlignIO
 import math
 
-for filename in os.listdir("blast/"):
-
+for ii, filename in enumerate(os.listdir("blast/")):
     file_identifier = filename.split('_')[2:]
     file_identifier[-1] = file_identifier[-1].split('.')[0]
-
-    with open(f"blast/{filename}", "r") as f:
+    print(ii)
+    with open(f"../blast/{filename}", "r") as f:
         query_list = []
         subject_list = []
         q_string, s_string = "", ""
@@ -181,25 +198,16 @@ for filename in os.listdir("blast/"):
             for i, seq in enumerate(subject_list):
                 f.write(f">seq_{i}\n{seq}\n")
 
+
+        # Define the paths and execute the Clustal Omega command
         file_path = os.getcwd()
         data_path = os.getcwd()
-
         file = 'input_sequences.txt'
-        os.system(f"clustalo -i {file_path}/{file} -o {data_path}/{file[:-4]}.fasta --force")
+        os.system(f"clustalo -i {file_path}/{file} --dealign -o {data_path}/{file[:-4]}.fasta --force --threads=10")
 
-
+        # Now read the alignment after the appropriate alignment has been done
         alignment = AlignIO.read("input_sequences.fasta", "fasta")
         summary_align = AlignInfo.SummaryInfo(alignment)
-
-
-        def shannon_entropy(list_input):
-            unique_base = set(list_input)
-            entropy = 0
-            for base in unique_base:
-                p_x = list_input.count(base) / len(list_input)
-                if p_x > 0:
-                    entropy += - p_x * math.log2(p_x)
-            return entropy
 
         scores = []
         for i in range(len(alignment[0])):
@@ -236,11 +244,11 @@ for filename in os.listdir("blast/"):
                         print("replaced it")
                         data[int(file_identifier[1])] = shorten
                         print(type(d1), type(data))
+                        # Convert the Seq object to a string
+                        data = [str(element) for element in data]
                         # Recreate the string for the line
                         new_d1 = '_'.join([d1.split('_')[0]] + data)
                         line = '\t'.join([new_d1, smile])
 
                 outfile.write(line)
-
-
 
