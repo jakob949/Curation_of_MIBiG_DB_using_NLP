@@ -161,7 +161,7 @@ from Bio.Align import AlignInfo
 from Bio import AlignIO
 import math
 
-for ii, filename in enumerate(os.listdir("blast/")):
+for ii, filename in enumerate(os.listdir("blast/"), start=131):
     file_identifier = filename.split('_')[2:]
     file_identifier[-1] = file_identifier[-1].split('.')[0]
     print(ii)
@@ -187,11 +187,11 @@ for ii, filename in enumerate(os.listdir("blast/")):
                 subject = ''.join([i for i in subject if not i.isdigit()])
                 s_string += subject
 
+        print(f"q_string: {q_string}, s_string: {s_string}")
         if q_string and s_string:
             if len(query_list) == 0:
                 query_list.append(re.sub(r'\s', '', q_string))
             subject_list.append(re.sub(r'\s', '', s_string))
-
         subject_list.append(query_list[0])
 
         with open("input_sequences.txt", "w") as f:
