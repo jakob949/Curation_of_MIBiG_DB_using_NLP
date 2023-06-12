@@ -42,10 +42,10 @@ end = int(sys.argv[2])
 for file in file_list[start:end]:
     # Remove extension to get the identifier
     identifier = file.split(".")[0].replace("raw_", "")
-    with open(f"Transformer_DB_Curation_MIBiG/code/rest_seqs/{file}", "r") as f:
+    with open(f"Transformer_DB_Curation_MIBiG/code/rest_seqs/raw_{identifier}.txt", "r") as f:
         # Read the fasta file
         fasta_string = f.read()
-    with open(f"Transformer_DB_Curation_MIBiG/code/rest_seqs_v1/{file}", "w") as ff:
+    with open(f"Transformer_DB_Curation_MIBiG/code/rest_seqs_v1/raw_{identifier}.txt", "w") as ff:
         for line in ff:
             if line.startswith("rest_"):
                 ff.write(f">{identifier}\n")
