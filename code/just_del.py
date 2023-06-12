@@ -365,8 +365,8 @@ def process_files(start, end, job_id):
             shorten = consensus
             print(len(shorten))
             with open(f"shorten/shorten_{filename}", "w") as out:
-                print(shorten)
-                out.write(shorten)
+                print(shorten , file=out, end="")
+
             break
         break
 
