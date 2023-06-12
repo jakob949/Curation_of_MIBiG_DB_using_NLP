@@ -136,20 +136,163 @@ def search_homologous_sequences(args):
 #     executor.map(search_homologous_sequences, args)
 # e = time.time()
 # print(e-s, "seconds")
-
+#
+# import re
+# import os
+# from Bio.Align import AlignInfo
+# from Bio import AlignIO
+# import math
+#
+# def contains_gap(filename):
+#     with open(filename, "r") as f:
+#         for line in f:
+#             if "-" in line:
+#                 return True
+#     return False
+#
+#
+# def shannon_entropy(list_input):
+#     unique_base = set(list_input)
+#     entropy = 0
+#     for base in unique_base:
+#         p_x = list_input.count(base) / len(list_input)
+#         if p_x > 0:
+#             entropy += - p_x * math.log2(p_x)
+#     return entropy
+#
+# def process_files(start, end):
+#     file_list = sorted(os.listdir("blast/"))
+#     file_list = file_list[start:end]
+#
+#     for ii, filename in enumerate(file_list, start=start):
+#
+#         file_identifier = filename.split('_')[2:]
+#         file_identifier[-1] = file_identifier[-1].split('.')[0]
+#         print(ii)
+#         print(file_identifier)
+#
+#
+#
+#         with open(f"blast/{filename}", "r") as f:
+#             query_list = []
+#             subject_list = []
+#             q_string, s_string = "", ""
+#             for line in f:
+#                 if line.startswith('>'):
+#                     if q_string and s_string:
+#                         if len(query_list) == 0:
+#                             query_list.append(re.sub(r'\s', '', q_string))
+#                         subject_list.append(re.sub(r'\s', '', s_string))
+#                     q_string, s_string = "", ""
+#
+#                 if line.startswith('Query '):
+#                     query = line[10:].strip()
+#                     query = ''.join([i for i in query if not i.isdigit()])
+#                     q_string += query
+#
+#                 elif line.startswith('Sbjct '):
+#                     subject = line[10:].strip()
+#                     subject = ''.join([i for i in subject if not i.isdigit()])
+#                     s_string += subject
+#
+#
+#             if q_string and s_string:
+#                 if len(query_list) == 0:
+#                     query_list.append(re.sub(r'\s', '', q_string))
+#                 subject_list.append(re.sub(r'\s', '', s_string))
+#
+#             subject_list.append(query_list[0])
+#
+#
+#
+#             with open("input_sequences.txt", "w") as f:
+#                 for i, seq in enumerate(subject_list):
+#                     f.write(f">seq_{i}\n{seq}\n")
+#
+#
+#
+#             # Define the paths and execute the Clustal Omega command
+#             file_path = os.getcwd()
+#             data_path = os.getcwd()
+#             file = 'input_sequences.txt'
+#             os.system(f"clustalo -i {file_path}/{file} --dealign -o {data_path}/{file[:-4]}.fasta --force --threads=10")
+#
+#             # Now read the alignment after the appropriate alignment has been done
+#             alignment = AlignIO.read("input_sequences.fasta", "fasta")
+#             summary_align = AlignInfo.SummaryInfo(alignment)
+#
+#             scores = []
+#             for i in range(len(alignment[0])):
+#                 column_bases = alignment[:, i]
+#                 scores.append(shannon_entropy(column_bases))
+#
+#             # Use the dumb_consensus method to get the consensus sequence
+#             consensus = summary_align.dumb_consensus()
+#
+#
+#             while len(consensus) > 850:
+#                 index = scores.index(max(scores))
+#                 consensus = consensus[:index] + consensus[index + 1:]
+#                 del scores[index]
+#
+#             shorten = consensus
+#
+#
+#             # First read all lines from the file and close it
+#             with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "r") as infile:
+#                 lines = infile.readlines()
+#
+#             # Now open the file in write mode to write back the modified lines
+#             with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "w") as outfile:
+#                 for i, line in enumerate(lines):
+#                     d1 = line.split('\t')[0]
+#                     smile = line.split('\t')[1]
+#                     data = d1.split('_')[1:]
+#
+#                     if i == int(file_identifier[0]):
+#
+#                         # Check - To insure correct file
+#                         if len(data[int(file_identifier[1])]) == int(file_identifier[2]):
+#                             print("replaced it")
+#                             data[int(file_identifier[1])] = shorten
+#                             print(type(d1), type(data))
+#                             # Convert the Seq object to a string
+#                             data = [str(element) for element in data]
+#                             # Recreate the string for the line
+#                             new_d1 = '_'.join([d1.split('_')[0]] + data)
+#                             line = '\t'.join([new_d1, smile])
+#
+#                     outfile.write(line)
+#
+# import argparse
+#
+# if __name__ == "__main__":
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument("start", help="Start index for file processing", type=int)
+#     parser.add_argument("end", help="End index for file processing", type=int)
+#     args = parser.parse_args()
+#
+#     process_files(args.start, args.end)
+#
+# c = 0
+# with open("dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "r") as f:
+#     for i, line in enumerate(f):
+#         splir = line.split('\t')
+#         data = splir[0].split('_')
+#
+#         # check if length is under 850 for all elements in data
+#         for j in range(1, len(data)):
+#             if len(data[j]) > 850:
+#                 print(i, j, len(data[j]))
+#                 c += 1
+# print(c)
+#
 import re
 import os
+import argparse
 from Bio.Align import AlignInfo
 from Bio import AlignIO
 import math
-
-def contains_gap(filename):
-    with open(filename, "r") as f:
-        for line in f:
-            if "-" in line:
-                return True
-    return False
-
 
 def shannon_entropy(list_input):
     unique_base = set(list_input)
@@ -160,17 +303,11 @@ def shannon_entropy(list_input):
             entropy += - p_x * math.log2(p_x)
     return entropy
 
-def process_files(start, end):
+def process_files(start, end, job_id):
     file_list = sorted(os.listdir("blast/"))
     file_list = file_list[start:end]
 
     for ii, filename in enumerate(file_list, start=start):
-
-        file_identifier = filename.split('_')[2:]
-        file_identifier[-1] = file_identifier[-1].split('.')[0]
-        print(ii)
-        print(file_identifier)
-
         with open(f"blast/{filename}", "r") as f:
             query_list = []
             subject_list = []
@@ -193,7 +330,6 @@ def process_files(start, end):
                     subject = ''.join([i for i in subject if not i.isdigit()])
                     s_string += subject
 
-
             if q_string and s_string:
                 if len(query_list) == 0:
                     query_list.append(re.sub(r'\s', '', q_string))
@@ -201,22 +337,18 @@ def process_files(start, end):
 
             subject_list.append(query_list[0])
 
-
-
-            with open("input_sequences.txt", "w") as f:
+            with open(f"input_sequences_{job_id}.txt", "w") as f:
                 for i, seq in enumerate(subject_list):
                     f.write(f">seq_{i}\n{seq}\n")
-
-
 
             # Define the paths and execute the Clustal Omega command
             file_path = os.getcwd()
             data_path = os.getcwd()
-            file = 'input_sequences.txt'
+            file = f'input_sequences_{job_id}.txt'
             os.system(f"clustalo -i {file_path}/{file} --dealign -o {data_path}/{file[:-4]}.fasta --force --threads=10")
 
             # Now read the alignment after the appropriate alignment has been done
-            alignment = AlignIO.read("input_sequences.fasta", "fasta")
+            alignment = AlignIO.read(f"input_sequences_{job_id}.fasta", "fasta")
             summary_align = AlignInfo.SummaryInfo(alignment)
 
             scores = []
@@ -227,7 +359,6 @@ def process_files(start, end):
             # Use the dumb_consensus method to get the consensus sequence
             consensus = summary_align.dumb_consensus()
 
-
             while len(consensus) > 850:
                 index = scores.index(max(scores))
                 consensus = consensus[:index] + consensus[index + 1:]
@@ -235,39 +366,26 @@ def process_files(start, end):
 
             shorten = consensus
 
-
-            # First read all lines from the file and close it
-            with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "r") as infile:
-                lines = infile.readlines()
-
-            # Now open the file in write mode to write back the modified lines
-            with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "w") as outfile:
-                for i, line in enumerate(lines):
-                    d1 = line.split('\t')[0]
-                    smile = line.split('\t')[1]
-                    data = d1.split('_')[1:]
-
-                    if i == int(file_identifier[0]):
-
-                        # Check - To insure correct file
-                        if len(data[int(file_identifier[1])]) == int(file_identifier[2]):
-                            print("replaced it")
-                            data[int(file_identifier[1])] = shorten
-                            print(type(d1), type(data))
-                            # Convert the Seq object to a string
-                            data = [str(element) for element in data]
-                            # Recreate the string for the line
-                            new_d1 = '_'.join([d1.split('_')[0]] + data)
-                            line = '\t'.join([new_d1, smile])
-
-                    outfile.write(line)
-
-import argparse
+            with open(f"dataset_protein_peptides_complete_v3_shorten_{job_id}.txt", "w") as outfile:
+                with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "r") as infile:
+                    lines = infile.readlines()
+                    for i, line in enumerate(lines):
+                        d1 = line.split('\t')[0]
+                        smile = line.split('\t')[1]
+                        data = d1.split('_')[1:]
+                        if i == int(filename.split('_')[2]):
+                            if len(data[int(filename.split('_')[3])]) == int(filename.split('_')[4].split('.')[0]):
+                                data[int(filename.split('_')[3])] = shorten
+                                data = [str(element) for element in data]
+                                new_d1 = '_'.join([d1.split('_')[0]] + data)
+                                line = '\t'.join([new_d1, smile])
+                        outfile.write(line)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("start", help="Start index for file processing", type=int)
     parser.add_argument("end", help="End index for file processing", type=int)
+    parser.add_argument("job_id", help="Job ID for this task", type=int)
     args = parser.parse_args()
 
-    process_files(args.start, args.end)
+    process_files(args.start, args.end, args.job_id)
