@@ -274,19 +274,19 @@ def search_homologous_sequences(args):
 #
 #     process_files(args.start, args.end)
 #
-# c = 0
-# with open("dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "r") as f:
-#     for i, line in enumerate(f):
-#         splir = line.split('\t')
-#         data = splir[0].split('_')
-#
-#         # check if length is under 850 for all elements in data
-#         for j in range(1, len(data)):
-#             if len(data[j]) > 850:
-#                 print(i, j, len(data[j]))
-#                 c += 1
-# print(c)
-#
+c = 0
+with open("dataset_protein_peptides_complete_v3_shorten_0.txt", "r") as f:
+    for i, line in enumerate(f):
+        splir = line.split('\t')
+        data = splir[0].split('_')
+
+        # check if length is under 850 for all elements in data
+        for j in range(1, len(data)):
+            print(i, j, len(data[j]))
+            if len(data[j]) >   850:
+                c += 1
+print(c)
+
 import re
 import os
 import argparse
@@ -399,17 +399,17 @@ def process_files(start, end, job_id):
             break
         break
 
-if __name__ == "__main__":
-    # Write the sorted list of files to a file
-    file_list = sorted(os.listdir("blast/"))
-    with open("file_order.txt", "w") as f:
-        for filename in file_list:
-            f.write(filename + '\n')
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("start", help="Start index for file processing", type=int)
-    parser.add_argument("end", help="End index for file processing", type=int)
-    parser.add_argument("job_id", help="Job ID for this task", type=int)
-    args = parser.parse_args()
-
-    process_files(args.start, args.end, args.job_id)
+# if __name__ == "__main__":
+#     # Write the sorted list of files to a file
+#     file_list = sorted(os.listdir("blast/"))
+#     with open("file_order.txt", "w") as f:
+#         for filename in file_list:
+#             f.write(filename + '\n')
+#
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument("start", help="Start index for file processing", type=int)
+#     parser.add_argument("end", help="End index for file processing", type=int)
+#     parser.add_argument("job_id", help="Job ID for this task", type=int)
+#     args = parser.parse_args()
+#
+#     process_files(args.start, args.end, args.job_id)
