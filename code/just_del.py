@@ -378,17 +378,18 @@ def process_files(start, end, job_id):
                         print(f"i :{i} == {int(filename.split('_')[2])}" , end= "  ")
                         if i == int(filename.split('_')[2]):
                             print("\ncheck for index - passed")
-                            for item in data:
-                                print(f"item :{len(item)} == {int(filename.split('_')[4].split('.')[0])}", end="  ")
-                                if len(item) == int(filename.split('_')[4].split('.')[0]):
-                                    print(len(data[int(filename.split('_')[3])]), '\n\nold length')
+                            for ii in range(len(data)):
+                                print(f"item :{len(data[ii])} == {int(filename.split('_')[4].split('.')[0])}", end="  ")
+                                if len(data[ii]) == int(filename.split('_')[4].split('.')[0]):
+
+                                    print(len(data[ii]), '\n\nold length')
                                     data[int(filename.split('_')[3])] = shorten
                                     data = [str(element) for element in data]
                                     new_d1 = '_'.join([d1.split('_')[0]] + data)
                                     line = '\t'.join([new_d1, smile])
-                                    print(len(data[int(filename.split('_')[3])]), 'New length')
+                                    print(len(data[ii]), 'New length')
 
-                                    break
+
                         outfile.write(line)
                         break
                 break
