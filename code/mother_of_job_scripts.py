@@ -59,7 +59,7 @@ for file in file_list[start:end]:
         ff.writelines(new_contents)
 
     # Run the blastp command
-    command = f"blastp -task blastp-fast -query Transformer_DB_Curation_MIBiG/code/rest_seqs/raw_{identifier}.txt -db nr -num_threads 10 -max_target_seqs 8 -out blast_rest/result_{identifier}.txt"
+    command = f"blastp -task blastp-fast -query Transformer_DB_Curation_MIBiG/code/rest_seqs_v1/raw_{identifier}.txt -db nr -num_threads 10 -max_target_seqs 8 -out blast_rest/result_{identifier}.txt"
     os.system(command)
 
 
