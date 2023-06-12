@@ -379,7 +379,7 @@ def process_files(start, end, job_id):
                         if i == int(filename.split('_')[2]):
                             print("\ncheck for index - passed")
                             for item in data:
-                                print(f"item :{item} == {int(filename.split('_')[4].split('.')[0])}", end="  ")
+                                print(f"item :{len(item)} == {int(filename.split('_')[4].split('.')[0])}", end="  ")
                                 if len(item) == int(filename.split('_')[4].split('.')[0]):
 
                                     print("\ncheck for length - passed - new length: ", len(data[int(filename.split('_')[3])]))
@@ -387,6 +387,7 @@ def process_files(start, end, job_id):
                                     data = [str(element) for element in data]
                                     new_d1 = '_'.join([d1.split('_')[0]] + data)
                                     line = '\t'.join([new_d1, smile])
+                                    break
                         outfile.write(line)
                         break
                 break
