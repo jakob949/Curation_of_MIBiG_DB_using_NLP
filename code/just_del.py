@@ -381,12 +381,13 @@ def process_files(start, end, job_id):
                             for item in data:
                                 print(f"item :{len(item)} == {int(filename.split('_')[4].split('.')[0])}", end="  ")
                                 if len(item) == int(filename.split('_')[4].split('.')[0]):
-
-                                    print("\ncheck for length - passed - new length: ", len(data[int(filename.split('_')[3])]))
+                                    print(len(data[int(filename.split('_')[3])]), '\n\nold length')
                                     data[int(filename.split('_')[3])] = shorten
                                     data = [str(element) for element in data]
                                     new_d1 = '_'.join([d1.split('_')[0]] + data)
                                     line = '\t'.join([new_d1, smile])
+                                    print(len(data[int(filename.split('_')[3])]), 'New length')
+
                                     break
                         outfile.write(line)
                         break
