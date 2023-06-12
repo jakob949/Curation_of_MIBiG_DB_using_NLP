@@ -367,8 +367,7 @@ def process_files(start, end, job_id):
             with open(f"shorten/shorten_{filename}", "w") as out:
                 print(shorten , file=out, end="")
 
-            break
-        break
+
 
 
             #
