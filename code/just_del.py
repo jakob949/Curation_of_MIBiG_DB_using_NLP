@@ -340,7 +340,7 @@ def process_files(start, end, job_id):
             with open(f"input_sequences_{job_id}.txt", "w") as f:
                 for i, seq in enumerate(subject_list):
                     f.write(f">seq_{i}\n{seq}\n")
-            print(subject_list,"\n\n")
+            print(len(subject_list),"\n\n")
             # Define the paths and execute the Clustal Omega command
             file_path = os.getcwd()
             data_path = os.getcwd()
@@ -350,7 +350,7 @@ def process_files(start, end, job_id):
             # Now read the alignment after the appropriate alignment has been done
             alignment = AlignIO.read(f"input_sequences_{job_id}.fasta", "fasta")
             summary_align = AlignInfo.SummaryInfo(alignment)
-
+            print(alignment)
             scores = []
             for i in range(len(alignment[0])):
                 column_bases = alignment[:, i]
@@ -374,7 +374,9 @@ def process_files(start, end, job_id):
                         d1 = line.split('\t')[0]
                         smile = line.split('\t')[1]
                         data = d1.split(': ')[1].split('_')
+                        print(f"i :{i} . {int(filename.split('_')[2])}" , end= "  ")
                         if i == int(filename.split('_')[2]):
+                            print("check for index - passed")
                             if len(data[int(filename.split('_')[3])]) == int(filename.split('_')[4].split('.')[0]):
                                 print("check for length - passed")
                                 data[int(filename.split('_')[3])] = shorten
