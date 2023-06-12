@@ -274,18 +274,18 @@ def search_homologous_sequences(args):
 #
 #     process_files(args.start, args.end)
 #
-c = 0
-with open("dataset_protein_peptides_complete_v3_shorten_0.txt", "r") as f:
-    for i, line in enumerate(f):
-        splir = line.split('\t')
-        data = splir[0].split('_')
-
-        # check if length is under 850 for all elements in data
-        for j in range(1, len(data)):
-            print(i, j, len(data[j]))
-            if len(data[j]) >   850:
-                c += 1
-print(c)
+# c = 0
+# with open("dataset_protein_peptides_complete_v3_shorten_0.txt", "r") as f:
+#     for i, line in enumerate(f):
+#         splir = line.split('\t')
+#         data = splir[0].split('_')
+#
+#         # check if length is under 850 for all elements in data
+#         for j in range(1, len(data)):
+#             print(i, j, len(data[j]))
+#             if len(data[j]) >   850:
+#                 c += 1
+# print(c)
 
 import re
 import os
@@ -344,15 +344,12 @@ def process_files(start, end, job_id):
             with open(f"input_sequences_{job_id}.txt", "w") as f:
                 for i, seq in enumerate(subject_list):
                     f.write(f">seq_{i}\n{seq}\n")
-            print(len(subject_list),"\n\n")
             file_path = os.getcwd()
             data_path = os.getcwd()
             file = f'input_sequences_{job_id}.txt'
             os.system(f"clustalo -i {file_path}/{file} --dealign -o {data_path}/{file[:-4]}.fasta --force --threads=10")
-            print("clustalo done")
             alignment = AlignIO.read(f"input_sequences_{job_id}.fasta", "fasta")
             summary_align = AlignInfo.SummaryInfo(alignment)
-            print(alignment)
             scores = []
             for i in range(len(alignment[0])):
                 column_bases = alignment[:, i]
@@ -364,7 +361,6 @@ def process_files(start, end, job_id):
                 index = scores.index(max(scores))
                 consensus = consensus[:index] + consensus[index + 1:]
                 del scores[index]
-                print("length of consensus", len(consensus))
 
             shorten = consensus
 
@@ -375,41 +371,33 @@ def process_files(start, end, job_id):
                         d1 = line.split('\t')[0]
                         smile = line.split('\t')[1]
                         data = d1.split(': ')[1].split('_')
-                        print(f"i :{i} == {int(filename.split('_')[2])}" , end= "  ")
                         if i == int(filename.split('_')[2]):
-                            print("\ncheck for index - passed")
-                            for ii in range(len(data)):
-                                print(f"item :{len(data[ii])} == {int(filename.split('_')[4].split('.')[0])}", end="  ")
-                                if len(data[ii]) == int(filename.split('_')[4].split('.')[0]):
-                                    for len_ in data:
-                                        print(len(len_), end=" ")
+                            for iii in range(len(data)):
+                                if len(data[iii]) == int(filename.split('_')[4].split('.')[0]):
 
-                                    data[ii] = shorten
+
+                                    data[iii] = shorten
                                     data = [str(element) for element in data]
                                     new_d1 = '_'.join([d1.split('_')[0]] + data)
                                     line = '\t'.join([new_d1, smile])
-
-                                    for len_ in data:
-                                        print(len(len_), end=" ")
+                                    print("shorten")
                                     break
 
                         outfile.write(line)
-                        break
-                break
-            break
-        break
 
-# if __name__ == "__main__":
-#     # Write the sorted list of files to a file
-#     file_list = sorted(os.listdir("blast/"))
-#     with open("file_order.txt", "w") as f:
-#         for filename in file_list:
-#             f.write(filename + '\n')
-#
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument("start", help="Start index for file processing", type=int)
-#     parser.add_argument("end", help="End index for file processing", type=int)
-#     parser.add_argument("job_id", help="Job ID for this task", type=int)
-#     args = parser.parse_args()
-#
-#     process_files(args.start, args.end, args.job_id)
+
+
+if __name__ == "__main__":
+    # Write the sorted list of files to a file
+    file_list = sorted(os.listdir("blast/"))
+    with open("file_order.txt", "w") as f:
+        for filename in file_list:
+            f.write(filename + '\n')
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("start", help="Start index for file processing", type=int)
+    parser.add_argument("end", help="End index for file processing", type=int)
+    parser.add_argument("job_id", help="Job ID for this task", type=int)
+    args = parser.parse_args()
+
+    process_files(args.start, args.end, args.job_id)
