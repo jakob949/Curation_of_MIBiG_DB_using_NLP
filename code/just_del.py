@@ -384,11 +384,9 @@ def process_files(start, end, job_id):
 
                         outfile.write(line)
 
-                        break
-                    break
-                break
+        if ii == 5:
             break
-        break
+
 
 if __name__ == "__main__":
     # Write the sorted list of files to a file
