@@ -286,13 +286,11 @@ def search_homologous_sequences(args):
 #                 print(i, j, len(data[j]))
 #                 c += 1
 # print(c)
-#
-import re
 import os
-import argparse
-from Bio.Align import AlignInfo
-from Bio import AlignIO
+import re
 import math
+import argparse
+from Bio import AlignIO, AlignInfo
 
 def shannon_entropy(list_input):
     unique_base = set(list_input)
@@ -304,8 +302,12 @@ def shannon_entropy(list_input):
     return entropy
 
 def process_files(start, end, job_id):
-    file_list = sorted(os.listdir("blast/"))
+    # Read the sorted list of files from the stored list
+    with open("file_order.txt", "r") as f:
+        file_list = [line.strip() for line in f]
+
     file_list = file_list[start:end]
+
     print("start")
     for ii, filename in enumerate(file_list, start=start):
         with open(f"blast/{filename}", "r") as f:
@@ -341,13 +343,11 @@ def process_files(start, end, job_id):
                 for i, seq in enumerate(subject_list):
                     f.write(f">seq_{i}\n{seq}\n")
             print(len(subject_list),"\n\n")
-            # Define the paths and execute the Clustal Omega command
             file_path = os.getcwd()
             data_path = os.getcwd()
             file = f'input_sequences_{job_id}.txt'
             os.system(f"clustalo -i {file_path}/{file} --dealign -o {data_path}/{file[:-4]}.fasta --force --threads=10")
             print("clustalo done")
-            # Now read the alignment after the appropriate alignment has been done
             alignment = AlignIO.read(f"input_sequences_{job_id}.fasta", "fasta")
             summary_align = AlignInfo.SummaryInfo(alignment)
             print(alignment)
@@ -356,7 +356,6 @@ def process_files(start, end, job_id):
                 column_bases = alignment[:, i]
                 scores.append(shannon_entropy(column_bases))
 
-            # Use the dumb_consensus method to get the consensus sequence
             consensus = summary_align.dumb_consensus()
 
             while len(consensus) > 850:
@@ -379,8 +378,6 @@ def process_files(start, end, job_id):
                             print("\ncheck for index - passed")
                             print(f"len(data[int(filename.split('_')[3])]) == {int(filename.split('_')[4].split('.')[0])}\nint(filename.split('_')[4].split('.')[0]) == {len(data[int(filename.split('_')[3])])}")
 
-                            # data is a list with all seqs in it
-                            #
                             if len(data[int(filename.split('_')[3])]) == int(filename.split('_')[4].split('.')[0]):
                                 print("check for length - passed")
                                 data[int(filename.split('_')[3])] = shorten
@@ -394,6 +391,12 @@ def process_files(start, end, job_id):
         break
 
 if __name__ == "__main__":
+    # Write the sorted list of files to a file
+    file_list = sorted(os.listdir("blast/"))
+    with open("file_order.txt", "w") as f:
+        for filename in file_list:
+            f.write(filename + '\n')
+
     parser = argparse.ArgumentParser()
     parser.add_argument("start", help="Start index for file processing", type=int)
     parser.add_argument("end", help="End index for file processing", type=int)
