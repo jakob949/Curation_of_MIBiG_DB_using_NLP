@@ -384,7 +384,7 @@ def process_files(start, end, job_id):
                                     for len_ in data:
                                         print(len(len_), end=" ")
 
-                                    data[int(filename.split('_')[3])] = shorten
+                                    data[ii] = shorten
                                     data = [str(element) for element in data]
                                     new_d1 = '_'.join([d1.split('_')[0]] + data)
                                     line = '\t'.join([new_d1, smile])
