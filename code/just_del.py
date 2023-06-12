@@ -286,11 +286,13 @@ def search_homologous_sequences(args):
 #                 print(i, j, len(data[j]))
 #                 c += 1
 # print(c)
-import os
+#
 import re
-import math
+import os
 import argparse
-from Bio import AlignIO, AlignInfo
+from Bio.Align import AlignInfo
+from Bio import AlignIO
+import math
 
 def shannon_entropy(list_input):
     unique_base = set(list_input)
