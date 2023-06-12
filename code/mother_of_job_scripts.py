@@ -44,13 +44,19 @@ for file in file_list[start:end]:
     identifier = file.split(".")[0].replace("raw_", "")
     with open(f"Transformer_DB_Curation_MIBiG/code/rest_seqs/raw_{identifier}.txt", "r") as f:
         # Read the fasta file
-        fasta_string = f.read()
+        fasta_string = f.readlines()
+
+    # Now modify the contents
+    new_contents = []
+    for line in fasta_string:
+        if line.startswith("rest_"):
+            new_contents.append(f">{identifier}\n")
+        else:
+            new_contents.append(line)
+
+    # Now write the modified contents back to the file
     with open(f"Transformer_DB_Curation_MIBiG/code/rest_seqs_v1/raw_{identifier}.txt", "w") as ff:
-        for line in ff:
-            if line.startswith("rest_"):
-                ff.write(f">{identifier}\n")
-            else:
-                ff.write(line)
+        ff.writelines(new_contents)
 
     # Run the blastp command
     command = f"blastp -task blastp-fast -query Transformer_DB_Curation_MIBiG/code/rest_seqs/raw_{identifier}.txt -db nr -num_threads 10 -max_target_seqs 8 -out blast_rest/result_{identifier}.txt"
