@@ -364,28 +364,32 @@ def process_files(start, end, job_id):
 
             shorten = consensus
 
-            with open(f"dataset_protein_peptides_complete_v3_shorten_{job_id}.txt", "w") as outfile:
-                with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "r") as infile:
-                    lines = infile.readlines()
-                    for i, line in enumerate(lines):
-                        d1 = line.split('\t')[0]
-                        smile = line.split('\t')[1]
-                        data = d1.split(': ')[1].split('_')
-                        if i == int(filename.split('_')[2]):
-                            for iii in range(len(data)):
-                                if len(data[iii]) == int(filename.split('_')[4].split('.')[0]):
+            with open(f"shorten/shorten_{filename}", "w") as out:
+                out.write(shorten)
 
-                                    data[iii] = shorten
-                                    data = [str(element) for element in data]
-                                    new_d1 = '_'.join([d1.split('_')[0]] + data)
-                                    line = '\t'.join([new_d1, smile])
-                                    print("shorten")
-                                    break
 
-                        outfile.write(line)
+            #
+            # with open(f"dataset_protein_peptides_complete_v3_shorten_{job_id}.txt", "w") as outfile:
+            #     with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "r") as infile:
+            #         lines = infile.readlines()
+            #         for i, line in enumerate(lines):
+            #             d1 = line.split('\t')[0]
+            #             smile = line.split('\t')[1]
+            #             data = d1.split(': ')[1].split('_')
+            #             if i == int(filename.split('_')[2]):
+            #                 for iii in range(len(data)):
+            #                     if len(data[iii]) == int(filename.split('_')[4].split('.')[0]):
+            #
+            #                         data[iii] = shorten
+            #                         data = [str(element) for element in data]
+            #                         new_d1 = '_'.join([d1.split('_')[0]] + data)
+            #                         line = '\t'.join([new_d1, smile])
+            #                         print("shorten")
+            #                         break
+            #
+            #             outfile.write(line)
 
-        if ii == 5:
-            break
+
 
 
 if __name__ == "__main__":
