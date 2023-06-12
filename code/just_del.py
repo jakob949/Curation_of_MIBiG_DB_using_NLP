@@ -363,9 +363,11 @@ def process_files(start, end, job_id):
                 del scores[index]
 
             shorten = consensus
-
+            print(len(shorten))
             with open(f"shorten/shorten_{filename}", "w") as out:
                 out.write(shorten)
+            break
+        break
 
 
             #
