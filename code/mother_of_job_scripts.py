@@ -29,7 +29,7 @@ import os
 import sys
 
 # Get the list of all files in the "raw" directory
-file_list = [f for f in os.listdir("raw") if f.endswith('.fasta')]
+file_list = [f for f in os.listdir("Transformer_DB_Curation_MIBiG/code/rest_seqs") if f.endswith('.txt')]
 
 # Sort the file list to ensure consistency across different jobs
 file_list.sort()
