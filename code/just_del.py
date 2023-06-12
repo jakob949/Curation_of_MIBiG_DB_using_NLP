@@ -306,7 +306,7 @@ def shannon_entropy(list_input):
 def process_files(start, end, job_id):
     file_list = sorted(os.listdir("blast/"))
     file_list = file_list[start:end]
-
+    print("start")
     for ii, filename in enumerate(file_list, start=start):
         with open(f"blast/{filename}", "r") as f:
             query_list = []
@@ -340,13 +340,13 @@ def process_files(start, end, job_id):
             with open(f"input_sequences_{job_id}.txt", "w") as f:
                 for i, seq in enumerate(subject_list):
                     f.write(f">seq_{i}\n{seq}\n")
-
+            print(subject_list,"\n\n")
             # Define the paths and execute the Clustal Omega command
             file_path = os.getcwd()
             data_path = os.getcwd()
             file = f'input_sequences_{job_id}.txt'
             os.system(f"clustalo -i {file_path}/{file} --dealign -o {data_path}/{file[:-4]}.fasta --force --threads=10")
-
+            print("clustalo done")
             # Now read the alignment after the appropriate alignment has been done
             alignment = AlignIO.read(f"input_sequences_{job_id}.fasta", "fasta")
             summary_align = AlignInfo.SummaryInfo(alignment)
@@ -363,6 +363,7 @@ def process_files(start, end, job_id):
                 index = scores.index(max(scores))
                 consensus = consensus[:index] + consensus[index + 1:]
                 del scores[index]
+                print("length of consensus", len(consensus))
 
             shorten = consensus
 
