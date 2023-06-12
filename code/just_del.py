@@ -282,8 +282,8 @@ def search_homologous_sequences(args):
 #
 #         # check if length is under 850 for all elements in data
 #         for j in range(1, len(data)):
-#             print(i, j, len(data[j]))
 #             if len(data[j]) >   850:
+#                 print(i, j, len(data[j]))
 #                 c += 1
 # print(c)
 
@@ -375,7 +375,6 @@ def process_files(start, end, job_id):
                             for iii in range(len(data)):
                                 if len(data[iii]) == int(filename.split('_')[4].split('.')[0]):
 
-
                                     data[iii] = shorten
                                     data = [str(element) for element in data]
                                     new_d1 = '_'.join([d1.split('_')[0]] + data)
@@ -385,7 +384,11 @@ def process_files(start, end, job_id):
 
                         outfile.write(line)
 
-
+                        break
+                    break
+                break
+            break
+        break
 
 if __name__ == "__main__":
     # Write the sorted list of files to a file
