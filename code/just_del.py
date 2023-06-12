@@ -374,9 +374,13 @@ def process_files(start, end, job_id):
                         d1 = line.split('\t')[0]
                         smile = line.split('\t')[1]
                         data = d1.split(': ')[1].split('_')
-                        print(f"i :{i} . {int(filename.split('_')[2])}" , end= "  ")
+                        print(f"i :{i} == {int(filename.split('_')[2])}" , end= "  ")
                         if i == int(filename.split('_')[2]):
-                            print("check for index - passed")
+                            print("\ncheck for index - passed")
+                            print(f"len(data[int(filename.split('_')[3])]) == {int(filename.split('_')[4].split('.')[0])}\nint(filename.split('_')[4].split('.')[0]) == {len(data[int(filename.split('_')[3])])}")
+
+                            # data is a list with all seqs in it
+                            #
                             if len(data[int(filename.split('_')[3])]) == int(filename.split('_')[4].split('.')[0]):
                                 print("check for length - passed")
                                 data[int(filename.split('_')[3])] = shorten
