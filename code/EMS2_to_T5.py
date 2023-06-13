@@ -16,7 +16,7 @@ def is_valid_smiles(smiles: str) -> bool:
     mol = Chem.MolFromSmiles(smiles)
     return mol is not None
 class ProteinDataset(torch.utils.data.Dataset):
-    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=850):
+    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=851):
         self.file_path = file_path
         self.data = self.load_data()
         self.T5_tokenizer = T5_tokenizer
@@ -122,8 +122,8 @@ t5_model.to(device)
 esm_model.to(device)
 projection.to(device)
 print(device)
-train_dataset = ProteinDataset("test_protein_peptides_complete_v3_3_shorten_0.txt", t5_tokenizer, esm_tokenizer)
-test_dataset = ProteinDataset("train_protein_peptides_complete_v3_3_shorten_0.txt", t5_tokenizer, esm_tokenizer)
+train_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_3_shorten_0.txt", t5_tokenizer, esm_tokenizer)
+test_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_3_shorten_0.txt", t5_tokenizer, esm_tokenizer)
 
 train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
