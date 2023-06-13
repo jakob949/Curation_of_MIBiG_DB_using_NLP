@@ -312,7 +312,7 @@ def process_files(start, end, job_id):
 
     print("start")
     for ii, filename in enumerate(file_list, start=start):
-        with open(f"blast/{filename}", "r") as f:
+        with open(f"blast_rest/{filename}", "r") as f:
             query_list = []
             subject_list = []
             q_string, s_string = "", ""
@@ -369,7 +369,7 @@ def process_files(start, end, job_id):
 
 
 
-
+            #
             #
             # with open(f"dataset_protein_peptides_complete_v3_shorten_{job_id}.txt", "w") as outfile:
             #     with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "r") as infile:
@@ -396,7 +396,7 @@ def process_files(start, end, job_id):
 
 if __name__ == "__main__":
     # Write the sorted list of files to a file
-    file_list = sorted(os.listdir("blast/"))
+    file_list = sorted(os.listdir("blast_rest/"))
     with open("file_order.txt", "w") as f:
         for filename in file_list:
             f.write(filename + '\n')
@@ -408,3 +408,76 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     process_files(args.start, args.end, args.job_id)
+
+
+# import os
+#
+# # Read the main file
+# with open("dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", 'r') as f:
+#     data = f.readlines()
+#
+# # Loop through all the files in the directory
+# for i, file_name in enumerate (os.listdir('../shorten/')):
+#     if file_name.endswith('.txt'):
+#         # Extract line number, position, and length from the file name
+#         line_number = int(file_name.split('_')[3])
+#         position = int(file_name.split('_')[4])+1
+#         length = int(file_name.split('_')[5].split('.')[0])
+#
+#         print(file_name)
+#
+#         # Read the sequence from the file
+#         with open(f'../shorten/{file_name}', 'r') as f:
+#             new_sequence = f.read().strip()
+#
+#         # Get the line from the main file
+#
+#         print(line_number, 'pos: ', position, 'len: ', length)
+#         line = data[line_number]
+#
+#
+#         # Split the line
+#         line_parts = line.split('\t')[0].split(': ')[1].split('_')
+#         smile = line.split('\t')[1]
+#
+#         # Get the original sequence
+#         original_sequence = line_parts[position]
+#
+#         print(len(original_sequence), len(new_sequence))
+#
+#
+#         # Make sure the original sequence has the correct length
+#         if len(original_sequence) == length:
+#             print("Replacing sequence")
+#             # Replace the original sequence with the new one
+#             line_parts[position] = new_sequence
+#
+#             # Combine the line parts back into a string
+#             new_line = '_'.join(line_parts)
+#
+#             # add ProteinSeqs2SMILE: to the beginning of the line
+#             new_line = 'ProteinSeqsShort2SMILE: ' + new_line + '\t' + smile
+#
+#             # Replace the line in the main data
+#             data[line_number] = new_line
+#         else:
+#             print("Lengths don't match")
+#             break
+#
+#
+# # Write the modified data back to the main file
+# with open("dataset/protein_SMILE/dataset_protein_peptides_complete_v3_1_shorten.txt", 'w') as f:
+#     f.writelines(data)
+
+
+# with open("dataset/protein_SMILE/dataset_protein_peptides_complete_v3_1_shorten.txt", 'r') as f:
+#     data = f.readlines()
+#     c = 0
+#     for i, line in enumerate(data):
+#         line_parts = line.split('\t')[0].split(': ')[1].split('_')
+#         for j, item in enumerate(line_parts):
+#             if len(item) > 850:
+#                 print(i, j, len(item))
+#                 with open(f"rest_seqs/raw_seq_{i}_{j}_{len(item)}.txt", "w") as out:
+#                     print("rest_seqs/raw_seq_{i}_{j}_{len(item)}\n", item , file=out, end="", sep="")
+#     print(c, 2390-c)
