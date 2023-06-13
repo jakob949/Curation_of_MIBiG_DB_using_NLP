@@ -27,8 +27,8 @@ class ProteinDataset(torch.utils.data.Dataset):
         data = []
         with open(self.file_path, 'r') as f:
             for line in f:
-                text = line.split('\t')[1]
-                label = line.split('\t')[2].strip('\n')
+                text = line.split(': ')[1:].split('\t')[0]
+                label = line.split('\t')[1].strip('\n')
                 text_list = text.split('_')
 
                 # Check if any element in text_list is longer than 2000 characters
