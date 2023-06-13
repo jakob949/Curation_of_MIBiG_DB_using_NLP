@@ -96,7 +96,7 @@ def concat_seqs(text):
 
 
 # Set up the training parameters
-num_epochs = 50
+num_epochs = 20
 learning_rate = 5e-5
 
 
@@ -122,8 +122,8 @@ t5_model.to(device)
 esm_model.to(device)
 projection.to(device)
 print(device)
-train_dataset = ProteinDataset("train_dataset_protein_v2_0.txt", t5_tokenizer, esm_tokenizer)
-test_dataset = ProteinDataset("test_dataset_protein_v2_0.txt", t5_tokenizer, esm_tokenizer)
+train_dataset = ProteinDataset("test_protein_peptides_complete_v3_3_shorten_0.txt", t5_tokenizer, esm_tokenizer)
+test_dataset = ProteinDataset("train_protein_peptides_complete_v3_3_shorten_0.txt", t5_tokenizer, esm_tokenizer)
 
 train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
