@@ -128,9 +128,9 @@ train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_com
 validation_dataset = ProteinDataset("dataset/protein_SMILE/validation_protein_peptides_complete_v3_4_shorten_0.txt", t5_tokenizer, esm_tokenizer)
 test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_4_shorten_0.txt", t5_tokenizer, esm_tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True)
-validation_loader = DataLoader(validation_dataset, batch_size=2, shuffle=False)
-test_loader = DataLoader(test_dataset, batch_size=2, shuffle=False)
+train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
+validation_loader = DataLoader(validation_dataset, batch_size=1, shuffle=False)
+test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience = 9, factor = 0.25)
