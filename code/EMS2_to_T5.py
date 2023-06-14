@@ -15,6 +15,7 @@ args = parser.parse_args()
 def is_valid_smiles(smiles: str) -> bool:
     mol = Chem.MolFromSmiles(smiles)
     return mol is not None
+
 class ProteinDataset(torch.utils.data.Dataset):
     def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=851):
         self.file_path = file_path
@@ -127,12 +128,12 @@ train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_com
 validation_dataset = ProteinDataset("dataset/protein_SMILE/validation_protein_peptides_complete_v3_4_shorten_0.txt", t5_tokenizer, esm_tokenizer)
 test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_4_shorten_0.txt", t5_tokenizer, esm_tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
-validation_loader = DataLoader(validation_dataset, batch_size=1, shuffle=False)
-test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
+train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True)
+validation_loader = DataLoader(validation_dataset, batch_size=2, shuffle=False)
+test_loader = DataLoader(test_dataset, batch_size=2, shuffle=False)
 
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
-scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=len(train_loader)*0.1, num_training_steps=len(train_loader)*num_epochs)
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
 
 
 rouge = ROUGEScore()
@@ -146,11 +147,9 @@ t5_model = get_peft_model(t5_model, peft_config)
 for epoch in range(num_epochs):
 
     t5_model.train()
-
-
-
     # esm_model.train()
     # projection.train()
+
     rouge_train_accumulated = 0.0
     bleu_train_accumulated = 0.0
     num_train_batches = 0
