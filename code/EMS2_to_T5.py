@@ -97,8 +97,8 @@ def concat_seqs(text):
 
 
 # Set up the training parameters
-num_epochs = 20
-learning_rate = 5e-5
+num_epochs = 100
+learning_rate = 7e-4
 
 
 peft_config = LoraConfig(
@@ -133,7 +133,7 @@ validation_loader = DataLoader(validation_dataset, batch_size=2, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=2, shuffle=False)
 
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience = 9, factor = 0.25)
 
 
 rouge = ROUGEScore()
@@ -258,10 +258,9 @@ for epoch in range(num_epochs):
             if is_valid_smiles(valid_predicted_labels):
                 Num_correct_val_mols_valid += 1
 
-        # After the validation loop, calculate the average validation loss
         valid_loss /= valid_batches
 
-        # Update the learning rate based on the validation loss
+        # Update the learning rate based on the validation loss??
         scheduler.step(valid_loss)
 
     # Test loop
