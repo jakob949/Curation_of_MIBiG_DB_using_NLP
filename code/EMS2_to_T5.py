@@ -1,7 +1,7 @@
 from torch.utils.data import DataLoader
 import torch
 from torch import nn
-from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, AutoModel, AdamW
+from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, AutoModel, AdamW, get_linear_schedule_with_warmup
 from rdkit import Chem
 from torchmetrics.text import BLEUScore, ROUGEScore
 from torchmetrics import CharErrorRate, SacreBLEUScore
@@ -122,15 +122,18 @@ t5_model.to(device)
 esm_model.to(device)
 projection.to(device)
 print(device)
-train_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_3_shorten_0.txt", t5_tokenizer, esm_tokenizer)
-test_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_3_shorten_0.txt", t5_tokenizer, esm_tokenizer)
+
+train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_3_shorten_0.txt", t5_tokenizer, esm_tokenizer)
+validation_dataset = ProteinDataset("dataset/protein_SMILE/validation_protein_peptides_complete_v3_3_shorten_0.txt", t5_tokenizer, esm_tokenizer)
+test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_3_shorten_0.txt", t5_tokenizer, esm_tokenizer)
 
 train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
+validation_loader = DataLoader(validation_dataset, batch_size=1, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
-# optimizer = AdamW(list(t5_model.parameters()) + list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
-# optimizer = AdamW(list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
+scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=len(train_loader)*0.1, num_training_steps=len(train_loader)*num_epochs)
+
 
 rouge = ROUGEScore()
 bleu = BLEUScore()
@@ -201,6 +204,66 @@ for epoch in range(num_epochs):
         optimizer.step()
 
 
+    ### validation loop
+    t5_model.eval()
+    esm_model.eval()
+    projection.eval()
+
+    valid_loss = 0.0
+    valid_batches = 0
+    rouge_valid_accumulated = 0.0
+    bleu_valid_accumulated = 0.0
+    char_error_rate_valid_accumulated = 0.0
+    sacre_bleu_valid_accumulated = 0.0
+    Num_correct_val_mols_valid = 0
+
+    with torch.no_grad():
+        for batch in validation_loader:
+            valid_batches += 1
+
+            text = batch["text_list"]
+            labels = batch["labels"].to(device)
+
+            concat_hidden_states = concat_seqs(text)
+
+            projected_hidden_states = projection(concat_hidden_states)
+
+            decoder_input_ids = torch.cat(
+                (torch.full((labels.size(0), 1), 0, dtype=torch.long, device=device), labels[:, :-1]), dim=-1)
+
+            valid_outputs = t5_model(
+                input_ids=None,
+                attention_mask=None,
+                decoder_input_ids=decoder_input_ids,
+                encoder_outputs=(projected_hidden_states, None),
+                labels=labels,
+            )
+
+            valid_loss += valid_outputs.loss.item()
+
+            valid_predicted_labels = t5_tokenizer.decode(valid_outputs.logits[0].argmax(dim=-1).tolist(),
+                                                         skip_special_tokens=True)
+            valid_true_labels = [batch["label"][0]]
+
+            valid_bleu_score = bleu(valid_predicted_labels.split(), [valid_true_labels[0].split()])
+            valid_rouge_score = rouge(valid_predicted_labels, valid_true_labels)["rouge1_fmeasure"]
+            valid_char_error_rate_score = char_error_rate(valid_predicted_labels, valid_true_labels).item()
+            valid_sacre_bleu_score = sacre_bleu([valid_predicted_labels], [valid_true_labels]).item()
+
+            # Accumulate the values of these metrics in separate variables
+            char_error_rate_valid_accumulated += valid_char_error_rate_score
+            sacre_bleu_valid_accumulated += valid_sacre_bleu_score
+            rouge_valid_accumulated += valid_rouge_score
+            bleu_valid_accumulated += valid_bleu_score
+
+            if is_valid_smiles(valid_predicted_labels):
+                Num_correct_val_mols_valid += 1
+
+        # After the validation loop, calculate the average validation loss
+        valid_loss /= valid_batches
+
+        # Update the learning rate based on the validation loss
+        scheduler.step(valid_loss)
 
     # Test loop
     t5_model.eval()
