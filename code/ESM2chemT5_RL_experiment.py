@@ -18,7 +18,7 @@ def is_valid_smiles(smiles: str) -> bool:
     return mol is not None
 
 class ProteinDataset(torch.utils.data.Dataset):
-    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=400):
+    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=150):
         self.file_path = file_path
         self.data = self.load_data()
         self.T5_tokenizer = T5_tokenizer
@@ -34,7 +34,7 @@ class ProteinDataset(torch.utils.data.Dataset):
                 text_list = text.split('_')
 
                 # Check if any element in text_list is longer than 2000 characters
-                if all(len(element) <= 851 for element in text_list):
+                if all(len(element) <= 150 for element in text_list):
                     data.append((text_list, label))
         print(len(data))
         return data
@@ -224,7 +224,7 @@ for epoch in range(num_epochs):
         # Decode the tokens into a SMILES string
         predicted_smiles = t5_tokenizer.decode(predicted_tokens.view(-1), skip_special_tokens=True)
 
-        print('output from RL: ', predicted_smiles, '\n', 'output from supervised learning: ', train_predicted_labels)
+        print('\n\noutput from RL: ', predicted_smiles, '\n', 'output from supervised learning: ', train_predicted_labels)
         # Compute the rewards
         rewards = reward_function(predicted_smiles, train_true_labels)
 
