@@ -214,6 +214,7 @@ for epoch in range(num_epochs):
         probs = F.softmax(t5_outputs.logits, dim=-1)
 
         # Sample from the policy to get predicted tokens
+        probs = probs.view(-1, probs.size(-1))  # reshape to (batch_size*sequence_length, num_tokens)
         predicted_tokens = torch.multinomial(probs, 1)
 
         print('output from RL: ',predicted_tokens)
