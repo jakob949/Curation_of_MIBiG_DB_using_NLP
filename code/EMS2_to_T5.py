@@ -98,7 +98,7 @@ def concat_seqs(text):
 
 # Set up the training parameters
 num_epochs = 100
-learning_rate = 7e-4
+learning_rate = 9e-4
 
 
 peft_config = LoraConfig(
@@ -133,7 +133,7 @@ validation_loader = DataLoader(validation_dataset, batch_size=1, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience = 9, factor = 0.25)
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience = 4, factor = 0.25)
 
 
 rouge = ROUGEScore()
@@ -241,7 +241,7 @@ for epoch in range(num_epochs):
             valid_loss += valid_outputs.loss.item()
 
             valid_predicted_labels = t5_tokenizer.decode(valid_outputs.logits[0].argmax(dim=-1).tolist(),
-                                                         skip_special_tokens=True)
+                                                         skip_special_tokens=True, num_of_beams=5)
             valid_true_labels = [batch["label"][0]]
 
             valid_bleu_score = bleu(valid_predicted_labels.split(), [valid_true_labels[0].split()])
@@ -296,7 +296,7 @@ for epoch in range(num_epochs):
                 labels=labels,
             )
 
-            test_predicted_labels = t5_tokenizer.decode(test_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True)
+            test_predicted_labels = t5_tokenizer.decode(test_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=5)
             test_true_labels = [batch["label"][0]]
 
             test_bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
