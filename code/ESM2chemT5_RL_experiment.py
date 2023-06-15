@@ -215,17 +215,18 @@ for epoch in range(num_epochs):
 
         # Sample from the policy to get predicted tokens
         print("Shape before reshaping:", probs.shape)
-
         probs = probs.view(-1, probs.size(-1))  # reshape to (batch_size*sequence_length, num_tokens)
-
 
         predicted_tokens = torch.multinomial(probs, 1)
         predicted_tokens = predicted_tokens.view(1, -1, 1)  # Reshape to [1, 250, 1]
 
 
-        print('output from RL: ',predicted_tokens)
+        # Decode the tokens into a SMILES string
+        predicted_smiles = t5_tokenizer.decode(predicted_tokens[0], skip_special_tokens=True)
+
+        print('output from RL: ', predicted_smiles, '\n', 'output from supervised learning: ', train_predicted_labels)
         # Compute the rewards
-        rewards = reward_function(predicted_tokens, train_true_labels)
+        rewards = reward_function(predicted_smiles, train_true_labels)
 
         # Compute log probabilities
         log_probs = F.log_softmax(t5_outputs.logits, dim=-1)
