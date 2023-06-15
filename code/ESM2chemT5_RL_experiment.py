@@ -222,7 +222,7 @@ for epoch in range(num_epochs):
 
 
         # Decode the tokens into a SMILES string
-        predicted_smiles = t5_tokenizer.decode(predicted_tokens[0], skip_special_tokens=True)
+        predicted_smiles = t5_tokenizer.decode(predicted_tokens.view(-1), skip_special_tokens=True)
 
         print('output from RL: ', predicted_smiles, '\n', 'output from supervised learning: ', train_predicted_labels)
         # Compute the rewards
