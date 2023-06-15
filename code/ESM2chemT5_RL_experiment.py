@@ -214,7 +214,9 @@ for epoch in range(num_epochs):
         probs = F.softmax(t5_outputs.logits, dim=-1)
 
         # Sample from the policy to get predicted tokens
+        print("Shape before reshaping:", probs.shape)
         probs = probs.view(-1, probs.size(-1))  # reshape to (batch_size*sequence_length, num_tokens)
+
         predicted_tokens = torch.multinomial(probs, 1)
         predicted_tokens = predicted_tokens.view(1, t5_config.d_model, -1)  # Reshape to 3D
 
