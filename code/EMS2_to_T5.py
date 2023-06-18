@@ -95,8 +95,28 @@ def concat_seqs(text):
     concat_hidden_states = torch.cat(padded_hidden_states_list, dim=1)
     return concat_hidden_states
 
+def calculate_metrics(true_labels, predicted_labels):
+    rouge_accumulated = 0.0
+    bleu_accumulated = 0.0
+    Num_correct_val_mols = 0
+    char_error_rate_accumulated = 0.0
+    sacre_bleu_accumulated = 0.0
 
+    rouge_score = rouge(predicted_labels, true_labels)["rouge1_fmeasure"]
+    char_error_rate_score = char_error_rate(predicted_labels, true_labels).item()
+    sacre_bleu_score = sacre_bleu([predicted_labels], [true_labels]).item()
+    bleu_score = bleu(predicted_labels.split(), [true_labels[0].split()])
 
+    # Accumulate the values of these metrics in separate variables
+    char_error_rate_accumulated += char_error_rate_score
+    sacre_bleu_accumulated += sacre_bleu_score
+    rouge_accumulated += rouge_score
+    bleu_accumulated += bleu_score
+
+    if is_valid_smiles(predicted_labels):
+        Num_correct_val_mols += 1
+
+    return char_error_rate_accumulated, sacre_bleu_accumulated, rouge_accumulated, bleu_accumulated, Num_correct_val_mols
 
 peft_config = LoraConfig(
     task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=8, lora_alpha=32, lora_dropout=0.1
@@ -152,12 +172,7 @@ for epoch in range(num_epochs):
     t5_model.train()
     # esm_model.train()
     # projection.train()
-    rouge_train_accumulated = 0.0
-    bleu_train_accumulated = 0.0
     num_train_batches = 0
-    Num_correct_val_mols_train = 0
-    char_error_rate_train_accumulated = 0.0
-    sacre_bleu_train_accumulated = 0.0
 
     for batch in train_loader:
         # Should be fixed - This only works for batch size 1...
@@ -165,10 +180,8 @@ for epoch in range(num_epochs):
 
         text = batch["text_list"]
         labels = batch["labels"].to(device)
-
         concat_hidden_states = concat_seqs(text)
         projected_hidden_states = projection(concat_hidden_states)
-
         decoder_input_ids = torch.cat((torch.full((labels.size(0), 1), 0, dtype=torch.long, device=device), labels[:, :-1]), dim=-1)
 
         t5_outputs = t5_model(
@@ -182,21 +195,7 @@ for epoch in range(num_epochs):
         with torch.no_grad():
             train_predicted_labels = t5_tokenizer.decode(t5_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=5)
             train_true_labels = [batch["label"][0]]
-            # Inside the training loop, after calculating train_rouge_score and train_bleu_score
-            train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
-            train_char_error_rate_score = char_error_rate(train_predicted_labels, train_true_labels).item()
-            train_sacre_bleu_score = sacre_bleu([train_predicted_labels], [train_true_labels]).item()
-            train_bleu_score = bleu(train_predicted_labels.split(), [train_true_labels[0].split()])
-
-            # Accumulate the values of these metrics in separate variables
-            char_error_rate_train_accumulated += train_char_error_rate_score
-            sacre_bleu_train_accumulated += train_sacre_bleu_score
-            rouge_train_accumulated += train_rouge_score
-            bleu_train_accumulated += train_bleu_score
-
-
-            if is_valid_smiles(train_predicted_labels):
-                Num_correct_val_mols_train += 1
+            char_error_rate_accumulated_train, sacre_bleu_accumulated_train, rouge_accumulated_train, bleu_accumulated_train, Num_correct_val_mols_train = calculate_metrics(train_true_labels, train_predicted_labels)
 
         loss = t5_outputs.loss
         optimizer.zero_grad()
@@ -211,11 +210,6 @@ for epoch in range(num_epochs):
 
         valid_loss = 0.0
         valid_batches = 0
-        rouge_valid_accumulated = 0.0
-        bleu_valid_accumulated = 0.0
-        char_error_rate_valid_accumulated = 0.0
-        sacre_bleu_valid_accumulated = 0.0
-        Num_correct_val_mols_valid = 0
 
         with torch.no_grad():
             for batch in validation_loader:
@@ -223,11 +217,8 @@ for epoch in range(num_epochs):
 
                 text = batch["text_list"]
                 labels = batch["labels"].to(device)
-
                 concat_hidden_states = concat_seqs(text)
-
                 projected_hidden_states = projection(concat_hidden_states)
-
                 decoder_input_ids = torch.cat(
                     (torch.full((labels.size(0), 1), 0, dtype=torch.long, device=device), labels[:, :-1]), dim=-1)
 
@@ -240,44 +231,22 @@ for epoch in range(num_epochs):
                 )
 
                 valid_loss += valid_outputs.loss.item()
-
                 valid_predicted_labels = t5_tokenizer.decode(valid_outputs.logits[0].argmax(dim=-1).tolist(),
                                                              skip_special_tokens=True, num_of_beams=5)
                 valid_true_labels = [batch["label"][0]]
-
-                valid_bleu_score = bleu(valid_predicted_labels.split(), [valid_true_labels[0].split()])
-                valid_rouge_score = rouge(valid_predicted_labels, valid_true_labels)["rouge1_fmeasure"]
-                valid_char_error_rate_score = char_error_rate(valid_predicted_labels, valid_true_labels).item()
-                valid_sacre_bleu_score = sacre_bleu([valid_predicted_labels], [valid_true_labels]).item()
-
-                # Accumulate the values of these metrics in separate variables
-                char_error_rate_valid_accumulated += valid_char_error_rate_score
-                sacre_bleu_valid_accumulated += valid_sacre_bleu_score
-                rouge_valid_accumulated += valid_rouge_score
-                bleu_valid_accumulated += valid_bleu_score
-
-                if is_valid_smiles(valid_predicted_labels):
-                    Num_correct_val_mols_valid += 1
+                char_error_rate_accumulated_valid, sacre_bleu_accumulated_valid, rouge_accumulated_valid, bleu_accumulated_valid, Num_correct_val_mols_valid = calculate_metrics(valid_true_labels, valid_true_labels)
 
             valid_loss /= valid_batches
 
             # Update the learning rate based on the validation loss??
             scheduler.step(valid_loss)
     else:
-
-
-    # Test loop
+        pass
+    ### test loop
     t5_model.eval()
     esm_model.eval()
     projection.eval()
-
-    rouge_test_accumulated = 0.0
     num_test_batches = 0
-    bleu_test_accumulated = 0.0
-    char_error_rate_test_accumulated = 0.0
-    sacre_bleu_test_accumulated = 0.0
-    Num_correct_val_mols_test = 0
-
     with torch.no_grad():
         for batch in test_loader:
             num_test_batches += 1
@@ -286,9 +255,7 @@ for epoch in range(num_epochs):
             labels = batch["labels"].to(device)
 
             concat_hidden_states = concat_seqs(text)
-
             projected_hidden_states = projection(concat_hidden_states)
-
             decoder_input_ids = torch.cat((torch.full((labels.size(0), 1), 0, dtype=torch.long, device=device), labels[:, :-1]), dim=-1)
 
             test_outputs = t5_model(
@@ -296,34 +263,20 @@ for epoch in range(num_epochs):
                 attention_mask=None,
                 decoder_input_ids=decoder_input_ids,
                 encoder_outputs=(projected_hidden_states, None),
-                labels=labels,
-            )
+                labels=labels)
 
             test_predicted_labels = t5_tokenizer.decode(test_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=5)
             test_true_labels = [batch["label"][0]]
+            char_error_rate_accumulated_test, sacre_bleu_accumulated_test, rouge_accumulated_test, bleu_accumulated_test, Num_correct_val_mols_test = calculate_metrics(test_true_labels, test_predicted_labels)
 
-            test_bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
-            test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
-            test_char_error_rate_score = char_error_rate(test_predicted_labels, test_true_labels).item()
-            test_sacre_bleu_score = sacre_bleu([test_predicted_labels], [test_true_labels]).item()
-
-            # Accumulate the values of these metrics in separate variables
-            char_error_rate_test_accumulated += test_char_error_rate_score
-            sacre_bleu_test_accumulated += test_sacre_bleu_score
-            rouge_test_accumulated += test_rouge_score
-            bleu_test_accumulated += test_bleu_score
-
-            #print(f"test_true_labels: {test_true_labels}, test_predicted_labels: {test_predicted_labels}, test_rouge_score: {test_rouge_score}")
-            if is_valid_smiles(test_predicted_labels):
-                Num_correct_val_mols_test += 1
             with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}", file=predictions_file)
 
         with open(f"scores_{args.output_file_name}.txt", "a") as scores_file:
             print(
-                f"Epoch {epoch + 1}/{num_epochs}\t Avg Train ROUGE-1 F1 Score\t {rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t {bleu_train_accumulated / num_train_batches}\tAvg Train Char Error Rate\t {char_error_rate_train_accumulated / num_train_batches}\tAvg Train SacreBLEU Score\t {sacre_bleu_train_accumulated / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
+                f"Epoch {epoch + 1}/{num_epochs}\t Avg Train ROUGE-1 F1 Score\t {rouge_accumulated_train / num_train_batches}\tAvg Train BLEU Score\t {bleu_accumulated_train / num_train_batches}\tAvg Train Char Error Rate\t {char_error_rate_accumulated_train / num_train_batches}\tAvg Train SacreBLEU Score\t {sacre_bleu_accumulated_train / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
                 file=scores_file)
 
             print(
-                f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
+                f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {rouge_accumulated_test / num_test_batches}\tAvg Test BLEU Score\t {bleu_accumulated_test / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_accumulated_test / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_accumulated_test / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
                 file=scores_file)
