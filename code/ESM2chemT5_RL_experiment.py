@@ -227,7 +227,7 @@ for epoch in range(num_epochs):
         print('\n\noutput from RL: ', predicted_smiles, '\n', 'output from supervised learning: ', train_predicted_labels)
         # Compute the rewards
         rewards = reward_function(predicted_smiles, train_true_labels)
-
+        print('rewards: ', rewards)
         # Compute log probabilities
         log_probs = F.log_softmax(t5_outputs.logits, dim=-1)
 
