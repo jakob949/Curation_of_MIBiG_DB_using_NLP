@@ -17,7 +17,7 @@ def is_valid_smiles(smiles: str) -> bool:
     return mol is not None
 
 class ProteinDataset(torch.utils.data.Dataset):
-    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=851):
+    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=775):
         self.file_path = file_path
         self.data = self.load_data()
         self.T5_tokenizer = T5_tokenizer
