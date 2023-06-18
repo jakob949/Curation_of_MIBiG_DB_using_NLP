@@ -116,27 +116,27 @@ projection = nn.Linear(esm_model.config.hidden_size, t5_config.d_model)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-t5_model.to(device)
-esm_model.to(device)
-projection.to(device)
-
-print(device)
-
-train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_4_shorten_0.txt", t5_tokenizer, esm_tokenizer)
-validation_dataset = ProteinDataset("dataset/protein_SMILE/validation_protein_peptides_complete_v3_4_shorten_0.txt", t5_tokenizer, esm_tokenizer)
-test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_4_shorten_0.txt", t5_tokenizer, esm_tokenizer)
-
-train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
-validation_loader = DataLoader(validation_dataset, batch_size=1, shuffle=False)
-test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
-
-
 # Set up the training parameters
 num_epochs = 100
 learning_rate = 5e-2
 
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience = 3, factor = 0.5)
+
+t5_model.to(device)
+esm_model.to(device)
+projection.to(device)
+
+print(device)
+validation_set = False
+train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_3_shorten_0.txt", t5_tokenizer, esm_tokenizer)
+test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_3_shorten_0.txt", t5_tokenizer, esm_tokenizer)
+
+train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
+if validation_set:
+    validation_dataset = ProteinDataset("dataset/protein_SMILE/validation_protein_peptides_complete_v3_4_shorten_0.txt", t5_tokenizer, esm_tokenizer)
+    validation_loader = DataLoader(validation_dataset, batch_size=1, shuffle=False)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience = 3, factor = 0.5)
 
 
 rouge = ROUGEScore()
@@ -152,7 +152,6 @@ for epoch in range(num_epochs):
     t5_model.train()
     # esm_model.train()
     # projection.train()
-
     rouge_train_accumulated = 0.0
     bleu_train_accumulated = 0.0
     num_train_batches = 0
@@ -204,66 +203,68 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
 
+    if validation_set:
+        ### validation loop
+        t5_model.eval()
+        esm_model.eval()
+        projection.eval()
 
-    ### validation loop
-    t5_model.eval()
-    esm_model.eval()
-    projection.eval()
+        valid_loss = 0.0
+        valid_batches = 0
+        rouge_valid_accumulated = 0.0
+        bleu_valid_accumulated = 0.0
+        char_error_rate_valid_accumulated = 0.0
+        sacre_bleu_valid_accumulated = 0.0
+        Num_correct_val_mols_valid = 0
 
-    valid_loss = 0.0
-    valid_batches = 0
-    rouge_valid_accumulated = 0.0
-    bleu_valid_accumulated = 0.0
-    char_error_rate_valid_accumulated = 0.0
-    sacre_bleu_valid_accumulated = 0.0
-    Num_correct_val_mols_valid = 0
+        with torch.no_grad():
+            for batch in validation_loader:
+                valid_batches += 1
 
-    with torch.no_grad():
-        for batch in validation_loader:
-            valid_batches += 1
+                text = batch["text_list"]
+                labels = batch["labels"].to(device)
 
-            text = batch["text_list"]
-            labels = batch["labels"].to(device)
+                concat_hidden_states = concat_seqs(text)
 
-            concat_hidden_states = concat_seqs(text)
+                projected_hidden_states = projection(concat_hidden_states)
 
-            projected_hidden_states = projection(concat_hidden_states)
+                decoder_input_ids = torch.cat(
+                    (torch.full((labels.size(0), 1), 0, dtype=torch.long, device=device), labels[:, :-1]), dim=-1)
 
-            decoder_input_ids = torch.cat(
-                (torch.full((labels.size(0), 1), 0, dtype=torch.long, device=device), labels[:, :-1]), dim=-1)
+                valid_outputs = t5_model(
+                    input_ids=None,
+                    attention_mask=None,
+                    decoder_input_ids=decoder_input_ids,
+                    encoder_outputs=(projected_hidden_states, None),
+                    labels=labels,
+                )
 
-            valid_outputs = t5_model(
-                input_ids=None,
-                attention_mask=None,
-                decoder_input_ids=decoder_input_ids,
-                encoder_outputs=(projected_hidden_states, None),
-                labels=labels,
-            )
+                valid_loss += valid_outputs.loss.item()
 
-            valid_loss += valid_outputs.loss.item()
+                valid_predicted_labels = t5_tokenizer.decode(valid_outputs.logits[0].argmax(dim=-1).tolist(),
+                                                             skip_special_tokens=True, num_of_beams=5)
+                valid_true_labels = [batch["label"][0]]
 
-            valid_predicted_labels = t5_tokenizer.decode(valid_outputs.logits[0].argmax(dim=-1).tolist(),
-                                                         skip_special_tokens=True, num_of_beams=5)
-            valid_true_labels = [batch["label"][0]]
+                valid_bleu_score = bleu(valid_predicted_labels.split(), [valid_true_labels[0].split()])
+                valid_rouge_score = rouge(valid_predicted_labels, valid_true_labels)["rouge1_fmeasure"]
+                valid_char_error_rate_score = char_error_rate(valid_predicted_labels, valid_true_labels).item()
+                valid_sacre_bleu_score = sacre_bleu([valid_predicted_labels], [valid_true_labels]).item()
 
-            valid_bleu_score = bleu(valid_predicted_labels.split(), [valid_true_labels[0].split()])
-            valid_rouge_score = rouge(valid_predicted_labels, valid_true_labels)["rouge1_fmeasure"]
-            valid_char_error_rate_score = char_error_rate(valid_predicted_labels, valid_true_labels).item()
-            valid_sacre_bleu_score = sacre_bleu([valid_predicted_labels], [valid_true_labels]).item()
+                # Accumulate the values of these metrics in separate variables
+                char_error_rate_valid_accumulated += valid_char_error_rate_score
+                sacre_bleu_valid_accumulated += valid_sacre_bleu_score
+                rouge_valid_accumulated += valid_rouge_score
+                bleu_valid_accumulated += valid_bleu_score
 
-            # Accumulate the values of these metrics in separate variables
-            char_error_rate_valid_accumulated += valid_char_error_rate_score
-            sacre_bleu_valid_accumulated += valid_sacre_bleu_score
-            rouge_valid_accumulated += valid_rouge_score
-            bleu_valid_accumulated += valid_bleu_score
+                if is_valid_smiles(valid_predicted_labels):
+                    Num_correct_val_mols_valid += 1
 
-            if is_valid_smiles(valid_predicted_labels):
-                Num_correct_val_mols_valid += 1
+            valid_loss /= valid_batches
 
-        valid_loss /= valid_batches
+            # Update the learning rate based on the validation loss??
+            scheduler.step(valid_loss)
+    else:
 
-        # Update the learning rate based on the validation loss??
-        scheduler.step(valid_loss)
 
     # Test loop
     t5_model.eval()
@@ -326,6 +327,3 @@ for epoch in range(num_epochs):
             print(
                 f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
                 file=scores_file)
-
-
-
