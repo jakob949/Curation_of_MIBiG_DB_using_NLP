@@ -95,12 +95,8 @@ def concat_seqs(text):
     concat_hidden_states = torch.cat(padded_hidden_states_list, dim=1)
     return concat_hidden_states
 
-def calculate_metrics(true_labels, predicted_labels):
-    rouge_accumulated = 0.0
-    bleu_accumulated = 0.0
-    Num_correct_val_mols = 0
-    char_error_rate_accumulated = 0.0
-    sacre_bleu_accumulated = 0.0
+def calculate_metrics(true_labels, predicted_labels, rouge_accumulated, bleu_accumulated, Num_correct_val_mols, char_error_rate_accumulated, sacre_bleu_accumulated):
+
 
     rouge_score = rouge(predicted_labels, true_labels)["rouge1_fmeasure"]
     char_error_rate_score = char_error_rate(predicted_labels, true_labels).item()
@@ -112,7 +108,6 @@ def calculate_metrics(true_labels, predicted_labels):
     sacre_bleu_accumulated += sacre_bleu_score
     rouge_accumulated += rouge_score
     bleu_accumulated += bleu_score
-
     if is_valid_smiles(predicted_labels):
         Num_correct_val_mols += 1
 
@@ -165,6 +160,8 @@ char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 
 t5_model = get_peft_model(t5_model, peft_config)
+esm_model.eval()
+projection.eval()
 
 # Training loop
 for epoch in range(num_epochs):
@@ -173,6 +170,8 @@ for epoch in range(num_epochs):
     # esm_model.train()
     # projection.train()
     num_train_batches = 0
+
+    rouge_accumulated_train, bleu_accumulated_train, Num_correct_val_mols_train, char_error_rate_accumulated_train, sacre_bleu_accumulated_train = 0.0, 0.0, 0, 0.0, 0.0
 
     for batch in train_loader:
         # Should be fixed - This only works for batch size 1...
@@ -195,7 +194,7 @@ for epoch in range(num_epochs):
         with torch.no_grad():
             train_predicted_labels = t5_tokenizer.decode(t5_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=5)
             train_true_labels = [batch["label"][0]]
-            char_error_rate_accumulated_train, sacre_bleu_accumulated_train, rouge_accumulated_train, bleu_accumulated_train, Num_correct_val_mols_train = calculate_metrics(train_true_labels, train_predicted_labels)
+            char_error_rate_accumulated_train, sacre_bleu_accumulated_train, rouge_accumulated_train, bleu_accumulated_train, Num_correct_val_mols_train = calculate_metrics(train_true_labels, train_predicted_labels, rouge_accumulated_train, bleu_accumulated_train, Num_correct_val_mols_train, char_error_rate_accumulated_train, sacre_bleu_accumulated_train)
 
         loss = t5_outputs.loss
         optimizer.zero_grad()
@@ -247,6 +246,8 @@ for epoch in range(num_epochs):
     esm_model.eval()
     projection.eval()
     num_test_batches = 0
+    rouge_accumulated_test, bleu_accumulated_test, Num_correct_val_mols_test, char_error_rate_accumulated_test, sacre_bleu_accumulated_test = 0.0, 0.0, 0, 0.0, 0.0
+
     with torch.no_grad():
         for batch in test_loader:
             num_test_batches += 1
@@ -267,7 +268,7 @@ for epoch in range(num_epochs):
 
             test_predicted_labels = t5_tokenizer.decode(test_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=5)
             test_true_labels = [batch["label"][0]]
-            char_error_rate_accumulated_test, sacre_bleu_accumulated_test, rouge_accumulated_test, bleu_accumulated_test, Num_correct_val_mols_test = calculate_metrics(test_true_labels, test_predicted_labels)
+            char_error_rate_accumulated_test, sacre_bleu_accumulated_test, rouge_accumulated_test, bleu_accumulated_test, Num_correct_val_mols_test = calculate_metrics(test_true_labels, test_predicted_labels, rouge_accumulated_test, bleu_accumulated_test, Num_correct_val_mols_test, char_error_rate_accumulated_test, sacre_bleu_accumulated_test)
 
             with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}", file=predictions_file)
