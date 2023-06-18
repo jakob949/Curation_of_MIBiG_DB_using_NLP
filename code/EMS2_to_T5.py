@@ -134,8 +134,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Set up the training parameters
 num_epochs = 100
 learning_rate = 1e-5
-
-optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
+optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay=0.01)
 
 t5_model.to(device)
 esm_model.to(device)
