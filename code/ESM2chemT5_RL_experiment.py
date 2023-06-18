@@ -99,7 +99,7 @@ def concat_seqs(text):
 
 def reward_function(predicted_smiles, target_smiles):
     valid = is_valid_smiles(predicted_smiles)
-    reward = 0
+    reward = char_error_rate(predicted_smiles, target_smiles)
     if valid:
         reward += 1
     return reward
