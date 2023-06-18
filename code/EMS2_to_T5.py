@@ -123,7 +123,7 @@ t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
 t5_model = get_peft_model(t5_model, peft_config)
 
-esm_model_name = "facebook/esm2_t6_8M_UR50D"
+esm_model_name = "facebook/esm2_t12_35M_UR50D"
 esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
 esm_model = AutoModel.from_pretrained(esm_model_name)
 
