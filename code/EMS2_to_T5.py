@@ -117,7 +117,7 @@ peft_config = LoraConfig(
     task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=8, lora_alpha=32, lora_dropout=0.1
 )
 
-T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-small-augm'
+T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
@@ -133,7 +133,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Set up the training parameters
 num_epochs = 100
-learning_rate = 5e-2
+learning_rate = 1e-5
 
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
 
@@ -174,6 +174,7 @@ for epoch in range(num_epochs):
     rouge_accumulated_train, bleu_accumulated_train, Num_correct_val_mols_train, char_error_rate_accumulated_train, sacre_bleu_accumulated_train = 0.0, 0.0, 0, 0.0, 0.0
 
     for batch in train_loader:
+        optimizer.zero_grad()
         # Should be fixed - This only works for batch size 1...
         num_train_batches += 1
 
@@ -197,8 +198,8 @@ for epoch in range(num_epochs):
             char_error_rate_accumulated_train, sacre_bleu_accumulated_train, rouge_accumulated_train, bleu_accumulated_train, Num_correct_val_mols_train = calculate_metrics(train_true_labels, train_predicted_labels, rouge_accumulated_train, bleu_accumulated_train, Num_correct_val_mols_train, char_error_rate_accumulated_train, sacre_bleu_accumulated_train)
 
         loss = t5_outputs.loss
-        optimizer.zero_grad()
         loss.backward()
+        print('loss ', loss)
         optimizer.step()
 
     if validation_set:
@@ -209,7 +210,7 @@ for epoch in range(num_epochs):
 
         valid_loss = 0.0
         valid_batches = 0
-
+        rouge_accumulated_valid, bleu_accumulated_valid, Num_correct_val_mols_valid, char_error_rate_accumulated_valid, sacre_bleu_accumulated_valid = 0.0, 0.0, 0, 0.0, 0.0
         with torch.no_grad():
             for batch in validation_loader:
                 valid_batches += 1
@@ -233,7 +234,7 @@ for epoch in range(num_epochs):
                 valid_predicted_labels = t5_tokenizer.decode(valid_outputs.logits[0].argmax(dim=-1).tolist(),
                                                              skip_special_tokens=True, num_of_beams=5)
                 valid_true_labels = [batch["label"][0]]
-                char_error_rate_accumulated_valid, sacre_bleu_accumulated_valid, rouge_accumulated_valid, bleu_accumulated_valid, Num_correct_val_mols_valid = calculate_metrics(valid_true_labels, valid_true_labels)
+                char_error_rate_accumulated_valid, sacre_bleu_accumulated_valid, rouge_accumulated_valid, bleu_accumulated_valid, Num_correct_val_mols_valid = calculate_metrics(valid_true_labels, valid_true_labels, rouge_accumulated_valid, bleu_accumulated_valid, Num_correct_val_mols_valid, char_error_rate_accumulated_valid, sacre_bleu_accumulated_valid)
 
             valid_loss /= valid_batches
 
