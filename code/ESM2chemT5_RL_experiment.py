@@ -18,7 +18,7 @@ def is_valid_smiles(smiles: str) -> bool:
     return mol is not None
 
 class ProteinDataset(torch.utils.data.Dataset):
-    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=150):
+    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=300):
         self.file_path = file_path
         self.data = self.load_data()
         self.T5_tokenizer = T5_tokenizer
@@ -34,7 +34,7 @@ class ProteinDataset(torch.utils.data.Dataset):
                 text_list = text.split('_')
 
                 # Check if any element in text_list is longer than 2000 characters
-                if all(len(element) <= 150 for element in text_list):
+                if all(len(element) <= 851 for element in text_list):
                     data.append((text_list, label))
         print(len(data))
         return data
@@ -214,7 +214,6 @@ for epoch in range(num_epochs):
         probs = F.softmax(t5_outputs.logits, dim=-1)
 
         # Sample from the policy to get predicted tokens
-        print("Shape before reshaping:", probs.shape)
         probs = probs.view(-1, probs.size(-1))  # reshape to (batch_size*sequence_length, num_tokens)
 
         predicted_tokens = torch.multinomial(probs, 1)
