@@ -17,7 +17,7 @@ def is_valid_smiles(smiles: str) -> bool:
     return mol is not None
 
 class ProteinDataset(torch.utils.data.Dataset):
-    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=775):
+    def __init__(self, file_path, T5_tokenizer, esm_tokenizer, max_length=851):
         self.file_path = file_path
         self.data = self.load_data()
         self.T5_tokenizer = T5_tokenizer
@@ -102,7 +102,7 @@ peft_config = LoraConfig(
     task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=8, lora_alpha=32, lora_dropout=0.1
 )
 
-T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-small-augm'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
