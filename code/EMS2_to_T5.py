@@ -132,8 +132,8 @@ projection = nn.Linear(esm_model.config.hidden_size, t5_config.d_model)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Set up the training parameters
-num_epochs = 100
-learning_rate = 1e-5
+num_epochs = 50
+learning_rate = 3e-4
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay=0.01)
 
 t5_model.to(device)
@@ -147,6 +147,7 @@ test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_compl
 
 train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
+
 if validation_set:
     validation_dataset = ProteinDataset("dataset/protein_SMILE/validation_protein_peptides_complete_v3_4_shorten_0.txt", t5_tokenizer, esm_tokenizer)
     validation_loader = DataLoader(validation_dataset, batch_size=1, shuffle=False)
@@ -204,8 +205,6 @@ for epoch in range(num_epochs):
     if validation_set:
         ### validation loop
         t5_model.eval()
-        esm_model.eval()
-        projection.eval()
 
         valid_loss = 0.0
         valid_batches = 0
@@ -239,12 +238,10 @@ for epoch in range(num_epochs):
 
             # Update the learning rate based on the validation loss??
             scheduler.step(valid_loss)
-    else:
-        pass
+
     ### test loop
     t5_model.eval()
-    esm_model.eval()
-    projection.eval()
+
     num_test_batches = 0
     rouge_accumulated_test, bleu_accumulated_test, Num_correct_val_mols_test, char_error_rate_accumulated_test, sacre_bleu_accumulated_test = 0.0, 0.0, 0, 0.0, 0.0
 
