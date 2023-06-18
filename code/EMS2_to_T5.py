@@ -96,9 +96,6 @@ def concat_seqs(text):
     return concat_hidden_states
 
 
-# Set up the training parameters
-num_epochs = 100
-learning_rate = 9e-4
 
 
 peft_config = LoraConfig(
@@ -122,6 +119,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 esm_model.to(device)
 projection.to(device)
+
 print(device)
 
 train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_4_shorten_0.txt", t5_tokenizer, esm_tokenizer)
@@ -132,8 +130,13 @@ train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
 validation_loader = DataLoader(validation_dataset, batch_size=1, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
+
+# Set up the training parameters
+num_epochs = 100
+learning_rate = 5e-2
+
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience = 4, factor = 0.25)
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience = 3, factor = 0.5)
 
 
 rouge = ROUGEScore()
@@ -165,9 +168,7 @@ for epoch in range(num_epochs):
         labels = batch["labels"].to(device)
 
         concat_hidden_states = concat_seqs(text)
-
         projected_hidden_states = projection(concat_hidden_states)
-        optimizer.zero_grad()
 
         decoder_input_ids = torch.cat((torch.full((labels.size(0), 1), 0, dtype=torch.long, device=device), labels[:, :-1]), dim=-1)
 
@@ -199,6 +200,7 @@ for epoch in range(num_epochs):
                 Num_correct_val_mols_train += 1
 
         loss = t5_outputs.loss
+        optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
