@@ -31,7 +31,7 @@ class ProteinDataset(torch.utils.data.Dataset):
                 text = line.split(': ')[1].split('\t')[0]
                 label = line.split('\t')[1].strip('\n')
                 text_list = text.split('_')
-
+                print(text_list)
                 # Check if any element in text_list is longer than 2000 characters
                 if all(len(element) <= 851 for element in text_list):
                     data.append((text_list, label))
@@ -123,7 +123,7 @@ t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
 t5_model = get_peft_model(t5_model, peft_config)
 
-esm_model_name = "facebook/esm2_t12_35M_UR50D"
+esm_model_name = "facebook/esm2_t33_650M_UR50D"
 esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
 esm_model = AutoModel.from_pretrained(esm_model_name)
 
@@ -193,7 +193,7 @@ for epoch in range(num_epochs):
         )
 
         with torch.no_grad():
-            train_predicted_labels = t5_tokenizer.decode(t5_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=5)
+            train_predicted_labels = t5_tokenizer.decode(t5_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=10)
             train_true_labels = [batch["label"][0]]
             char_error_rate_accumulated_train, sacre_bleu_accumulated_train, rouge_accumulated_train, bleu_accumulated_train, Num_correct_val_mols_train = calculate_metrics(train_true_labels, train_predicted_labels, rouge_accumulated_train, bleu_accumulated_train, Num_correct_val_mols_train, char_error_rate_accumulated_train, sacre_bleu_accumulated_train)
 
@@ -263,7 +263,7 @@ for epoch in range(num_epochs):
                 encoder_outputs=(projected_hidden_states, None),
                 labels=labels)
 
-            test_predicted_labels = t5_tokenizer.decode(test_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=5)
+            test_predicted_labels = t5_tokenizer.decode(test_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=10)
             test_true_labels = [batch["label"][0]]
             char_error_rate_accumulated_test, sacre_bleu_accumulated_test, rouge_accumulated_test, bleu_accumulated_test, Num_correct_val_mols_test = calculate_metrics(test_true_labels, test_predicted_labels, rouge_accumulated_test, bleu_accumulated_test, Num_correct_val_mols_test, char_error_rate_accumulated_test, sacre_bleu_accumulated_test)
 
