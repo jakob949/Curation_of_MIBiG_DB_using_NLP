@@ -31,7 +31,7 @@ class ProteinDataset(torch.utils.data.Dataset):
                 text = line.split(': ')[1].split('\t')[0]
                 label = line.split('\t')[1].strip('\n')
                 text_list = text.split('_')
-                print(text_list)
+
                 # Check if any element in text_list is longer than 2000 characters
                 if all(len(element) <= 851 for element in text_list):
                     data.append((text_list, label))
@@ -123,7 +123,7 @@ t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
 t5_model = get_peft_model(t5_model, peft_config)
 
-esm_model_name = "facebook/esm2_t33_650M_UR50D"
+esm_model_name = "facebook/esm2_t12_35M_UR50D"
 esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
 esm_model = AutoModel.from_pretrained(esm_model_name)
 
@@ -167,7 +167,7 @@ projection.eval()
 for epoch in range(num_epochs):
 
     t5_model.train()
-    # esm_model.train()
+    esm_model.train()
     # projection.train()
     num_train_batches = 0
 
@@ -241,7 +241,7 @@ for epoch in range(num_epochs):
 
     ### test loop
     t5_model.eval()
-
+    esm_model.eval()
     num_test_batches = 0
     rouge_accumulated_test, bleu_accumulated_test, Num_correct_val_mols_test, char_error_rate_accumulated_test, sacre_bleu_accumulated_test = 0.0, 0.0, 0, 0.0, 0.0
 
