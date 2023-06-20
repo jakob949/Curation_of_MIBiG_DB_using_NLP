@@ -133,8 +133,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Set up the training parameters
 num_epochs = 50
-learning_rate = 3e-4
-optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay=0.01)
+learning_rate = 1e-4
+optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay=0.07)
 
 t5_model.to(device)
 esm_model.to(device)
@@ -269,6 +269,10 @@ for epoch in range(num_epochs):
 
             with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}", file=predictions_file)
+
+            # save pridictions for training set
+            with open(f"predictions_train_{args.output_file_name}.txt", "a") as predictions_file:
+                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}", file=predictions_file)
 
         with open(f"scores_{args.output_file_name}.txt", "a") as scores_file:
             print(
