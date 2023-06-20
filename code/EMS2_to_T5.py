@@ -143,8 +143,8 @@ projection.to(device)
 
 print(device)
 validation_set = False
-train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_0.txt", t5_tokenizer, esm_tokenizer)
-test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_0.txt", t5_tokenizer, esm_tokenizer)
+train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_3_shorten_1.txt", t5_tokenizer, esm_tokenizer)
+test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_3_shorten_1.txt", t5_tokenizer, esm_tokenizer)
 
 train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
