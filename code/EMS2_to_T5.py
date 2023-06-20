@@ -201,6 +201,10 @@ for epoch in range(num_epochs):
         loss.backward()
         print('loss ', loss)
         optimizer.step()
+        # save pridictions for training set
+        with open(f"predictions_train_{args.output_file_name}.txt", "a") as predictions_file:
+            print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}",
+                  file=predictions_file)
 
     if validation_set:
         ### validation loop
@@ -270,9 +274,6 @@ for epoch in range(num_epochs):
             with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}", file=predictions_file)
 
-            # save pridictions for training set
-            with open(f"predictions_train_{args.output_file_name}.txt", "a") as predictions_file:
-                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}", file=predictions_file)
 
         with open(f"scores_{args.output_file_name}.txt", "a") as scores_file:
             print(
