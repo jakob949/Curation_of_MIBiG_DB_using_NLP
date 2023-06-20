@@ -33,8 +33,9 @@ class ProteinDataset(torch.utils.data.Dataset):
                 text_list = text.split('_')
 
                 # Check if any element in text_list is longer than 2000 characters
-                if all(len(element) <= 851 for element in text_list):
-                    data.append((text_list, label))
+                # if all(len(element) <= 851 for element in text_list):
+                #     data.append((text_list, label))
+                data.append((text_list, label))
         print(len(data))
         return data
 
