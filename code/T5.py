@@ -20,23 +20,30 @@ args = parser.parse_args()
 
 
 class Dataset(Dataset):
-    def __init__(self, filename, tokenizer, max_length=1750):
+    def __init__(self, file_path, tokenizer, max_length=851):
+        self.file_path = file_path
+        self.data = self.load_data()
         self.tokenizer = tokenizer
-        self.data = []
-        with open(filename, "r") as f:
-            for line in f:
-                if len(line.strip().split("\t")) == 2:
-
-                    text = line.split('\t')[0]
-                    task = text.split(':')[0]
-                    label = line.split('\t')[1].strip('\n')
-                    print(len(text), len(label))
-                    if len(text) < 500:
-                        self.data.append((text, label, task))
-                    else:
-                        print('something wrong')
-        print(len(self.data))
         self.max_length = max_length
+
+    def load_data(self):
+        data = []
+        with open(self.file_path, 'r') as f:
+            for line in f:
+                text = line.split(': ')[1].split('\t')[0]
+                label = line.split('\t')[1].strip('\n')
+                text_list = text.split('_')
+
+                # Check if any element in text_list is longer than 2000 characters
+                if all(len(element) <= 851 for element in text_list):
+                    data.append((text_list, label))
+                else:
+                    truncated_text_list = [element[:851] for element in text_list]
+                    data.append((truncated_text_list, label))
+
+        print(len(data))
+        return data
+
 
     def __len__(self):
         return len(self.data)
@@ -51,7 +58,6 @@ class Dataset(Dataset):
             "input_ids": input_encoding["input_ids"].squeeze(),
             "attention_mask": input_encoding["attention_mask"].squeeze(),
             "labels": target_encoding["input_ids"].squeeze(),
-            "task": task
         }
 
 
