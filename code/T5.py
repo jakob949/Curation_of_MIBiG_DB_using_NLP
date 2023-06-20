@@ -49,15 +49,14 @@ class Dataset(Dataset):
             "input_ids": input_encoding["input_ids"].squeeze(),
             "attention_mask": input_encoding["attention_mask"].squeeze(),
             "labels": target_encoding["input_ids"].squeeze(),
-            "task": task,
-            "label": label
+            "task": task
         }
 
 
 start_time = time.time()
 
 # Assume you have a T5 model and tokenizer already
-T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-small-augm'
+T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -67,7 +66,7 @@ t5_model.to(device)
 train_dataset = Dataset("dataset/invalid2validSMILE/train_invalid2validSMILE.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/invalid2validSMILE/test_invalid2validSMILE.txt", t5_tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=1, shuffle=False)
+train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 
@@ -110,8 +109,7 @@ for epoch in range(num_epochs):
         with torch.no_grad():
             train_predicted_labels = t5_tokenizer.decode(outputs.logits[0].argmax(dim=-1).tolist(),
                                                          skip_special_tokens=True)
-            train_true_labels = [batch["label"][0]]
-            print(train_predicted_labels, '\ttrue_labe\n\n')
+            train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
             if is_valid_smiles(train_predicted_labels):
                 Num_correct_val_mols_train += 1
 
@@ -148,8 +146,8 @@ for epoch in range(num_epochs):
             outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
             test_predicted_labels = t5_tokenizer.decode(outputs.logits[0].argmax(dim=-1).tolist(),
                                                         skip_special_tokens=True)
-            test_true_labels = labels
-            print(test_true_labels)
+            test_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
+
             test_outputs.append({"predicted_label": test_predicted_labels, "true_label": test_true_labels[0]})
 
             if is_valid_smiles(test_predicted_labels):
