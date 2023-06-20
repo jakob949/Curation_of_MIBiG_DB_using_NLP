@@ -49,7 +49,8 @@ class Dataset(Dataset):
             "input_ids": input_encoding["input_ids"].squeeze(),
             "attention_mask": input_encoding["attention_mask"].squeeze(),
             "labels": target_encoding["input_ids"].squeeze(),
-            "task": task
+            "task": task,
+            "label": label
         }
 
 
@@ -109,7 +110,7 @@ for epoch in range(num_epochs):
         with torch.no_grad():
             train_predicted_labels = t5_tokenizer.decode(outputs.logits[0].argmax(dim=-1).tolist(),
                                                          skip_special_tokens=True)
-            train_true_labels = [batch["labels"][0]]
+            train_true_labels = [batch["label"][0]]
             print(train_predicted_labels, '\ttrue_labe\n\n')
             if is_valid_smiles(train_predicted_labels):
                 Num_correct_val_mols_train += 1
