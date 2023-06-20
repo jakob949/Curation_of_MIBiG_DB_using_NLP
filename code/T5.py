@@ -109,8 +109,8 @@ for epoch in range(num_epochs):
         with torch.no_grad():
             train_predicted_labels = t5_tokenizer.decode(outputs.logits[0].argmax(dim=-1).tolist(),
                                                          skip_special_tokens=True)
-            train_true_labels = labels
-            print(train_predicted_labels, '\n\n')
+            train_true_labels = [batch["label"][0]]
+            print(train_predicted_labels, '\ttrue_labe\n\n')
             if is_valid_smiles(train_predicted_labels):
                 Num_correct_val_mols_train += 1
 
