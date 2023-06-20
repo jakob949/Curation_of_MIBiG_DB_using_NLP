@@ -63,13 +63,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 
-train_dataset = Dataset("code/dataset/shorten/train_protein_text_shorten_v3_0.txt", t5_tokenizer)
-test_dataset = Dataset("code/dataset/shorten/test_protein_text_shorten_v3_0.txt", t5_tokenizer)
+train_dataset = Dataset("code/dataset/invalid2validSMILE/train_invalid2validSMILE.txt", t5_tokenizer)
+test_dataset = Dataset("code/dataset/invalid2validSMILE/test_invalid2validSMILE.txt", t5_tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
-
-# Rest of your code here
+train_loader = DataLoader(train_dataset, batch_size=6, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=6, shuffle=False)
 
 
 learning_rate = 5e-5
