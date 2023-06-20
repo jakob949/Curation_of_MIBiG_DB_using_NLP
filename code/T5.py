@@ -49,7 +49,7 @@ class Dataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, idx):
-        text, label, task = self.data[idx]
+        text, label = self.data[idx]
         input_encoding = self.tokenizer(text, return_tensors="pt", max_length=self.max_length, padding="max_length")
         target_encoding = self.tokenizer(label, return_tensors="pt", max_length=400, padding="max_length",
                                          truncation=True)
