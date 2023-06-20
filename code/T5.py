@@ -30,9 +30,11 @@ class Dataset(Dataset):
                     text = line.split('\t')[0]
                     task = text.split(':')[0]
                     label = line.split('\t')[1].strip('\n')
-                    # label = "1" if label == "1" else "0"
-                    if len(text) < 1750:
+                    print(len(text), len(label))
+                    if len(text) < 500:
                         self.data.append((text, label, task))
+                    else:
+                        print('something wrong')
         print(len(self.data))
         self.max_length = max_length
 
