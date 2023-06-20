@@ -67,7 +67,7 @@ t5_model.to(device)
 train_dataset = Dataset("dataset/invalid2validSMILE/train_invalid2validSMILE.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/invalid2validSMILE/test_invalid2validSMILE.txt", t5_tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
+train_loader = DataLoader(train_dataset, batch_size=1, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 
