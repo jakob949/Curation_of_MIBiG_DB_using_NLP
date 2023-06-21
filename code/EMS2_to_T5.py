@@ -127,6 +127,8 @@ t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
 t5_model = get_peft_model(t5_model, peft_config)
 
+t5_invalid2valid_model = torch.load("model_200623_T5_v11_saving_model.pt")
+
 esm_model_name = "facebook/esm2_t6_8M_UR50D"
 esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
 esm_model = AutoModel.from_pretrained(esm_model_name)
@@ -146,8 +148,8 @@ projection.to(device)
 
 print(device)
 validation_set = False
-train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_0.txt", t5_tokenizer, esm_tokenizer)
-test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_0.txt", t5_tokenizer, esm_tokenizer)
+train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_3_shorten_1.txt", t5_tokenizer, esm_tokenizer)
+test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_3_shorten_1.txt", t5_tokenizer, esm_tokenizer)
 
 train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
