@@ -574,7 +574,7 @@ for epoch in range(num_epochs):
         with torch.no_grad():
             outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
             test_predicted_labels = t5_tokenizer.decode(outputs.logits[0].argmax(dim=-1).tolist(),
-                                                        skip_special_tokens=True)
+                                                        skip_special_tokens=True, num_of_beams=10)
             test_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
 
             test_outputs.append({"predicted_label": test_predicted_labels, "true_label": test_true_labels[0]})
