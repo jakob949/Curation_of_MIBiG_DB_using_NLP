@@ -277,8 +277,18 @@ for epoch in range(num_epochs):
             test_true_labels = [batch["label"][0]]
             char_error_rate_accumulated_test, sacre_bleu_accumulated_test, rouge_accumulated_test, bleu_accumulated_test, Num_correct_val_mols_test = calculate_metrics(test_true_labels, test_predicted_labels, rouge_accumulated_test, bleu_accumulated_test, Num_correct_val_mols_test, char_error_rate_accumulated_test, sacre_bleu_accumulated_test)
 
+            # use the t5_invalid2valid_model
+            input_encoding_smile_preditions = t5_tokenizer(test_predicted_labels, return_tensors="pt", max_length=512, padding="max_length", truncation=True)
+
+            input_ids_smile_preditions = input_encoding_smile_preditions["input_ids"].squeeze()
+            attention_mask_smile_preditions = input_encoding_smile_preditions["attention_mask"].squeeze()
+
+            outputs = t5_invalid2valid_model(input_ids=input_ids_smile_preditions, attention_mask=attention_mask_smile_preditions, labels=labels)
+            test_predicted_labels_smile_preditions = t5_tokenizer.decode(outputs.logits[0].argmax(dim=-1).tolist(),
+                                                        skip_special_tokens=True)
+
             with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
-                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}", file=predictions_file)
+                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}\tInvalid2valid: {test_predicted_labels_smile_preditions}", file=predictions_file)
 
 
         with open(f"scores_{args.output_file_name}.txt", "a") as scores_file:
