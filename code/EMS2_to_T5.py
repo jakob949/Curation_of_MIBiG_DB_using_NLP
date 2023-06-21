@@ -145,7 +145,7 @@ optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay=0.
 t5_model.to(device)
 esm_model.to(device)
 projection.to(device)
-
+t5_invalid2valid_model.to(device)
 print(device)
 validation_set = False
 train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_3_shorten_1.txt", t5_tokenizer, esm_tokenizer)
