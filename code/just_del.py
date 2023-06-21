@@ -369,45 +369,21 @@ def process_files(start, end, job_id):
 
 
 
-            #
-            #
-            # with open(f"dataset_protein_peptides_complete_v3_shorten_{job_id}.txt", "w") as outfile:
-            #     with open("Transformer_DB_Curation_MIBiG/code/dataset/protein_SMILE/dataset_protein_peptides_complete_v3_shorten.txt", "r") as infile:
-            #         lines = infile.readlines()
-            #         for i, line in enumerate(lines):
-            #             d1 = line.split('\t')[0]
-            #             smile = line.split('\t')[1]
-            #             data = d1.split(': ')[1].split('_')
-            #             if i == int(filename.split('_')[2]):
-            #                 for iii in range(len(data)):
-            #                     if len(data[iii]) == int(filename.split('_')[4].split('.')[0]):
-            #
-            #                         data[iii] = shorten
-            #                         data = [str(element) for element in data]
-            #                         new_d1 = '_'.join([d1.split('_')[0]] + data)
-            #                         line = '\t'.join([new_d1, smile])
-            #                         print("shorten")
-            #                         break
-            #
-            #             outfile.write(line)
 
-
-
-
-if __name__ == "__main__":
-    # Write the sorted list of files to a file
-    file_list = sorted(os.listdir("blast_rest/"))
-    with open("file_order.txt", "w") as f:
-        for filename in file_list:
-            f.write(filename + '\n')
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("start", help="Start index for file processing", type=int)
-    parser.add_argument("end", help="End index for file processing", type=int)
-    parser.add_argument("job_id", help="Job ID for this task", type=int)
-    args = parser.parse_args()
-
-    process_files(args.start, args.end, args.job_id)
+# if __name__ == "__main__":
+#     # Write the sorted list of files to a file
+#     file_list = sorted(os.listdir("blast_rest/"))
+#     with open("file_order.txt", "w") as f:
+#         for filename in file_list:
+#             f.write(filename + '\n')
+#
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument("start", help="Start index for file processing", type=int)
+#     parser.add_argument("end", help="End index for file processing", type=int)
+#     parser.add_argument("job_id", help="Job ID for this task", type=int)
+#     args = parser.parse_args()
+#
+#     process_files(args.start, args.end, args.job_id)
 
 
 # import os
@@ -417,17 +393,23 @@ if __name__ == "__main__":
 #     data = f.readlines()
 #
 # # Loop through all the files in the directory
-# for i, file_name in enumerate (os.listdir('../shorten/')):
+# for i, file_name in enumerate (os.listdir('../shorten_v2/')):
 #     if file_name.endswith('.txt'):
 #         # Extract line number, position, and length from the file name
 #         line_number = int(file_name.split('_')[3])
-#         position = int(file_name.split('_')[4])+1
+#         if file_name.split('_')[4] == '0':
+#             position = 0
+#         elif file_name.split('_')[4] == '00000':
+#             position = 1
+#         else:
+#             position = int(file_name.split('_')[4])+1
+#
 #         length = int(file_name.split('_')[5].split('.')[0])
 #
 #         print(file_name)
 #
 #         # Read the sequence from the file
-#         with open(f'../shorten/{file_name}', 'r') as f:
+#         with open(f'../shorten_v2/{file_name}', 'r') as f:
 #             new_sequence = f.read().strip()
 #
 #         # Get the line from the main file
@@ -466,11 +448,11 @@ if __name__ == "__main__":
 #
 #
 # # Write the modified data back to the main file
-# with open("dataset/protein_SMILE/dataset_protein_peptides_complete_v3_1_shorten.txt", 'w') as f:
+# with open("dataset/protein_SMILE/dataset_protein_peptides_complete_v3_3_shorten.txt", 'w') as f:
 #     f.writelines(data)
 
 
-# with open("dataset/protein_SMILE/dataset_protein_peptides_complete_v3_1_shorten.txt", 'r') as f:
+# with open("dataset/protein_SMILE/dataset_protein_peptides_complete_v3_3_shorten.txt", 'r') as f:
 #     data = f.readlines()
 #     c = 0
 #     for i, line in enumerate(data):
@@ -478,6 +460,150 @@ if __name__ == "__main__":
 #         for j, item in enumerate(line_parts):
 #             if len(item) > 850:
 #                 print(i, j, len(item))
-#                 with open(f"rest_seqs/raw_seq_{i}_{j}_{len(item)}.txt", "w") as out:
-#                     print("rest_seqs/raw_seq_{i}_{j}_{len(item)}\n", item , file=out, end="", sep="")
-#     print(c, 2390-c)
+#                 c += 1
+#     print(c)
+
+
+import os
+import torch
+from torch.utils.data import Dataset, DataLoader
+from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, AutoModel, AdamW
+import time
+from sklearn.metrics import accuracy_score, f1_score
+from torch.optim.lr_scheduler import CosineAnnealingLR
+import argparse as arg
+from torchmetrics.text import BLEUScore, ROUGEScore
+from torchmetrics import CharErrorRate, SacreBLEUScore
+from rdkit import Chem
+
+def is_valid_smiles(smiles: str) -> bool:
+    mol = Chem.MolFromSmiles(smiles)
+    return mol is not None
+
+parser = arg.ArgumentParser()
+parser.add_argument("-o", "--output_file_name", type=str, default="unknown", )
+args = parser.parse_args()
+
+
+class Dataset(Dataset):
+    def __init__(self, file_path, tokenizer, max_length=851):
+        self.file_path = file_path
+        self.data = self.load_data()
+        self.tokenizer = tokenizer
+        self.max_length = max_length
+
+    def load_data(self):
+        data = []
+        with open(self.file_path, 'r') as f:
+            for line in f:
+                text = line.split(': ')[1].split('\t')[0]
+                label = line.split('\t')[1].strip('\n')
+                text_list = text.split('_')
+
+                # Check if any element in text_list is longer than 2000 characters
+                if all(len(element) <= 851 for element in text_list):
+                    data.append((text_list, label))
+                else:
+                    truncated_text_list = [element[:851] for element in text_list]
+                    data.append((truncated_text_list, label))
+
+        print(len(data))
+        return data
+
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        text, label = self.data[idx]
+        input_encoding = self.tokenizer(text, return_tensors="pt", max_length=self.max_length, padding="max_length")
+        target_encoding = self.tokenizer(label, return_tensors="pt", max_length=400, padding="max_length",
+                                         truncation=True)
+
+        return {
+            "input_ids": input_encoding["input_ids"].squeeze(),
+            "attention_mask": input_encoding["attention_mask"].squeeze(),
+            "labels": target_encoding["input_ids"].squeeze(),
+        }
+
+
+start_time = time.time()
+
+# Assume you have a T5 model and tokenizer already
+T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
+t5_model = torch.load("model_200623_T5_v11_saving_model.pt")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+t5_model.to(device)
+
+
+train_dataset = Dataset("dataset/invalid2validSMILE/train_invalid2validSMILE.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/invalid2validSMILE/test_invalid2validSMILE_ex1.txt", t5_tokenizer)
+
+train_loader = DataLoader(train_dataset, batch_size=5, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
+
+
+learning_rate = 5e-5
+optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
+
+rouge = ROUGEScore()
+bleu = BLEUScore()
+char_error_rate = CharErrorRate()
+sacre_bleu = SacreBLEUScore()
+
+num_epochs = 18
+t5_model.eval()
+# Training loop
+for epoch in range(num_epochs):
+
+    # Similar loop for testing
+
+    rouge_test_accumulated = 0.0
+    bleu_test_accumulated = 0.0
+    char_error_rate_test_accumulated = 0.0
+    sacre_bleu_test_accumulated = 0.0
+    num_test_batches = 0
+    Num_correct_val_mols_test = 0
+    test_outputs = []
+
+    for batch in test_loader:
+        num_test_batches += 1
+        inputs = batch["input_ids"].to(device)
+        attention_mask = batch["attention_mask"].to(device)
+        labels = batch["labels"].to(device)
+
+        with torch.no_grad():
+            outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
+            test_predicted_labels = t5_tokenizer.decode(outputs.logits[0].argmax(dim=-1).tolist(),
+                                                        skip_special_tokens=True)
+            test_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
+
+            test_outputs.append({"predicted_label": test_predicted_labels, "true_label": test_true_labels[0]})
+
+            if is_valid_smiles(test_predicted_labels):
+                Num_correct_val_mols_test += 1
+
+            with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
+                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}",
+                      file=predictions_file)
+
+            test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
+            test_bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
+            test_char_error_rate_score = char_error_rate(test_predicted_labels, test_true_labels).item()
+            test_sacre_bleu_score = sacre_bleu([test_predicted_labels], [test_true_labels]).item()
+
+            rouge_test_accumulated += test_rouge_score
+            bleu_test_accumulated += test_bleu_score
+            char_error_rate_test_accumulated += test_char_error_rate_score
+            sacre_bleu_test_accumulated += test_sacre_bleu_score
+
+    # Print and save results for this epoch
+    with open(f"scores_{args.output_file_name}.txt", "a") as scores_file:
+
+        print(
+            f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
+            file=scores_file)
+    # save the model
+    # if epoch == 17:
+    #     torch.save(t5_model, f"model_{args.output_file_name}.pt")
