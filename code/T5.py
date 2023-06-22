@@ -115,8 +115,8 @@ for epoch in range(num_epochs):
 
         # compute the metrics for each output
         with torch.no_grad():
-            train_predicted_labels = t5_tokenizer.decode(outputs.logits[0].argmax(dim=-1).tolist(),
-                                                         skip_special_tokens=True)
+            train_predicted_labels = [t5_tokenizer.decode(logits.argmax(dim=-1).tolist(), skip_special_tokens=True) for logits in outputs.logits]
+
             train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
             if is_valid_smiles(train_predicted_labels):
                 Num_correct_val_mols_train += 1
@@ -152,8 +152,7 @@ for epoch in range(num_epochs):
 
         with torch.no_grad():
             outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
-            test_predicted_labels = t5_tokenizer.decode(outputs.logits[0].argmax(dim=-1).tolist(),
-                                                        skip_special_tokens=True)
+            test_predicted_labels = [t5_tokenizer.decode(logits.argmax(dim=-1).tolist(), skip_special_tokens=True) for logits in outputs.logits]
             test_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
 
             test_outputs.append({"predicted_label": test_predicted_labels, "true_label": test_true_labels[0]})
