@@ -98,7 +98,7 @@ for epoch in range(num_epochs):
     sacre_bleu_train_accumulated = 0.0
     num_train_batches = 0
     Num_correct_val_mols_train = 0
-
+    train_accuracy_accumulated = 0.0
 
     for batch in train_loader:
         inputs = batch["input_ids"].to(device)
@@ -128,7 +128,9 @@ for epoch in range(num_epochs):
             train_bleu_score = bleu(train_predicted_labels.split(), [train_true_labels[0].split()])
             train_char_error_rate_score = char_error_rate(train_predicted_labels, train_true_labels).item()
             train_sacre_bleu_score = sacre_bleu([train_predicted_labels], [train_true_labels]).item()
+            batch_train_accuracy = accuracy_score(train_true_labels, train_predicted_labels)
 
+            train_accuracy_accumulated += batch_train_accuracy
             rouge_train_accumulated += train_rouge_score
             bleu_train_accumulated += train_bleu_score
             char_error_rate_train_accumulated += train_char_error_rate_score
@@ -142,6 +144,7 @@ for epoch in range(num_epochs):
     sacre_bleu_test_accumulated = 0.0
     num_test_batches = 0
     Num_correct_val_mols_test = 0
+    test_accuracy_accumulated = 0.0
     test_outputs = []
 
     for batch in test_loader:
@@ -168,7 +171,9 @@ for epoch in range(num_epochs):
             test_bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
             test_char_error_rate_score = char_error_rate(test_predicted_labels, test_true_labels).item()
             test_sacre_bleu_score = sacre_bleu([test_predicted_labels], [test_true_labels]).item()
+            batch_test_accuracy = accuracy_score(test_true_labels, test_predicted_labels)
 
+            test_accuracy_accumulated += batch_test_accuracy
             rouge_test_accumulated += test_rouge_score
             bleu_test_accumulated += test_bleu_score
             char_error_rate_test_accumulated += test_char_error_rate_score
@@ -177,11 +182,11 @@ for epoch in range(num_epochs):
     # Print and save results for this epoch
     with open(f"scores_{args.output_file_name}.txt", "a") as scores_file:
         print(
-            f"Epoch {epoch + 1}/{num_epochs}\t Avg Train ROUGE-1 F1 Score\t {rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t {bleu_train_accumulated / num_train_batches}\tAvg Train Char Error Rate\t {char_error_rate_train_accumulated / num_train_batches}\tAvg Train SacreBLEU Score\t {sacre_bleu_train_accumulated / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
+            f"Epoch {epoch + 1}/{num_epochs}\tTrain Accuracy: {train_accuracy_accumulated / num_train_batches} Avg Train ROUGE-1 F1 Score\t {rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t {bleu_train_accumulated / num_train_batches}\tAvg Train Char Error Rate\t {char_error_rate_train_accumulated / num_train_batches}\tAvg Train SacreBLEU Score\t {sacre_bleu_train_accumulated / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
             file=scores_file)
 
         print(
-            f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
+            f"Epoch {epoch + 1}/{num_epochs}\tTest Accuracy: {test_accuracy_accumulated / num_test_batches}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
             file=scores_file)
     # save the model
     if epoch == 17:
