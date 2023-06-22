@@ -131,7 +131,9 @@ for epoch in range(num_epochs):
             train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
             train_bleu_score = bleu(train_predicted_labels, train_true_labels)
             train_char_error_rate_score = char_error_rate(train_predicted_labels, train_true_labels)
-            train_sacre_bleu_score = sacre_bleu(train_predicted_labels, train_true_labels)
+            train_sacre_bleu_scores = [sacre_bleu([pred], [true]) for pred, true in zip(train_predicted_labels, train_true_labels)]
+            train_sacre_bleu_score = sum(train_sacre_bleu_scores) / len(train_sacre_bleu_scores)
+
             batch_train_accuracy = accuracy_score(train_true_labels, train_predicted_labels)
 
             train_accuracy_accumulated += batch_train_accuracy
@@ -173,7 +175,8 @@ for epoch in range(num_epochs):
             test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
             test_bleu_score = bleu(test_predicted_labels, test_true_labels)
             test_char_error_rate_score = char_error_rate(test_predicted_labels, test_true_labels)
-            test_sacre_bleu_score = sacre_bleu(test_predicted_labels, test_true_labels)
+            test_sacre_bleu_scores = [sacre_bleu([pred], [true]) for pred, true in zip(test_predicted_labels, test_true_labels)]
+            test_sacre_bleu_score = sum(test_sacre_bleu_scores) / len(test_sacre_bleu_scores)
             batch_test_accuracy = accuracy_score(test_true_labels, test_predicted_labels)
 
             test_accuracy_accumulated += batch_test_accuracy
