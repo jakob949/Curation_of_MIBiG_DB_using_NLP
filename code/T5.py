@@ -129,7 +129,7 @@ for epoch in range(num_epochs):
                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}", file=predictions_file)
 
             train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
-            train_bleu_score = bleu(train_predicted_labels.split(), [train_true_labels[0].split()])
+            train_bleu_score = bleu(train_predicted_labels, train_true_labels)
             train_char_error_rate_score = char_error_rate(train_predicted_labels, train_true_labels).item()
             train_sacre_bleu_score = sacre_bleu([train_predicted_labels], [train_true_labels]).item()
             batch_train_accuracy = accuracy_score(train_true_labels, train_predicted_labels)
@@ -162,7 +162,7 @@ for epoch in range(num_epochs):
             test_predicted_labels = [t5_tokenizer.decode(logits.argmax(dim=-1).tolist(), skip_special_tokens=True) for logits in outputs.logits]
             test_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
 
-            test_outputs.append({"predicted_label": test_predicted_labels, "true_label": test_true_labels[0]})
+            test_outputs.append({"predicted_label": test_predicted_labels, "true_label": test_true_labels})
 
             Num_correct_val_mols_test = count_valid_smiles(test_predicted_labels)
 
@@ -171,7 +171,7 @@ for epoch in range(num_epochs):
                       file=predictions_file)
 
             test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
-            test_bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
+            test_bleu_score = bleu(test_predicted_labels, test_true_labels)
             test_char_error_rate_score = char_error_rate(test_predicted_labels, test_true_labels).item()
             test_sacre_bleu_score = sacre_bleu([test_predicted_labels], [test_true_labels]).item()
             batch_test_accuracy = accuracy_score(test_true_labels, test_predicted_labels)
