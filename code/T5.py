@@ -10,9 +10,14 @@ from torchmetrics.text import BLEUScore, ROUGEScore
 from torchmetrics import CharErrorRate, SacreBLEUScore
 from rdkit import Chem
 
-def is_valid_smiles(smiles: str) -> bool:
-    mol = Chem.MolFromSmiles(smiles)
-    return mol is not None
+def count_valid_smiles(smiles_list: list) -> int:
+    valid_count = 0
+    for smiles in smiles_list:
+        mol = Chem.MolFromSmiles(smiles)
+        if mol is not None:
+            valid_count += 1
+    return valid_count
+
 
 parser = arg.ArgumentParser()
 parser.add_argument("-o", "--output_file_name", type=str, default="unknown", )
@@ -118,8 +123,7 @@ for epoch in range(num_epochs):
             train_predicted_labels = [t5_tokenizer.decode(logits.argmax(dim=-1).tolist(), skip_special_tokens=True) for logits in outputs.logits]
 
             train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
-            if is_valid_smiles(train_predicted_labels):
-                Num_correct_val_mols_train += 1
+            Num_correct_val_mols_train = count_valid_smiles(train_predicted_labels)
 
             with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}", file=predictions_file)
@@ -160,8 +164,7 @@ for epoch in range(num_epochs):
 
             test_outputs.append({"predicted_label": test_predicted_labels, "true_label": test_true_labels[0]})
 
-            if is_valid_smiles(test_predicted_labels):
-                Num_correct_val_mols_test += 1
+            Num_correct_val_mols_test = count_valid_smiles(test_predicted_labels)
 
             with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}",
