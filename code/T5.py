@@ -79,7 +79,7 @@ t5_model.to(device)
 train_dataset = Dataset("dataset/invalid2validSMILE/train_invalid2validSMILE.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/invalid2validSMILE/test_invalid2validSMILE.txt", t5_tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=5, shuffle=True)
+train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 
@@ -125,7 +125,10 @@ for epoch in range(num_epochs):
             train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
             Num_correct_val_mols_train = count_valid_smiles(train_predicted_labels)
 
-            with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
+            print('\n\ntrain_predicted_labels', train_predicted_labels, type(train_predicted_labels))
+            print('\n\ntrain_true_labels', train_true_labels, type(train_true_labels))
+
+            with open(f"predictions_train_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}", file=predictions_file)
 
             train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
@@ -133,6 +136,8 @@ for epoch in range(num_epochs):
             train_char_error_rate_score = char_error_rate(train_predicted_labels, train_true_labels)
             train_sacre_bleu_scores = [sacre_bleu([pred], [true]) for pred, true in zip(train_predicted_labels, train_true_labels)]
             train_sacre_bleu_score = sum(train_sacre_bleu_scores) / len(train_sacre_bleu_scores)
+
+
 
             batch_train_accuracy = accuracy_score(train_true_labels, train_predicted_labels)
 
@@ -166,9 +171,12 @@ for epoch in range(num_epochs):
 
             test_outputs.append({"predicted_label": test_predicted_labels, "true_label": test_true_labels})
 
+            print('\n\ntest_predicted_labels', test_predicted_labels, type(test_predicted_labels))
+            print('\n\ntest_true_labels', test_true_labels, type(test_true_labels))
+
             Num_correct_val_mols_test = count_valid_smiles(test_predicted_labels)
 
-            with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
+            with open(f"predictions_test_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}",
                       file=predictions_file)
 
