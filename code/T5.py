@@ -9,7 +9,7 @@ import argparse as arg
 from torchmetrics.text import BLEUScore, ROUGEScore
 from torchmetrics import CharErrorRate, SacreBLEUScore
 from rdkit import Chem
-
+from torch.nn.utils import clip_grad_norm_
 def count_valid_smiles(smiles_list: list) -> int:
     valid_count = 0
     for smiles in smiles_list:
@@ -86,6 +86,12 @@ test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 learning_rate = 5e-5
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
+scheduler = CosineAnnealingLR(optimizer, T_max=100)  # Learning rate scheduler
+
+grad_clip = 1.0
+
+scaler = torch.cuda.amp.GradScaler()
+
 
 rouge = ROUGEScore()
 bleu = BLEUScore()
@@ -98,10 +104,7 @@ num_epochs = 18
 for epoch in range(num_epochs):
     print(f"Epoch {epoch + 1}/{num_epochs}")
     t5_model.train()
-    rouge_train_accumulated = 0.0
-    bleu_train_accumulated = 0.0
-    char_error_rate_train_accumulated = 0.0
-    sacre_bleu_train_accumulated = 0.0
+    rouge_train_accumulated, bleu_train_accumulated, char_error_rate_train_accumulated, sacre_bleu_train_accumulated = 0.0, 0.0, 0.0, 0.0
     num_train_batches = 0
     Num_correct_val_mols_train = 0
     train_accuracy_accumulated = 0.0
@@ -113,11 +116,25 @@ for epoch in range(num_epochs):
         num_train_batches += 1
 
         # compute the model output
-        outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
-        loss = outputs.loss
-        loss.backward()
+        with torch.cuda.amp.autocast():
+            outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
+            loss = outputs.loss
+
+        # Scales the loss, and calls backward() to create scaled gradients
+        scaler.scale(loss).backward()
+
+        # Gradient clipping
+        clip_grad_norm_(t5_model.parameters(), grad_clip)
+
+        # Unscales the gradients of optimizer's assigned params in-place, and checks for NaN/Inf gradients
+        scaler.unscale_(optimizer)
+
         optimizer.step()
+        scaler.step(optimizer)
+        scaler.update()
+
         optimizer.zero_grad()
+        scheduler.step()
 
         # compute the metrics for each output
         with torch.no_grad():
@@ -125,9 +142,6 @@ for epoch in range(num_epochs):
 
             train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
             Num_correct_val_mols_train = count_valid_smiles(train_predicted_labels)
-
-            # print('\n\ntrain_predicted_labels', train_predicted_labels, type(train_predicted_labels))
-            # print('\n\ntrain_true_labels', train_true_labels, type(train_true_labels))
 
             with open(f"predictions_train_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}", file=predictions_file)
@@ -146,8 +160,6 @@ for epoch in range(num_epochs):
             bleu_train_accumulated += train_bleu_score
             char_error_rate_train_accumulated += train_char_error_rate_score
             sacre_bleu_train_accumulated += train_sacre_bleu_score
-
-
 
     # Similar loop for testing
     t5_model.eval()
@@ -170,9 +182,6 @@ for epoch in range(num_epochs):
             outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
             test_predicted_labels = [t5_tokenizer.decode(logits.argmax(dim=-1).tolist(), skip_special_tokens=True) for logits in outputs.logits]
             test_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
-
-            # print('\n\ntest_predicted_labels', test_predicted_labels, type(test_predicted_labels))
-            # print('\n\ntest_true_labels', test_true_labels, type(test_true_labels))
 
             Num_correct_val_mols_test = count_valid_smiles(test_predicted_labels)
 
