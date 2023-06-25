@@ -33,6 +33,7 @@ class Dataset(Dataset):
 
     def load_data(self):
         data = []
+        num_of_truncs = 0
         with open(self.file_path, 'r') as f:
             for line in f:
                 text = line.split(': ')[1].split('\t')[0]
@@ -45,8 +46,8 @@ class Dataset(Dataset):
                 else:
                     truncated_text_list = [element[:851] for element in text_list]
                     data.append((truncated_text_list, label))
-
-        print(len(data))
+                    num_of_truncs += 1
+        print('Num of seqs: ', len(data), 'truncated seqs: ', num_of_truncs)
         return data
 
 
@@ -79,7 +80,7 @@ t5_model.to(device)
 train_dataset = Dataset("dataset/invalid2validSMILE/train_invalid2validSMILE.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/invalid2validSMILE/test_invalid2validSMILE.txt", t5_tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True)
+train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 
@@ -125,8 +126,8 @@ for epoch in range(num_epochs):
             train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
             Num_correct_val_mols_train = count_valid_smiles(train_predicted_labels)
 
-            print('\n\ntrain_predicted_labels', train_predicted_labels, type(train_predicted_labels))
-            print('\n\ntrain_true_labels', train_true_labels, type(train_true_labels))
+            # print('\n\ntrain_predicted_labels', train_predicted_labels, type(train_predicted_labels))
+            # print('\n\ntrain_true_labels', train_true_labels, type(train_true_labels))
 
             with open(f"predictions_train_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}", file=predictions_file)
@@ -149,6 +150,7 @@ for epoch in range(num_epochs):
 
     # Similar loop for testing
     t5_model.eval()
+
     rouge_test_accumulated = 0.0
     bleu_test_accumulated = 0.0
     char_error_rate_test_accumulated = 0.0
@@ -156,7 +158,6 @@ for epoch in range(num_epochs):
     num_test_batches = 0
     Num_correct_val_mols_test = 0
     test_accuracy_accumulated = 0.0
-    test_outputs = []
 
     for batch in test_loader:
         num_test_batches += 1
@@ -169,10 +170,8 @@ for epoch in range(num_epochs):
             test_predicted_labels = [t5_tokenizer.decode(logits.argmax(dim=-1).tolist(), skip_special_tokens=True) for logits in outputs.logits]
             test_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
 
-            test_outputs.append({"predicted_label": test_predicted_labels, "true_label": test_true_labels})
-
-            print('\n\ntest_predicted_labels', test_predicted_labels, type(test_predicted_labels))
-            print('\n\ntest_true_labels', test_true_labels, type(test_true_labels))
+            # print('\n\ntest_predicted_labels', test_predicted_labels, type(test_predicted_labels))
+            # print('\n\ntest_true_labels', test_true_labels, type(test_true_labels))
 
             Num_correct_val_mols_test = count_valid_smiles(test_predicted_labels)
 
@@ -183,7 +182,7 @@ for epoch in range(num_epochs):
             test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
             test_bleu_score = bleu(test_predicted_labels, test_true_labels)
             test_char_error_rate_score = char_error_rate(test_predicted_labels, test_true_labels)
-            test_sacre_bleu_scores = [sacre_bleu([pred], [true]) for pred, true in zip(test_predicted_labels, test_true_labels)]
+            test_sacre_bleu_scores = [sacre_bleu([pred], [[true]]) for pred, true in zip(test_predicted_labels, test_true_labels)]
             test_sacre_bleu_score = sum(test_sacre_bleu_scores) / len(test_sacre_bleu_scores)
             batch_test_accuracy = accuracy_score(test_true_labels, test_predicted_labels)
 
@@ -192,6 +191,8 @@ for epoch in range(num_epochs):
             bleu_test_accumulated += test_bleu_score
             char_error_rate_test_accumulated += test_char_error_rate_score
             sacre_bleu_test_accumulated += test_sacre_bleu_score
+
+            print(test_rouge_score, test_bleu_score, test_char_error_rate_score, test_sacre_bleu_score, batch_test_accuracy, Num_correct_val_mols_test)
 
     # Print and save results for this epoch
     with open(f"scores_{args.output_file_name}.txt", "a") as scores_file:
