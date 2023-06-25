@@ -138,15 +138,16 @@ for epoch in range(num_epochs):
             train_sacre_bleu_scores = [sacre_bleu([pred], [true]) for pred, true in zip(train_predicted_labels, train_true_labels)]
             train_sacre_bleu_score = sum(train_sacre_bleu_scores) / len(train_sacre_bleu_scores)
 
-
+            print(train_rouge_score, train_bleu_score, train_char_error_rate_score, train_sacre_bleu_score, Num_correct_val_mols_train)
 
             batch_train_accuracy = accuracy_score(train_true_labels, train_predicted_labels)
-
             train_accuracy_accumulated += batch_train_accuracy
             rouge_train_accumulated += train_rouge_score
             bleu_train_accumulated += train_bleu_score
             char_error_rate_train_accumulated += train_char_error_rate_score
             sacre_bleu_train_accumulated += train_sacre_bleu_score
+
+
 
     # Similar loop for testing
     t5_model.eval()
