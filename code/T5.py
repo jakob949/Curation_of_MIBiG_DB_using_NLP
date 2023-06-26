@@ -77,8 +77,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 
-train_dataset = Dataset("dataset/smile_biosynclass/train_multi_0.txt", t5_tokenizer)
-test_dataset = Dataset("dataset/smile_biosynclass/test_multi_0.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/Multitask/train_multi_0.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/Multitask/test_multi_0.txt", t5_tokenizer)
 
 train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
