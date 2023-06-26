@@ -36,7 +36,7 @@ class Dataset(Dataset):
         num_of_truncs = 0
         with open(self.file_path, 'r') as f:
             for line in f:
-                text = line.split(': ')[1].split('\t')[0]
+                text = line.split('\t')[0]
                 label = line.split('\t')[1].strip('\n')
                 text_list = text.split('_')
 
@@ -123,6 +123,8 @@ for epoch in range(num_epochs):
             train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
             Num_correct_val_mols_train += count_valid_smiles(train_predicted_labels)
 
+            print('predicted: ', train_predicted_labels, 'true: ', train_true_labels)
+
             with open(f"predictions_train_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}", file=predictions_file)
 
@@ -187,7 +189,7 @@ for epoch in range(num_epochs):
     # Print and save results for this epoch
     with open(f"scores_{args.output_file_name}.txt", "a") as scores_file:
         print(
-            f"Epoch {epoch + 1}/{num_epochs}\tTrain Accuracy: {train_accuracy_accumulated / num_train_batches} Avg Train ROUGE-1 F1 Score\t {rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t {bleu_train_accumulated / num_train_batches}\tAvg Train Char Error Rate\t {char_error_rate_train_accumulated / num_train_batches}\tAvg Train SacreBLEU Score\t {sacre_bleu_train_accumulated / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
+            f"Epoch {epoch + 1}/{num_epochs}\tTrain Accuracy: {train_accuracy_accumulated / num_train_batches}\t Avg Train ROUGE-1 F1 Score\t {rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t {bleu_train_accumulated / num_train_batches}\tAvg Train Char Error Rate\t {char_error_rate_train_accumulated / num_train_batches}\tAvg Train SacreBLEU Score\t {sacre_bleu_train_accumulated / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
             file=scores_file)
 
         print(
