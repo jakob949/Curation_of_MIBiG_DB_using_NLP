@@ -107,6 +107,7 @@ for epoch in range(num_epochs):
         inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
+        print('labels: ', labels)
         num_train_batches += 1
 
         # compute the model output
