@@ -42,6 +42,7 @@ class Dataset(Dataset):
                 task = text.split(': ')[0]
 
                 if task == 'ProteinSeqs2SMILE':
+                    print('ProteinSeqs2SMILE skipped')
                     continue
                     # possibly implement ESM2 encoder here
 
