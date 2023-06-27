@@ -45,17 +45,22 @@ class Dataset(Dataset):
                     print('ProteinSeqs2SMILE skipped')
                     continue
                     # possibly implement ESM2 encoder here
-
-                # data.append((text, label))
-                # Check if any element in text_list is longer than 2000 characters
-                if all(len(element) <= 800 for element in text_list):
-                    data.append((text, label))
+                if len(text) > self.max_length:
+                    data.append((text[:self.max_length], label))
+                    num_of_truncs += 1
                 else:
-                    truncated_text_list = [element[:100] for element in text_list]
-                    for item in truncated_text_list:
-                        data.append((item, label))
-                        if len(item) > 99:
-                            num_of_truncs += 1
+                    data.append((text, label))
+
+
+                # # Check if any element in text_list is longer than 2000 characters
+                # if all(len(element) <= 800 for element in text_list):
+                #     data.append((text, label))
+                # else:
+                #     truncated_text_list = [element[:100] for element in text_list]
+                #     for item in truncated_text_list:
+                #         data.append((item, label))
+                #         if len(item) > 99:
+                #             num_of_truncs += 1
 
         print('Num of seqs: ', len(data), 'truncated seqs: ', num_of_truncs)
         return data
