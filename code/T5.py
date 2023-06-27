@@ -40,9 +40,14 @@ class Dataset(Dataset):
                 label = line.split('\t')[1].strip('\n')
                 text_list = text.split(': ')[1].split('_')
                 task = text.split(': ')[0]
+
+                if task == 'ProteinSeqs2SMILE':
+                    continue
+                    # possibly implement ESM2 encoder here
+
                 # data.append((text, label))
                 # Check if any element in text_list is longer than 2000 characters
-                if all(len(element) <= 100 for element in text_list):
+                if all(len(element) <= 800 for element in text_list):
                     data.append((text, label))
                 else:
                     truncated_text_list = [element[:100] for element in text_list]
