@@ -25,7 +25,7 @@ args = parser.parse_args()
 
 
 class Dataset(Dataset):
-    def __init__(self, file_path, tokenizer, max_length=1000):
+    def __init__(self, file_path, tokenizer, max_length=850):
         self.file_path = file_path
         self.data = self.load_data()
         self.tokenizer = tokenizer
