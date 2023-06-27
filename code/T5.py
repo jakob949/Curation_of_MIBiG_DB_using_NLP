@@ -49,7 +49,7 @@ class Dataset(Dataset):
                     data.append((text[:800], label))
                     num_of_truncs += 1
                 else:
-                    data.append((text, label, task))
+                    data.append((text, label))
 
 
                 # # Check if any element in text_list is longer than 2000 characters
@@ -70,7 +70,7 @@ class Dataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, idx):
-        text, label, task = self.data[idx]
+        text, label = self.data[idx]
         input_encoding = self.tokenizer(text, return_tensors="pt", max_length=self.max_length, padding="max_length")
         target_encoding = self.tokenizer(label, return_tensors="pt", max_length=400, padding="max_length",
                                          truncation=True)
@@ -79,7 +79,7 @@ class Dataset(Dataset):
             "input_ids": input_encoding["input_ids"].squeeze(),
             "attention_mask": input_encoding["attention_mask"].squeeze(),
             "labels": target_encoding["input_ids"].squeeze(),
-            "task": task,
+            "text": text,
         }
 
 
@@ -120,7 +120,7 @@ for epoch in range(num_epochs):
     train_accuracy_accumulated = 0.0
 
     for batch in train_loader:
-        task = batch["task"]
+        task = batch["text"].split(': ')[0]
         inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
@@ -173,7 +173,7 @@ for epoch in range(num_epochs):
     test_accuracy_accumulated = 0.0
 
     for batch in test_loader:
-        task_test = batch["task"]
+        task_test = batch["text"].split(': ')[0]
         num_test_batches += 1
         inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
