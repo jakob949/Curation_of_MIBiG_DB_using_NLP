@@ -25,7 +25,7 @@ args = parser.parse_args()
 
 
 class Dataset(Dataset):
-    def __init__(self, file_path, tokenizer, max_length=1500):
+    def __init__(self, file_path, tokenizer, max_length=1000):
         self.file_path = file_path
         self.data = self.load_data()
         self.tokenizer = tokenizer
@@ -71,7 +71,7 @@ class Dataset(Dataset):
 start_time = time.time()
 
 # Assume you have a T5 model and tokenizer already
-T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-small-augm'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
