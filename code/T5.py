@@ -48,7 +48,7 @@ class Dataset(Dataset):
                     truncated_text_list = [element[:851] for element in text_list]
                     for item in truncated_text_list:
                         data.append((item, label))
-                        if len(item > 850):
+                        if len(item) > 850:
                             num_of_truncs += 1
 
         print('Num of seqs: ', len(data), 'truncated seqs: ', num_of_truncs)
