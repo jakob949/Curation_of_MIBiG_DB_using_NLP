@@ -95,8 +95,8 @@ t5_model.to(device)
 
 train_dataset = Dataset("dataset/Multitask/train_multi_0.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/Multitask/test_multi_0.txt", t5_tokenizer)
-
-train_loader = DataLoader(train_dataset, batch_size=2, shuffle=False)
+batch_size_train = 2
+train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 
@@ -120,6 +120,7 @@ for epoch in range(num_epochs):
     train_accuracy_accumulated = 0.0
 
     for batch in train_loader:
+        print('batch: ', len(batch))
         task = batch["text"].split(': ')[0]
         inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
@@ -173,7 +174,7 @@ for epoch in range(num_epochs):
     test_accuracy_accumulated = 0.0
 
     for batch in test_loader:
-        task_test = batch["text"].split(': ')[0]
+        task_test = batch["text"]
         num_test_batches += 1
         inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
