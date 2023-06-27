@@ -121,7 +121,9 @@ for epoch in range(num_epochs):
 
     for batch in train_loader:
         print('batch: ', len(batch))
-        task = batch["text"].split(': ')[0]
+        task = batch["text"].split(': ')
+        print('task: ', task)
+        break
         inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
