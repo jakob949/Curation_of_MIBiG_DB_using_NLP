@@ -25,7 +25,7 @@ args = parser.parse_args()
 
 
 class Dataset(Dataset):
-    def __init__(self, file_path, tokenizer, max_length=851):
+    def __init__(self, file_path, tokenizer, max_length=1500):
         self.file_path = file_path
         self.data = self.load_data()
         self.tokenizer = tokenizer
@@ -81,7 +81,7 @@ t5_model.to(device)
 train_dataset = Dataset("dataset/Multitask/train_multi_0.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/Multitask/test_multi_0.txt", t5_tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=1, shuffle=False)
+train_loader = DataLoader(train_dataset, batch_size=2, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 
