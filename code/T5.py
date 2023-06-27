@@ -42,13 +42,13 @@ class Dataset(Dataset):
                 task = text.split(': ')[0]
                 # data.append((text, label))
                 # Check if any element in text_list is longer than 2000 characters
-                if all(len(element) <= 851 for element in text_list):
+                if all(len(element) <= 100 for element in text_list):
                     data.append((text, label))
                 else:
-                    truncated_text_list = [element[:851] for element in text_list]
+                    truncated_text_list = [element[:100] for element in text_list]
                     for item in truncated_text_list:
                         data.append((item, label))
-                        if len(item) > 850:
+                        if len(item) > 100:
                             num_of_truncs += 1
 
         print('Num of seqs: ', len(data), 'truncated seqs: ', num_of_truncs)
