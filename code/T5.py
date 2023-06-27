@@ -120,14 +120,13 @@ for epoch in range(num_epochs):
     train_accuracy_accumulated = 0.0
 
     for batch in train_loader:
-        print('batch: ', len(batch))
-        task = batch["text"]
-        print('task: ', task)
-        break
+        task_train = []
+        for item in batch["text"]:
+            task_train.append(item.split(': ')[0])
         inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
-        num_train_batches += 1
+        num_train_batches += batch_size_train
         train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
         print('true: ', train_true_labels)
         # compute the model output
@@ -147,7 +146,7 @@ for epoch in range(num_epochs):
             print('predicted: ', train_predicted_labels, 'true: ', train_true_labels)
 
             with open(f"predictions_train_{args.output_file_name}.txt", "a") as predictions_file:
-                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}\task\t{task}", file=predictions_file)
+                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}\task\t{task_train}", file=predictions_file)
 
             train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
             train_bleu_score = bleu(train_predicted_labels, train_true_labels)
@@ -176,7 +175,9 @@ for epoch in range(num_epochs):
     test_accuracy_accumulated = 0.0
 
     for batch in test_loader:
-        task_test = batch["text"]
+        task_test = []
+        for item in batch["text"]:
+            task_test.append(item.split(': ')[0])
         num_test_batches += 1
         inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
