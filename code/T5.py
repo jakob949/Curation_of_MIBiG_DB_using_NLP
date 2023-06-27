@@ -121,7 +121,7 @@ for epoch in range(num_epochs):
 
     for batch in train_loader:
         print('batch: ', len(batch))
-        task = batch["text"].split(': ')
+        task = batch["text"]
         print('task: ', task)
         break
         inputs = batch["input_ids"].to(device)
