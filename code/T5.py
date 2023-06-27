@@ -49,7 +49,7 @@ class Dataset(Dataset):
                     data.append((text[:800], label))
                     num_of_truncs += 1
                 else:
-                    data.append((text, label))
+                    data.append((text, label, task))
 
 
                 # # Check if any element in text_list is longer than 2000 characters
@@ -70,7 +70,7 @@ class Dataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, idx):
-        text, label = self.data[idx]
+        text, label, task = self.data[idx]
         input_encoding = self.tokenizer(text, return_tensors="pt", max_length=self.max_length, padding="max_length")
         target_encoding = self.tokenizer(label, return_tensors="pt", max_length=400, padding="max_length",
                                          truncation=True)
@@ -79,6 +79,7 @@ class Dataset(Dataset):
             "input_ids": input_encoding["input_ids"].squeeze(),
             "attention_mask": input_encoding["attention_mask"].squeeze(),
             "labels": target_encoding["input_ids"].squeeze(),
+            "task": task,
         }
 
 
@@ -119,6 +120,7 @@ for epoch in range(num_epochs):
     train_accuracy_accumulated = 0.0
 
     for batch in train_loader:
+        task = batch["task"]
         inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
@@ -142,7 +144,7 @@ for epoch in range(num_epochs):
             print('predicted: ', train_predicted_labels, 'true: ', train_true_labels)
 
             with open(f"predictions_train_{args.output_file_name}.txt", "a") as predictions_file:
-                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}", file=predictions_file)
+                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}\task\t{task}", file=predictions_file)
 
             train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
             train_bleu_score = bleu(train_predicted_labels, train_true_labels)
@@ -171,6 +173,7 @@ for epoch in range(num_epochs):
     test_accuracy_accumulated = 0.0
 
     for batch in test_loader:
+        task_test = batch["task"]
         num_test_batches += 1
         inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
@@ -184,7 +187,7 @@ for epoch in range(num_epochs):
             Num_correct_val_mols_test += count_valid_smiles(test_predicted_labels)
 
             with open(f"predictions_test_{args.output_file_name}.txt", "a") as predictions_file:
-                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}",
+                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}\task\t{task_test}",
                       file=predictions_file)
 
             test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
