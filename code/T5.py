@@ -93,8 +93,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 
-train_dataset = Dataset("dataset/Multitask/train_multi_0.txt", t5_tokenizer)
-test_dataset = Dataset("dataset/Multitask/test_multi_0.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/Multitask/train_multi_0_v2.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/Multitask/test_multi_0_v2.txt", t5_tokenizer)
 batch_size_train = 2
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
@@ -191,7 +191,7 @@ for epoch in range(num_epochs):
             Num_correct_val_mols_test += count_valid_smiles(test_predicted_labels)
 
             with open(f"predictions_test_{args.output_file_name}.txt", "a") as predictions_file:
-                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}\task\t{task_test}",
+                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}\ttask\t{task_test}",
                       file=predictions_file)
 
             test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
