@@ -41,7 +41,7 @@ class Dataset(Dataset):
                 text_list = text.split(': ')[1].split('_')
                 task = text.split(': ')[0]
 
-                if task == 'ProteinSeqs2SMILE':
+                if task == 'ProteinSeqs2SMILE' or task == 'SMILE2Activity' or task == 'SMILE2Biosyn_class':
                     print('ProteinSeqs2SMILE skipped')
                     continue
                     # possibly implement ESM2 encoder here
@@ -86,7 +86,7 @@ class Dataset(Dataset):
 start_time = time.time()
 
 # Assume you have a T5 model and tokenizer already
-T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-small-augm'
+T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
