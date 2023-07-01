@@ -238,9 +238,9 @@ def get_product_names_and_positions(accession, start=None, end=None):
 
 
 #loop thruogh all json files in the folder
-for file in os.listdir('/data/'):
+for file in os.listdir('data/'):
 
-    json_data = read_mibig_data(f'/data/{file}')
+    json_data = read_mibig_data(f'data/{file}')
 
     acc = json_data['cluster']['loci']['accession']
     try:
