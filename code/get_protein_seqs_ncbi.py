@@ -264,7 +264,7 @@ for file in os.listdir('data/'):
     if acc is not None and output is not None and SMILE is not None:
         print()
         with open(f"dataset/geneProduct2SMILE/dataset_geneProduct2SMILES_v1.txt", "a") as f:
-            f.write(f"ProteinSeqs2SMILE: ")
+            f.write(f"GeneProduct2SMILE: ")
             for item in output:
                 if item == output[-1]:
                     f.write(f"{item}")
