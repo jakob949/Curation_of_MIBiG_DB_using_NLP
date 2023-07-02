@@ -127,7 +127,7 @@ for epoch in range(num_epochs):
         inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
-        num_train_batches += batch_size_train
+        num_train_batches += 1
         train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
         print('true: ', train_true_labels)
         # compute the model output
