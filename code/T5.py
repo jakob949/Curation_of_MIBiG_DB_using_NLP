@@ -95,12 +95,12 @@ t5_model.to(device)
 
 train_dataset = Dataset("dataset/Multitask/train_data_mult_v3.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/Multitask/test_data_mult_v3.txt", t5_tokenizer)
-batch_size_train = 2
+batch_size_train = 8
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 
-learning_rate = 5e-4
+learning_rate = 1e-4
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
 
 rouge = ROUGEScore()
