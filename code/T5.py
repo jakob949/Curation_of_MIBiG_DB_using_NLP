@@ -95,12 +95,13 @@ t5_model.to(device)
 
 train_dataset = Dataset("dataset/geneProduct2SMILE/train_geneproduct2SMILES_0.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/geneProduct2SMILE/test_geneproduct2SMILES_0.txt", t5_tokenizer)
+
 batch_size_train = 8
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # Optimizer
-learning_rate = 3e-4
+learning_rate = 2e-5
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
 
 rouge = ROUGEScore()
