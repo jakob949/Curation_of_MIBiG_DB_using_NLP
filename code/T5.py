@@ -41,7 +41,7 @@ class Dataset(Dataset):
                 text_list = text.split(': ')[1].split('_')
                 task = text.split(': ')[0]
 
-                if task == 'ProteinSeqs2SMILE' or task == 'SMILE2Activity' or task == 'SMILE2Biosyn_class':
+                if task == 'ProteinSeqs2SMILE' or task == 'SMILE2Activity' or task == 'SMILE2Biosynclass':
                     print('ProteinSeqs2SMILE skipped')
                     continue
                     # possibly implement ESM2 encoder here
@@ -93,8 +93,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 
-train_dataset = Dataset("dataset/Multitask/train_multi_0_v2.txt", t5_tokenizer)
-test_dataset = Dataset("dataset/Multitask/test_multi_0_v2.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/Multitask/train_data_mult_v3.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/Multitask/test_data_mult_v3.txt", t5_tokenizer)
 batch_size_train = 2
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
