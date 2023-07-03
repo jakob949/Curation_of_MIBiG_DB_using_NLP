@@ -86,22 +86,23 @@ class Dataset(Dataset):
 start_time = time.time()
 
 # Assume you have a T5 model and tokenizer already
-T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+# T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+T5_model_name = 'model_020623_geneProduct2SMILES_v3.pt'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 
-train_dataset = Dataset("dataset/invalid2validSMILE/train_invalid2validSMILE_from_geneproduct_incl_corr_mols_v1.txt", t5_tokenizer)
-test_dataset = Dataset("dataset/invalid2validSMILE/test_invalid2validSMILE_from_geneproduct_incl_corr_mols_v1.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/geneProduct2SMILE/train_geneproduct2SMILES_0.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/geneProduct2SMILE/test_geneproduct2SMILES_0.txt", t5_tokenizer)
 
 batch_size_train = 8
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # Optimizer
-learning_rate = 2e-5
+learning_rate = 6e-5
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
 
 rouge = ROUGEScore()
