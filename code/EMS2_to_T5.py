@@ -151,7 +151,7 @@ validation_set = False
 train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_3_shorten_1.txt", t5_tokenizer, esm_tokenizer)
 test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_3_shorten_1.txt", t5_tokenizer, esm_tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
+train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 if validation_set:
@@ -162,8 +162,8 @@ if validation_set:
 
 rouge = ROUGEScore()
 bleu = BLEUScore()
-char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
+char_error_rate = CharErrorRate()
 
 t5_model = get_peft_model(t5_model, peft_config)
 esm_model.eval()
