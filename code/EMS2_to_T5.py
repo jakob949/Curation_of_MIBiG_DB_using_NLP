@@ -27,6 +27,7 @@ class ProteinDataset(torch.utils.data.Dataset):
         data = []
         with open(self.file_path, 'r') as f:
             for line in f:
+                # remove the TASK from the text
                 text = line.split(': ')[1].split('\t')[0]
                 label = line.split('\t')[1].strip('\n')
                 text_list = text.split('_')
@@ -128,9 +129,9 @@ test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_compl
 train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
-# optimizer = AdamW(list(t5_model.parameters()) + list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
+optimizer = AdamW(list(t5_model.parameters()) + list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
 # optimizer = AdamW(list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
-optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
+# optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
 
 rouge = ROUGEScore()
 bleu = BLEUScore()
@@ -143,8 +144,8 @@ t5_model = get_peft_model(t5_model, peft_config)
 for epoch in range(num_epochs):
 
     t5_model.train()
-    # esm_model.train()
-    # projection.train()
+    esm_model.train()
+    projection.train()
     rouge_train_accumulated = 0.0
     bleu_train_accumulated = 0.0
     num_train_batches = 0
