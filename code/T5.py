@@ -99,13 +99,13 @@ t5_model.to(device)
 train_dataset = Dataset("dataset/smile_biosynclass/train_SMILE_biosyn_class_v2_0.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/smile_biosynclass/test_SMILE_biosyn_class_v2_0.txt", t5_tokenizer)
 
-batch_size_train = 8
+batch_size_train = 12
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # Optimizer
 learning_rate = 6e-5
-optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
+optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay = 0.1)
 
 rouge = ROUGEScore()
 bleu = BLEUScore()
