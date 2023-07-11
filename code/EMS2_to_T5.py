@@ -48,32 +48,13 @@ class ProteinDataset(torch.utils.data.Dataset):
         target_encoding = self.T5_tokenizer(label, return_tensors="pt", max_length=250, padding="max_length",
                                             truncation=True)
 
-        print(f"Input ids size: {input_encoding['input_ids'].size()}")
-        print(f"Attention mask size: {input_encoding['attention_mask'].size()}")
-
         return {
-            "input_ids": input_encoding["input_ids"],
-            "attention_mask": input_encoding["attention_mask"],
-            "labels": target_encoding["input_ids"],
+            "input_ids": input_encoding["input_ids"].squeeze(),
+            "attention_mask": input_encoding["attention_mask"].squeeze(),
+            "labels": target_encoding["input_ids"].squeeze(),
             "text_list": text,
             "label": label
         }
-from torch.nn.utils.rnn import pad_sequence
-
-def collate_fn(batch):
-    input_ids = pad_sequence([item['input_ids'] for item in batch], batch_first=True)
-    attention_mask = pad_sequence([item['attention_mask'] for item in batch], batch_first=True)
-    labels = pad_sequence([item['labels'] for item in batch], batch_first=True)
-    text_list = [item['text_list'] for item in batch]
-    label = [item['label'] for item in batch]
-
-    return {
-        "input_ids": input_ids,
-        "attention_mask": attention_mask,
-        "labels": labels,
-        "text_list": text_list,
-        "label": label
-    }
 
 # Function to process input sequences with the ESM2 model and return hidden states
 def get_esm_hidden_states(input_text):
@@ -116,7 +97,7 @@ def concat_seqs(text):
 
 # Set up the training parameters
 num_epochs = 20
-learning_rate = 5e-4
+learning_rate = 5e-3
 
 
 peft_config = LoraConfig(
@@ -144,8 +125,8 @@ print(device)
 train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_3_shorten_1.txt", t5_tokenizer, esm_tokenizer)
 test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_3_shorten_1.txt", t5_tokenizer, esm_tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True, collate_fn=collate_fn)
-test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, collate_fn=collate_fn)
+train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # optimizer = AdamW(list(t5_model.parameters()) + list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
 # optimizer = AdamW(list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
