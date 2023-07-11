@@ -49,9 +49,9 @@ class ProteinDataset(torch.utils.data.Dataset):
                                             truncation=True)
 
         return {
-            "input_ids": input_encoding["input_ids"].squeeze(),
-            "attention_mask": input_encoding["attention_mask"].squeeze(),
-            "labels": target_encoding["input_ids"].squeeze(),
+            "input_ids": input_encoding["input_ids"],
+            "attention_mask": input_encoding["attention_mask"],
+            "labels": target_encoding["input_ids"],
             "text_list": text,
             "label": label
         }
