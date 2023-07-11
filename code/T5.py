@@ -86,17 +86,17 @@ class Dataset(Dataset):
 start_time = time.time()
 
 # Assume you have a T5 model and tokenizer already
-# T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
-T5_model_name = 'model_020623_geneProduct2SMILES_v3.pt'
+T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+# T5_model_name = 'model_020623_geneProduct2SMILES_v3.pt'
 t5_tokenizer = T5Tokenizer.from_pretrained('GT4SD/multitask-text-and-chemistry-t5-base-augm')
 t5_model = torch.load(T5_model_name)
-# t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name)
+t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 
-train_dataset = Dataset("dataset/smile_biosynclass/train_SMILE_biosyn_class_v2_0.txt.txt", t5_tokenizer)
-test_dataset = Dataset("dataset/smile_biosynclass/test_SMILE_biosyn_class_v2_0.txt.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/smile_biosynclass/train_SMILE_biosyn_class_v2_0.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/smile_biosynclass/test_SMILE_biosyn_class_v2_0.txt", t5_tokenizer)
 
 batch_size_train = 8
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
