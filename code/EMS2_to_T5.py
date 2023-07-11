@@ -49,9 +49,9 @@ class ProteinDataset(torch.utils.data.Dataset):
                                             truncation=True)
 
         return {
-            "input_ids": input_encoding["input_ids"],
-            "attention_mask": input_encoding["attention_mask"],
-            "labels": target_encoding["input_ids"],
+            "input_ids": input_encoding["input_ids"].squeeze(),
+            "attention_mask": input_encoding["attention_mask"].squeeze(),
+            "labels": target_encoding["input_ids"].squeeze(),
             "text_list": text,
             "label": label
         }
@@ -101,7 +101,7 @@ learning_rate = 5e-4
 
 
 peft_config = LoraConfig(
-    task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=8, lora_alpha=32, lora_dropout=0.1
+    task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=8, lora_alpha=32, lora_dropout=0.3
 )
 
 T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
@@ -125,7 +125,7 @@ print(device)
 train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_3_shorten_1.txt", t5_tokenizer, esm_tokenizer)
 test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_3_shorten_1.txt", t5_tokenizer, esm_tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True)
+train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # optimizer = AdamW(list(t5_model.parameters()) + list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
