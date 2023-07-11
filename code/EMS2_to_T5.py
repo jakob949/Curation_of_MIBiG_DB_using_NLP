@@ -125,7 +125,7 @@ print(device)
 train_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_3_shorten_1.txt", t5_tokenizer, esm_tokenizer)
 test_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_3_shorten_1.txt", t5_tokenizer, esm_tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
+train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # optimizer = AdamW(list(t5_model.parameters()) + list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
