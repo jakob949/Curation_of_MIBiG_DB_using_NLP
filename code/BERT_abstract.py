@@ -76,8 +76,8 @@ dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
 ## Fine-tune the model ##
 save_model = False
 model.train()
-num_of_epochs = 1
-optimizer = AdamW(model.parameters(), lr=1e-5)  # weight_decay=0.01
+num_of_epochs = 8
+optimizer = AdamW(model.parameters(), lr=1e-4)  # weight_decay=0.01
 
 with open(args.logfile, 'w') as f:
     print(f"Training for {num_of_epochs} epochs", file=f)
@@ -115,7 +115,7 @@ with open(args.logfile, 'w') as f:
             inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
             outputs = model(inputs["input_ids"], inputs["attention_mask"])
             predictions = torch.argmax(outputs.logits, dim=1)
-            print('Prediction class:', predictions.item(), '\\tCorrect label:', labels.item(), '\\tprobs',
+            print('Prediction class:', predictions, '\\tCorrect label:', labels, '\\tprobs',
                   torch.nn.functional.softmax(outputs.logits, dim=1).tolist()[0], file=f)
             total_correct_preds += torch.sum(predictions == labels).item()
             total_samples += 1
