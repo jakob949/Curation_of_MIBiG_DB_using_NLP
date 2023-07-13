@@ -55,7 +55,12 @@ time_start = time.time()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 # Load the pre-trained model
-num_labels = len(set(Dataset.labels))  # Get number of unique labels
+# Instantiate the Dataset before trying to access its labels attribute
+file_paths = [args.trainfile]
+dataset = Dataset(file_paths)
+num_labels = len(set(dataset.labels))  # Get number of unique labels
+
+# Then load the model
 model = RobertaForSequenceClassification.from_pretrained("allenai/biomed_roberta_base", num_labels=num_labels)
 tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
 
