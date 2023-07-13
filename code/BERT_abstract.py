@@ -84,51 +84,50 @@ model.train()
 num_of_epochs = 8
 optimizer = AdamW(model.parameters(), lr=1e-4)  # weight_decay=0.01
 
-with open(args.logfile, 'w') as f:
-    print_log(f"Training for {num_of_epochs} epochs", file=f, args.logfile)
-    print_log(f"Training for {num_of_epochs} epochs", args.logfile)
-    for epoch in range(num_of_epochs):
-        print_log(f"Epoch {epoch + 1}/{num_of_epochs}", file=f, args.logfile)
-        print_log(f"Epoch {epoch + 1}/{num_of_epochs}", args.logfile)
-        for i, batch in enumerate(dataloader):
-            print_log(f"Batch {i + 1}/{len(dataloader)}", file=f, args.logfile)
-            print_log(f"Batch {i + 1}/{len(dataloader)}", args.logfile)
-            texts, labels = batch
-            inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
-            outputs = model(inputs["input_ids"], inputs["attention_mask"], labels=labels)
-            predictions_train = torch.argmax(outputs.logits, dim=1)
-            print_log('Prediction class:', predictions_train, '\tCorrect label:', labels, '\tprobs', args.logfile)
-            loss = outputs.loss
-            loss.backward()
 
-            optimizer.step()
-            optimizer.zero_grad()
+print_log(f"Training for {num_of_epochs} epochs", args.logfile)
+for epoch in range(num_of_epochs):
+    print_log(f"Epoch {epoch + 1}/{num_of_epochs}", args.logfile)
+    print_log(f"Epoch {epoch + 1}/{num_of_epochs}", args.logfile)
+    for i, batch in enumerate(dataloader):
+        print_log(f"Batch {i + 1}/{len(dataloader)}", args.logfile)
+        print_log(f"Batch {i + 1}/{len(dataloader)}", args.logfile)
+        texts, labels = batch
+        inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
+        outputs = model(inputs["input_ids"], inputs["attention_mask"], labels=labels)
+        predictions_train = torch.argmax(outputs.logits, dim=1)
+        print_log('Prediction class:', predictions_train, '\tCorrect label:', labels, '\tprobs', args.logfile)
+        loss = outputs.loss
+        loss.backward()
 
-    # Define the test dataloader, re-using the label encoder from the training dataset
-    test_file_path = [args.testfile]
-    test_dataset = Dataset(test_file_path, label_encoder=dataset.get_label_encoder())
-    test_dataloader = DataLoader(test_dataset, batch_size=1)
+        optimizer.step()
+        optimizer.zero_grad()
 
-    # Evaluate the model on the test dataset
-    model.eval()
-    total_correct_preds = 0
-    total_samples = 0
-    with torch.no_grad():
-        for i, batch in enumerate(test_dataloader):
-            print_log(f"Batch {i + 1}/{len(test_dataloader)}", file=f, args.logfile)
-            abstract_text, labels = batch
-            inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
-            outputs = model(inputs["input_ids"], inputs["attention_mask"])
-            predictions = torch.argmax(outputs.logits, dim=1)
-            print('Prediction class:', predictions, '\\tCorrect label:', labels, '\\tprobs',
-                  torch.nn.functional.softmax(outputs.logits, dim=1).tolist()[0], file=f)
-            total_correct_preds += torch.sum(predictions == labels).item()
-            total_samples += 1
+# Define the test dataloader, re-using the label encoder from the training dataset
+test_file_path = [args.testfile]
+test_dataset = Dataset(test_file_path, label_encoder=dataset.get_label_encoder())
+test_dataloader = DataLoader(test_dataset, batch_size=1)
 
-    accuracy = total_correct_preds / total_samples
-    print_log("Accuracy: {:.2f}%".format(accuracy * 100), file=f, args.logfile)
-    time_end = time.time()
-    print_log(f"Time elapsed in this session: {round(time_end - time_start, 2) / 60} minutes", file=f, args.logfile)
+# Evaluate the model on the test dataset
+model.eval()
+total_correct_preds = 0
+total_samples = 0
+with torch.no_grad():
+    for i, batch in enumerate(test_dataloader):
+        print_log(f"Batch {i + 1}/{len(test_dataloader)}", args.logfile)
+        abstract_text, labels = batch
+        inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
+        outputs = model(inputs["input_ids"], inputs["attention_mask"])
+        predictions = torch.argmax(outputs.logits, dim=1)
+        print_log('Prediction class:', predictions, '\tCorrect label:', labels, '\tprobs',
+              torch.nn.functional.softmax(outputs.logits, dim=1).tolist()[0])
+        total_correct_preds += torch.sum(predictions == labels).item()
+        total_samples += 1
+
+accuracy = total_correct_preds / total_samples
+print_log("Accuracy: {:.2f}%".format(accuracy * 100), args.logfile)
+time_end = time.time()
+print_log(f"Time elapsed in this session: {round(time_end - time_start, 2) / 60} minutes", args.logfile)
 
 # Save the fine-tuned model
 if save_model:
