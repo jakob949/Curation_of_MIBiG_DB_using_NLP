@@ -97,8 +97,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 #load data
-train_dataset = Dataset("dataset/tigrfam2SMILES/train_tigrfam2SMILES_0.txt", t5_tokenizer)
-test_dataset = Dataset("dataset/tigrfam2SMILES/test_tigrfam2SMILES_0.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/pfam2SMILES/train_pfam2SMILES_0.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/pfam2SMILES/test_pfam2SMILES_0.txt", t5_tokenizer)
 
 batch_size_train = 12
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
