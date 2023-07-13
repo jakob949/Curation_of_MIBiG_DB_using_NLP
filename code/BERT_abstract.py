@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+def print_log(message, file):
+    print(message)
+    with open(file, 'a') as f:
+        print(message, file=f)
+
 
 import torch
 from torch.utils.data import Dataset, DataLoader
@@ -43,7 +48,7 @@ class Dataset(Dataset):
 
         # Print out the label mapping
         for i, label in enumerate(self.label_encoder.classes_):
-            print(f'{label}: {i}')
+            print_log(f'{label}: {i}', args.logfile)
 
     def __getitem__(self, index):
         return self.data[index]
@@ -57,13 +62,13 @@ class Dataset(Dataset):
 
 time_start = time.time()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"Using device: {device}")
+print_log(f"Using device: {device}", args.logfile)
 # Load the pre-trained model
 # Instantiate the Dataset before trying to access its labels attribute
 file_paths = [args.trainfile]
 dataset = Dataset(file_paths)
 num_labels = len(set(dataset.labels))  # Get number of unique labels
-print(num_labels, "labels", set(dataset.labels))
+print_log(num_labels, "labels", set(dataset.labels), args.logfile)
 # Then load the model
 model = RobertaForSequenceClassification.from_pretrained("allenai/biomed_roberta_base", num_labels=num_labels)
 tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
@@ -80,19 +85,19 @@ num_of_epochs = 8
 optimizer = AdamW(model.parameters(), lr=1e-4)  # weight_decay=0.01
 
 with open(args.logfile, 'w') as f:
-    print(f"Training for {num_of_epochs} epochs", file=f)
-    print(f"Training for {num_of_epochs} epochs")
+    print_log(f"Training for {num_of_epochs} epochs", file=f, args.logfile)
+    print_log(f"Training for {num_of_epochs} epochs", args.logfile)
     for epoch in range(num_of_epochs):
-        print(f"Epoch {epoch + 1}/{num_of_epochs}", file=f)
-        print(f"Epoch {epoch + 1}/{num_of_epochs}")
+        print_log(f"Epoch {epoch + 1}/{num_of_epochs}", file=f, args.logfile)
+        print_log(f"Epoch {epoch + 1}/{num_of_epochs}", args.logfile)
         for i, batch in enumerate(dataloader):
-            print(f"Batch {i + 1}/{len(dataloader)}", file=f)
-            print(f"Batch {i + 1}/{len(dataloader)}")
+            print_log(f"Batch {i + 1}/{len(dataloader)}", file=f, args.logfile)
+            print_log(f"Batch {i + 1}/{len(dataloader)}", args.logfile)
             texts, labels = batch
             inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
             outputs = model(inputs["input_ids"], inputs["attention_mask"], labels=labels)
             predictions_train = torch.argmax(outputs.logits, dim=1)
-            print('Prediction class:', predictions_train, '\tCorrect label:', labels, '\tprobs')
+            print_log('Prediction class:', predictions_train, '\tCorrect label:', labels, '\tprobs', args.logfile)
             loss = outputs.loss
             loss.backward()
 
@@ -110,7 +115,7 @@ with open(args.logfile, 'w') as f:
     total_samples = 0
     with torch.no_grad():
         for i, batch in enumerate(test_dataloader):
-            print(f"Batch {i + 1}/{len(test_dataloader)}", file=f)
+            print_log(f"Batch {i + 1}/{len(test_dataloader)}", file=f, args.logfile)
             abstract_text, labels = batch
             inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
             outputs = model(inputs["input_ids"], inputs["attention_mask"])
@@ -121,9 +126,9 @@ with open(args.logfile, 'w') as f:
             total_samples += 1
 
     accuracy = total_correct_preds / total_samples
-    print("Accuracy: {:.2f}%".format(accuracy * 100), file=f)
+    print_log("Accuracy: {:.2f}%".format(accuracy * 100), file=f, args.logfile)
     time_end = time.time()
-    print(f"Time elapsed in this session: {round(time_end - time_start, 2) / 60} minutes", file=f)
+    print_log(f"Time elapsed in this session: {round(time_end - time_start, 2) / 60} minutes", file=f, args.logfile)
 
 # Save the fine-tuned model
 if save_model:
