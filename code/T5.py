@@ -86,8 +86,8 @@ class Dataset(Dataset):
 start_time = time.time()
 
 # Assume you have a T5 model and tokenizer already
-T5_model_name = 'google/flan-t5-large'
-# T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+# T5_model_name = 'google/flan-t5-large'
+T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 # T5_model_name = 'model_020623_geneProduct2SMILES_v3.pt'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 # t5_model = torch.load(T5_model_name)
@@ -100,12 +100,12 @@ t5_model.to(device)
 train_dataset = Dataset("dataset/pfam2SMILES/train_pfam2SMILES_0.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/smile_biosynclass/test_pfam2SMILES_0.txt", t5_tokenizer)
 
-batch_size_train = 2
+batch_size_train = 4
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # Optimizer
-learning_rate = 6e-5
+learning_rate = 6e-3
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay = 0.1)
 
 rouge = ROUGEScore()
