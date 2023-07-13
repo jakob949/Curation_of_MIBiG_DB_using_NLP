@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-def print_log(message, file):
-    print(message)
-    with open(file, 'a') as f:
-        print(message, file=f)
-
 
 import torch
 from torch.utils.data import Dataset, DataLoader
@@ -48,7 +43,7 @@ class Dataset(Dataset):
 
         # Print out the label mapping
         for i, label in enumerate(self.label_encoder.classes_):
-            print_log(f'{label}: {i}', args.logfile)
+            print(f'{label}: {i}')
 
     def __getitem__(self, index):
         return self.data[index]
@@ -62,13 +57,13 @@ class Dataset(Dataset):
 
 time_start = time.time()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print_log(f"Using device: {device}", args.logfile)
+print(f"Using device: {device}")
 # Load the pre-trained model
 # Instantiate the Dataset before trying to access its labels attribute
 file_paths = [args.trainfile]
 dataset = Dataset(file_paths)
 num_labels = len(set(dataset.labels))  # Get number of unique labels
-print_log(num_labels, "labels", set(dataset.labels), args.logfile)
+print(num_labels, "labels", set(dataset.labels))
 # Then load the model
 model = RobertaForSequenceClassification.from_pretrained("allenai/biomed_roberta_base", num_labels=num_labels)
 tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
@@ -84,50 +79,51 @@ model.train()
 num_of_epochs = 8
 optimizer = AdamW(model.parameters(), lr=1e-4)  # weight_decay=0.01
 
+with open(args.logfile, 'w') as f:
+    print(f"Training for {num_of_epochs} epochs", file=f)
+    print(f"Training for {num_of_epochs} epochs")
+    for epoch in range(num_of_epochs):
+        print(f"Epoch {epoch + 1}/{num_of_epochs}", file=f)
+        print(f"Epoch {epoch + 1}/{num_of_epochs}")
+        for i, batch in enumerate(dataloader):
+            print(f"Batch {i + 1}/{len(dataloader)}", file=f)
+            print(f"Batch {i + 1}/{len(dataloader)}")
+            texts, labels = batch
+            inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
+            outputs = model(inputs["input_ids"], inputs["attention_mask"], labels=labels)
+            predictions_train = torch.argmax(outputs.logits, dim=1)
+            print('Prediction class:', predictions_train, '\tCorrect label:', labels, '\tprobs')
+            loss = outputs.loss
+            loss.backward()
 
-print_log(f"Training for {num_of_epochs} epochs", args.logfile)
-for epoch in range(num_of_epochs):
-    print_log(f"Epoch {epoch + 1}/{num_of_epochs}", args.logfile)
-    print_log(f"Epoch {epoch + 1}/{num_of_epochs}", args.logfile)
-    for i, batch in enumerate(dataloader):
-        print_log(f"Batch {i + 1}/{len(dataloader)}", args.logfile)
-        print_log(f"Batch {i + 1}/{len(dataloader)}", args.logfile)
-        texts, labels = batch
-        inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
-        outputs = model(inputs["input_ids"], inputs["attention_mask"], labels=labels)
-        predictions_train = torch.argmax(outputs.logits, dim=1)
-        print_log('Prediction class:', predictions_train, '\tCorrect label:', labels, '\tprobs', args.logfile)
-        loss = outputs.loss
-        loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
 
-        optimizer.step()
-        optimizer.zero_grad()
+    # Define the test dataloader, re-using the label encoder from the training dataset
+    test_file_path = [args.testfile]
+    test_dataset = Dataset(test_file_path, label_encoder=dataset.get_label_encoder())
+    test_dataloader = DataLoader(test_dataset, batch_size=1)
 
-# Define the test dataloader, re-using the label encoder from the training dataset
-test_file_path = [args.testfile]
-test_dataset = Dataset(test_file_path, label_encoder=dataset.get_label_encoder())
-test_dataloader = DataLoader(test_dataset, batch_size=1)
+    # Evaluate the model on the test dataset
+    model.eval()
+    total_correct_preds = 0
+    total_samples = 0
+    with torch.no_grad():
+        for i, batch in enumerate(test_dataloader):
+            print(f"Batch {i + 1}/{len(test_dataloader)}", file=f)
+            abstract_text, labels = batch
+            inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
+            outputs = model(inputs["input_ids"], inputs["attention_mask"])
+            predictions = torch.argmax(outputs.logits, dim=1)
+            print('Prediction class:', predictions, '\\tCorrect label:', labels, '\\tprobs',
+                  torch.nn.functional.softmax(outputs.logits, dim=1).tolist()[0], file=f)
+            total_correct_preds += torch.sum(predictions == labels).item()
+            total_samples += 1
 
-# Evaluate the model on the test dataset
-model.eval()
-total_correct_preds = 0
-total_samples = 0
-with torch.no_grad():
-    for i, batch in enumerate(test_dataloader):
-        print_log(f"Batch {i + 1}/{len(test_dataloader)}", args.logfile)
-        abstract_text, labels = batch
-        inputs = tokenizer(abstract_text, padding=True, truncation=True, return_tensors="pt")
-        outputs = model(inputs["input_ids"], inputs["attention_mask"])
-        predictions = torch.argmax(outputs.logits, dim=1)
-        print_log('Prediction class:', predictions, '\tCorrect label:', labels, '\tprobs',
-              torch.nn.functional.softmax(outputs.logits, dim=1).tolist()[0])
-        total_correct_preds += torch.sum(predictions == labels).item()
-        total_samples += 1
-
-accuracy = total_correct_preds / total_samples
-print_log("Accuracy: {:.2f}%".format(accuracy * 100), args.logfile)
-time_end = time.time()
-print_log(f"Time elapsed in this session: {round(time_end - time_start, 2) / 60} minutes", args.logfile)
+    accuracy = total_correct_preds / total_samples
+    print("Accuracy: {:.2f}%".format(accuracy * 100), file=f)
+    time_end = time.time()
+    print(f"Time elapsed in this session: {round(time_end - time_start, 2) / 60} minutes", file=f)
 
 # Save the fine-tuned model
 if save_model:
