@@ -17,6 +17,7 @@ args = parser.parse_args()
 
 
 # Define the dataset
+# Define the dataset
 class Dataset(Dataset):
     def __init__(self, file_paths, label_encoder=None):
         self.data = []
@@ -24,8 +25,7 @@ class Dataset(Dataset):
         for file_path in file_paths:
             with open(file_path, "r") as f:
                 for line in f:
-                    text, label = line.strip().split("\t")
-                    text = text.split(": ")[1]
+                    text, label = line.strip().split("\\t")
                     self.data.append((text, label))
                     self.labels.append(label)
 
@@ -40,6 +40,10 @@ class Dataset(Dataset):
         for i in range(len(self.data)):
             text, label = self.data[i]
             self.data[i] = (text, self.label_encoder.transform([label])[0])
+
+        # Print out the label mapping
+        for i, label in enumerate(self.label_encoder.classes_):
+            print(f'{label}: {i}')
 
     def __getitem__(self, index):
         return self.data[index]
@@ -83,10 +87,12 @@ with open(args.logfile, 'w') as f:
         print(f"Epoch {epoch + 1}/{num_of_epochs}")
         for i, batch in enumerate(dataloader):
             print(f"Batch {i + 1}/{len(dataloader)}", file=f)
+            print(f"Batch {i + 1}/{len(dataloader)}")
             texts, labels = batch
             inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
             outputs = model(inputs["input_ids"], inputs["attention_mask"], labels=labels)
-
+            predictions_train = torch.argmax(outputs.logits, dim=1)
+            print('Prediction class:', predictions_train.item(), '\tCorrect label:', labels.item(), '\tprobs')
             loss = outputs.loss
             loss.backward()
 
