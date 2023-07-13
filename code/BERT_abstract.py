@@ -92,7 +92,7 @@ with open(args.logfile, 'w') as f:
             inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
             outputs = model(inputs["input_ids"], inputs["attention_mask"], labels=labels)
             predictions_train = torch.argmax(outputs.logits, dim=1)
-            print('Prediction class:', predictions_train.item(), '\tCorrect label:', labels.item(), '\tprobs')
+            print('Prediction class:', predictions_train, '\tCorrect label:', labels, '\tprobs')
             loss = outputs.loss
             loss.backward()
 
