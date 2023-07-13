@@ -59,7 +59,7 @@ print(f"Using device: {device}")
 file_paths = [args.trainfile]
 dataset = Dataset(file_paths)
 num_labels = len(set(dataset.labels))  # Get number of unique labels
-
+print(num_labels, "labels", set(dataset.labels))
 # Then load the model
 model = RobertaForSequenceClassification.from_pretrained("allenai/biomed_roberta_base", num_labels=num_labels)
 tokenizer = RobertaTokenizer.from_pretrained("allenai/biomed_roberta_base")
