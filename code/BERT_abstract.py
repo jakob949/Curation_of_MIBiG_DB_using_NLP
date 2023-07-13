@@ -25,7 +25,7 @@ class Dataset(Dataset):
         for file_path in file_paths:
             with open(file_path, "r") as f:
                 for line in f:
-                    text, label = line.strip().split("\\t")
+                    text, label = line.strip().split("\t")
                     self.data.append((text, label))
                     self.labels.append(label)
 
