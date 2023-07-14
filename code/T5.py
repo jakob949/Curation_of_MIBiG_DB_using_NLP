@@ -72,7 +72,7 @@ class Dataset(Dataset):
     def __getitem__(self, idx):
         text, label = self.data[idx]
         input_encoding = self.tokenizer(text, return_tensors="pt", max_length=self.max_length, padding="max_length")
-        target_encoding = self.tokenizer(label, return_tensors="pt", max_length=400, padding="max_length",
+        target_encoding = self.tokenizer(label, return_tensors="pt", max_length=1000, padding="max_length",
                                          truncation=True)
 
         return {
@@ -100,12 +100,12 @@ t5_model.to(device)
 train_dataset = Dataset("invalid2valid_pfam_train.txt", t5_tokenizer)
 test_dataset = Dataset("invalid2valid_pfam_test.txt", t5_tokenizer)
 
-batch_size_train = 12
+batch_size_train = 24
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # Optimizer
-learning_rate = 6e-3
+learning_rate = 9e-3
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay = 0.1)
 
 rouge = ROUGEScore()
