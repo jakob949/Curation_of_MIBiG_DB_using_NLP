@@ -25,7 +25,7 @@ args = parser.parse_args()
 
 
 class Dataset(Dataset):
-    def __init__(self, file_path, tokenizer, max_length=850):
+    def __init__(self, file_path, tokenizer, max_length=1050):
         self.file_path = file_path
         self.data = self.load_data()
         self.tokenizer = tokenizer
@@ -45,6 +45,9 @@ class Dataset(Dataset):
                     print('ProteinSeqs2SMILE skipped')
                     continue
                     # possibly implement ESM2 encoder here
+                if task == 'invalid2validSMILE':
+                    data.append((text, label))
+
                 if len(text) > 800:
                     data.append((text[:800], label))
                     num_of_truncs += 1
