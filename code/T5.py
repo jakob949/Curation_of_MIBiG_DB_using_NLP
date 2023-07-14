@@ -41,7 +41,7 @@ class Dataset(Dataset):
                 text_list = text.split(': ')[1].split('_')
                 task = text.split(': ')[0]
 
-                if task == 'ProteinSeqs2SMILE' or task == 'SMILE2Activity' or task == 'SMILE2Biosynclass':
+                if task == 'ProteinSeqs2SMILE' or task == 'SMILE2Biosynclass':
                     print('ProteinSeqs2SMILE skipped')
                     continue
                     # possibly implement ESM2 encoder here
