@@ -89,7 +89,7 @@ class Dataset(Dataset):
 start_time = time.time()
 
 # Assume you have a T5 model and tokenizer already
-# T5_model_name = 'google/flan-t5-large'
+# T5_model_name = 'google/flan-t5-base'
 T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 # T5_model_name = 'model_020623_geneProduct2SMILES_v3.pt'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
