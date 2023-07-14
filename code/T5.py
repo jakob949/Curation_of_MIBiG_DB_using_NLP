@@ -103,13 +103,13 @@ t5_model.to(device)
 train_dataset = Dataset("invalid2valid_pfam_train.txt", t5_tokenizer)
 test_dataset = Dataset("invalid2valid_pfam_test.txt", t5_tokenizer)
 
-batch_size_train = 24
+batch_size_train = 8
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # Optimizer
-learning_rate = 9e-3
-optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay = 0.1)
+learning_rate = 7e-4
+optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay = 0.05)
 
 rouge = ROUGEScore()
 bleu = BLEUScore()
