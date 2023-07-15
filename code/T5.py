@@ -103,7 +103,7 @@ t5_model.to(device)
 train_dataset = Dataset("dataset/train_grammarCheck_0.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/test_grammarCheck_0.txt", t5_tokenizer)
 
-batch_size_train = 10
+batch_size_train = 5
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
