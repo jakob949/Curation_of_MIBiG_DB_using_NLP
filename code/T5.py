@@ -38,7 +38,7 @@ class Dataset(Dataset):
             for line in f:
                 text = line.split('\t')[0]
                 label = line.split('\t')[1].strip('\n')
-                text_list = text.split(': ')[1].split('_')
+                # text_list = text.split(': ')[1].split('_')
                 task = text.split(': ')[0]
 
                 if task == 'ProteinSeqs2SMILE' or task == 'SMILE2Biosynclass':
