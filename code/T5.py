@@ -100,10 +100,10 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 #load data
-train_dataset = Dataset("train_data_mult_v5.txt", t5_tokenizer)
-test_dataset = Dataset("test_data_mult_v5.txt", t5_tokenizer)
+train_dataset = Dataset("train_iv2_classes.txt", t5_tokenizer)
+test_dataset = Dataset("test_iv2_classes.txt", t5_tokenizer)
 
-batch_size_train = 10
+batch_size_train = 3
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
