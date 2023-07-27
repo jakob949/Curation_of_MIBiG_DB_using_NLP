@@ -2,7 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import json
-
+from Bio import Entrez
+import time
 def fetch_abstract(pubmed_id):
     """
     Fetch the abstract for a given PubMed ID from ncbi.
@@ -23,6 +24,23 @@ def fetch_abstract(pubmed_id):
     #  strips the unnecessary HTML formats from the abstract
     abstract = abstract_section.text.strip()
     return abstract
+
+
+
+def fetch_pubmed_ids(start_date, end_date, journal):
+    # set your email here
+    Entrez.email = "jakob949@hotmail.com"
+    query = f'"{journal}"[Journal] AND ("{start_date}"[PDAT] : "{end_date}"[PDAT])'
+    handle = Entrez.esearch(db="pubmed", term=query)
+    record = Entrez.read(handle)
+    return record["IdList"]
+
+# usage:
+ids = fetch_pubmed_ids("2023/01/01", "2023/07/27", "Nature")
+for id in ids:
+    print(id)
+    print(fetch_abstract(id))
+    time.sleep(1)  # to comply with NCBI's rate limit
 
 
 def loop_through_pmid_list():
@@ -77,11 +95,11 @@ def loop_pmid_list(file):
         return abstact_list
 
 
-abstracts_list = loop_pmid_list("testing_small_neg_pubmed.txt")
-
-with open('Testing_small_neg_abstacts.tsv', 'w') as tsvfile:
-    for line in abstracts_list:
-        tsvfile.write(line[0] + '\t' + str(line[1]) + '\n')
+# abstracts_list = loop_pmid_list("testing_small_neg_pubmed.txt")
+#
+# with open('Testing_small_neg_abstacts.tsv', 'w') as tsvfile:
+#     for line in abstracts_list:
+#         tsvfile.write(line[0] + '\t' + str(line[1]) + '\n')
 
 # # open the json file and print the abstract for a given PubMed ID - TESTING
 # with open("../pmid_abstract.json") as f_in:
