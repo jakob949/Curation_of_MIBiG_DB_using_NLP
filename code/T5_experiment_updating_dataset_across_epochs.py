@@ -106,7 +106,7 @@ t5_model.to(device)
 train_dataset = Dataset("dataset/pfam2SMILES/train_pfam2SMILES_0.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/pfam2SMILES/test_pfam2SMILES_0.txt", t5_tokenizer)
 
-batch_size_train = 14
+batch_size_train = 10
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
@@ -239,7 +239,7 @@ for epoch in range(num_epochs):
         train_dataset = Dataset("train_intermediate_dataset.txt", t5_tokenizer)
         test_dataset = Dataset("test_intermediate_dataset.txt", t5_tokenizer)
 
-        batch_size_train = 14
+        batch_size_train = 10
         train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
         test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
