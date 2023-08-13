@@ -230,7 +230,7 @@ for epoch in range(num_epochs):
             sacre_bleu_test_accumulated += test_sacre_bleu_score
 
             print(test_rouge_score, test_bleu_score, test_char_error_rate_score, test_sacre_bleu_score, batch_test_accuracy, Num_correct_val_mols_test)
-    if epoch > 1:
+    if epoch > 1 and epoch % 2 == 0:
         # creating new datasets for the next epoch
         intermediate_dataset(all_train_true_labels, all_train_predicted_labels, "train_intermediate_dataset", "pfam2SMILES: ")
         intermediate_dataset(all_test_true_labels, all_test_pred_labels, "test_intermediate_dataset", "pfam2SMILES: ")
