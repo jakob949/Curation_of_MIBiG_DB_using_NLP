@@ -106,20 +106,20 @@ t5_model.to(device)
 train_dataset = Dataset("dataset/pfam2SMILES/train_pfam2SMILES_0.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/pfam2SMILES/test_pfam2SMILES_0.txt", t5_tokenizer)
 
-batch_size_train = 8
+batch_size_train = 14
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # Optimizer
-learning_rate = 7e-4
-optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay = 0.05)
+learning_rate = 7e-3
+optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay = 0.005)
 
 rouge = ROUGEScore()
 bleu = BLEUScore()
 char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 
-num_epochs = 18
+num_epochs = 35
 
 # Training loop
 for epoch in range(num_epochs):
@@ -239,7 +239,7 @@ for epoch in range(num_epochs):
         train_dataset = Dataset("train_intermediate_dataset.txt", t5_tokenizer)
         test_dataset = Dataset("test_intermediate_dataset.txt", t5_tokenizer)
 
-        batch_size_train = 8
+        batch_size_train = 14
         train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
         test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 

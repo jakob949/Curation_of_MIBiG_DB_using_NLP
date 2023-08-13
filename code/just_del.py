@@ -1,7 +1,98 @@
+### plots for scores new format
+import pandas as pd
+import matplotlib.pyplot as plt
+
+
+# Function to process lines and extract values
+def process_lines(lines):
+    data = []
+    for line in lines:
+        split_line = line.split("\t")
+        epoch = split_line[0][6:-3]
+        accuracy = split_line[1].split(": ")[1]
+        avg_rouge_f1 = split_line[3]
+        avg_char_error_rate = split_line[7]
+        avg_sacrebleu_score = split_line[9]
+        num_correct_val_mols = split_line[10].split(": ")[1].rstrip()
+
+        # Store values in a dictionary and add it to the list
+        data.append({
+            "Epoch": epoch,
+            "Accuracy": accuracy,
+            "AVG ROUGE-F1": avg_rouge_f1,
+            "Avg Char Error Rate": avg_char_error_rate,
+            "Avg SacreBLEU Score": avg_sacrebleu_score,
+            "Num correct val mols": num_correct_val_mols,
+        })
+    return data
+
+
+# Load the new file and split it into lines
+with open("scores_130823_ex_updating_datasets_over_epochs_v3.txt", "r") as file:
+    lines_v3 = file.readlines()
+
+# Separate the lines into two groups: one for the training set and one for the test set.
+train_lines_v3 = lines_v3[::2]  # even lines
+test_lines_v3 = lines_v3[1::2]  # odd lines
+
+# Process each group of lines to extract the relevant values
+train_data_v3 = process_lines(train_lines_v3)
+test_data_v3 = process_lines(test_lines_v3)
+
+# Store the extracted values in data structures (dataframes) for further analysis
+train_df_v3 = pd.DataFrame(train_data_v3).apply(pd.to_numeric)
+test_df_v3 = pd.DataFrame(test_data_v3).apply(pd.to_numeric)
+
+# Normalize the 'Num correct val mols' values for the new dataset
+train_df_v3['Num correct val mols'] /= 4609
+test_df_v3['Num correct val mols'] /= 898
+
+# Create the subplots
+fig, ax = plt.subplots(2, 2, figsize=(15, 10))
+
+# Set main title for the entire plot
+plt.suptitle('Metrics Over Epochs for the New Dataset', fontsize=16)
+
+# Subplot 1: epoch vs Accuracy
+ax[0, 0].plot(train_df_v3['Epoch'], train_df_v3['Accuracy'], label='Train - v3', ls=':', alpha=0.5)
+ax[0, 0].plot(test_df_v3['Epoch'], test_df_v3['Accuracy'], label='Test - v3', ls=':', alpha=0.5)
+ax[0, 0].set_title('Epoch vs Accuracy')
+ax[0, 0].set_xlabel('Epoch')
+ax[0, 0].set_ylabel('Accuracy')
+ax[0, 0].legend()
+
+# Subplot 2: epoch vs AVG ROUGE-F1
+ax[0, 1].plot(train_df_v3['Epoch'], train_df_v3['AVG ROUGE-F1'], label='Train - v3', ls=':', alpha=0.5)
+ax[0, 1].plot(test_df_v3['Epoch'], test_df_v3['AVG ROUGE-F1'], label='Test - v3', ls=':', alpha=0.5)
+ax[0, 1].set_title('Epoch vs AVG ROUGE-F1')
+ax[0, 1].set_xlabel('Epoch')
+ax[0, 1].set_ylabel('AVG ROUGE-F1')
+ax[0, 1].legend()
+
+# Subplot 3: epoch vs Avg Char Error Rate
+ax[1, 0].plot(train_df_v3['Epoch'], train_df_v3['Avg Char Error Rate'], label='Train - v3', ls=':', alpha=0.5)
+ax[1, 0].plot(test_df_v3['Epoch'], test_df_v3['Avg Char Error Rate'], label='Test - v3', ls=':', alpha=0.5)
+ax[1, 0].set_title('Epoch vs Avg Char Error Rate')
+ax[1, 0].set_xlabel('Epoch')
+ax[1, 0].set_ylabel('Avg Char Error Rate')
+ax[1, 0].legend()
+
+# Subplot 4: epoch vs Normalized Num correct val mols
+ax[1, 1].plot(train_df_v3['Epoch'], train_df_v3['Num correct val mols'], label='Train - v3', ls=':', alpha=0.5)
+ax[1, 1].plot(test_df_v3['Epoch'], test_df_v3['Num correct val mols'], label='Test - v3', ls=':', alpha=0.5)
+ax[1, 1].set_title('Epoch vs Normalized Num correct val mols')
+ax[1, 1].set_xlabel('Epoch')
+ax[1, 1].set_ylabel('Normalized Num correct val mols')
+ax[1, 1].legend()
+
+plt.show()
+
+### plots for scores old format
+
 # import matplotlib.pyplot as plt
 #
 # # List of file names
-# files = ["scores_160523_GT4SD_multitask-text-and-chemistry-t5-small-augm.txt", "scores_070523_molt5_base.txt"]
+# files = ["scores_130823_ex_updating_datasets_over_epochs_v3.txt", "scores_070523_molt5_base.txt"]
 #
 # # Initialize lists to store the extracted data
 # data = {}
