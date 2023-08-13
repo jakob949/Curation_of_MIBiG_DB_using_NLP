@@ -87,7 +87,7 @@ class Dataset(Dataset):
 def intermediate_dataset(true, pred, name, task):
     with open(f'{name}.txt', 'w') as f:
         for i in range(len(true)):
-            f.write(task + true[i] + '\t' + pred[i] + '\n')
+            f.write(task + pred[i] + '\t' + true[i] + '\n')
 
 start_time = time.time()
 
@@ -106,7 +106,7 @@ t5_model.to(device)
 train_dataset = Dataset("dataset/pfam2SMILES/train_pfam2SMILES_0.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/pfam2SMILES/test_pfam2SMILES_0.txt", t5_tokenizer)
 
-batch_size_train = 3
+batch_size_train = 8
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
@@ -230,7 +230,7 @@ for epoch in range(num_epochs):
             sacre_bleu_test_accumulated += test_sacre_bleu_score
 
             print(test_rouge_score, test_bleu_score, test_char_error_rate_score, test_sacre_bleu_score, batch_test_accuracy, Num_correct_val_mols_test)
-    if epoch > 3:
+    if epoch > 1:
         # creating new datasets for the next epoch
         intermediate_dataset(all_train_true_labels, all_train_predicted_labels, "train_intermediate_dataset", "pfam2SMILES: ")
         intermediate_dataset(all_test_true_labels, all_test_pred_labels, "test_intermediate_dataset", "pfam2SMILES: ")
@@ -239,7 +239,7 @@ for epoch in range(num_epochs):
         train_dataset = Dataset("train_intermediate_dataset.txt", t5_tokenizer)
         test_dataset = Dataset("test_intermediate_dataset.txt", t5_tokenizer)
 
-        batch_size_train = 3
+        batch_size_train = 8
         train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
         test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
