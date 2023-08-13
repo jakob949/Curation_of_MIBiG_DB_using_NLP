@@ -230,7 +230,7 @@ for epoch in range(num_epochs):
             sacre_bleu_test_accumulated += test_sacre_bleu_score
 
             print(test_rouge_score, test_bleu_score, test_char_error_rate_score, test_sacre_bleu_score, batch_test_accuracy, Num_correct_val_mols_test)
-    if epoch > 1 and epoch % 2 == 0:
+    if epoch > 1 and epoch % 2 == 0 and epoch < 30:
         # creating new datasets for the next epoch
         intermediate_dataset(all_train_true_labels, all_train_predicted_labels, "train_intermediate_dataset", "pfam2SMILES: ")
         intermediate_dataset(all_test_true_labels, all_test_pred_labels, "test_intermediate_dataset", "pfam2SMILES: ")
@@ -253,5 +253,5 @@ for epoch in range(num_epochs):
             f"Epoch {epoch + 1}/{num_epochs}\tTest Accuracy: {test_accuracy_accumulated / num_test_batches}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
             file=scores_file)
     # save the model
-    if epoch == 17:
+    if epoch == 30:
         torch.save(t5_model, f"model_{args.output_file_name}.pt")
