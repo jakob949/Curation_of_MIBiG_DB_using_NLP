@@ -89,8 +89,8 @@ class Dataset(Dataset):
 start_time = time.time()
 
 
-# T5_model_name = 'google/flan-t5-base'
-T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+T5_model_name = 'google/flan-t5-base'
+# T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 # T5_model_name = 'model_020623_geneProduct2SMILES_v3.pt'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 # t5_model = torch.load(T5_model_name)
@@ -100,10 +100,10 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 #load data
-train_dataset = Dataset("train_iv2_classes.txt", t5_tokenizer)
-test_dataset = Dataset("test_iv2_classes.txt", t5_tokenizer)
+train_dataset = Dataset("train_SMILE_activity_v3_modified_0.txt", t5_tokenizer)
+test_dataset = Dataset("test_SMILE_activity_v3_modified_0.txt", t5_tokenizer)
 
-batch_size_train = 3
+batch_size_train = 8
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
@@ -116,7 +116,7 @@ bleu = BLEUScore()
 char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 
-num_epochs = 18
+num_epochs = 11
 
 # Training loop
 for epoch in range(num_epochs):
