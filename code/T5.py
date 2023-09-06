@@ -100,8 +100,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 #load data
-train_dataset = Dataset("train_SMILE_activity_v3_modified_0.txt", t5_tokenizer)
-test_dataset = Dataset("test_SMILE_activity_v3_modified_0.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/train_SMILE_activity_v3_modified_0.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/test_SMILE_activity_v3_modified_0.txt", t5_tokenizer)
 
 batch_size_train = 8
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
