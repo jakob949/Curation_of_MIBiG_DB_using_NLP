@@ -40,7 +40,7 @@ class Dataset(Dataset):
                 label = line.split('\t')[1].strip('\n')
                 text_list = text.split(': ')[1].split('_')
                 task = text.split(': ')[0]
-                if task == 'GeneName2SMILE':
+                if task == 'GeneName2SMILE' or task == 'pfam2SMILES':
                     if len(text_list) < 3:
                         num_of_truncs += 1
                         continue
@@ -103,8 +103,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 #load data
-train_dataset = Dataset("dataset/shorten/train_protein_text_shorten_v3_0.txt", t5_tokenizer)
-test_dataset = Dataset("dataset/shorten/test_protein_text_shorten_v3_0.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/pfam2SMILES/train_pfam2SMILES_0.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/pfam2SMILES/test_pfam2SMILES_0.txt", t5_tokenizer)
 
 batch_size_train = 6
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
