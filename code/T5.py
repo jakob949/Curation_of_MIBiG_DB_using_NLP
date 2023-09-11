@@ -119,7 +119,7 @@ bleu = BLEUScore()
 char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 
-num_epochs = 11
+num_epochs = 20
 
 # Training loop
 for epoch in range(num_epochs):
