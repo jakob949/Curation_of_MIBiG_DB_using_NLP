@@ -38,9 +38,12 @@ class Dataset(Dataset):
             for line in f:
                 text = line.split('\t')[0]
                 label = line.split('\t')[1].strip('\n')
-                # text_list = text.split(': ')[1].split('_')
+                text_list = text.split(': ')[1].split('_')
                 task = text.split(': ')[0]
-
+                if task == 'GeneName2SMILE':
+                    if len(text_list) < 3:
+                        num_of_truncs += 1
+                        continue
                 if task == 'ProteinSeqs2SMILE' or task == 'SMILE2Biosynclass':
                     print('ProteinSeqs2SMILE skipped')
                     continue
@@ -100,10 +103,10 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 #load data
-train_dataset = Dataset("dataset/train_SMILE_activity_v3_modified_0.txt", t5_tokenizer)
-test_dataset = Dataset("dataset/test_SMILE_activity_v3_modified_0.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/shorten/train_protein_text_shorten_v3_0.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/shorten/test_protein_text_shorten_v3_0.txt", t5_tokenizer)
 
-batch_size_train = 8
+batch_size_train = 6
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
