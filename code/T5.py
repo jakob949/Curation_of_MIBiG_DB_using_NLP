@@ -92,8 +92,8 @@ class Dataset(Dataset):
 start_time = time.time()
 
 
-# T5_model_name = 'google/flan-t5-base'
-T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+T5_model_name = 'google/flan-t5-base'
+# T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 # T5_model_name = 'model_020623_geneProduct2SMILES_v3.pt'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 # t5_model = torch.load(T5_model_name)
@@ -103,8 +103,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 #load data
-train_dataset = Dataset("dataset/pfam2SMILES/train_pfam2SMILES_0.txt", t5_tokenizer)
-test_dataset = Dataset("dataset/pfam2SMILES/test_pfam2SMILES_0.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/shorten/train_protein_text_shorten_v3.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/shorten/test_protein_text_shorten_v3.txt", t5_tokenizer)
 
 batch_size_train = 6
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
