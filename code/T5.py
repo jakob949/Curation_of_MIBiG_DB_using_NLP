@@ -103,8 +103,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 #load data
-train_dataset = Dataset("dataset/shorten/train_protein_text_shorten_v3.txt", t5_tokenizer)
-test_dataset = Dataset("dataset/shorten/test_protein_text_shorten_v3.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/shorten/train_protein_text_shorten_v3_0.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/shorten/test_protein_text_shorten_v3_0.txt", t5_tokenizer)
 
 batch_size_train = 6
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)

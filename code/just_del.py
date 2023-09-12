@@ -1,91 +1,156 @@
-### plots for scores new format
+### plot for distrubtion of char error
+
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# Reading the file and populating the DataFrame
+file_path = 'predictions_test_150723_i2v_pfam_correct_dataset_v1.txt'  # Replace with your actual file path
+epochs = []
+true_labels = []
+predictions = []
+tasks = []
 
-# Function to process lines and extract values
-def process_lines(lines):
-    data = []
-    for line in lines:
-        split_line = line.split("\t")
-        epoch = split_line[0][6:-3]
-        accuracy = split_line[1].split(": ")[1]
-        avg_rouge_f1 = split_line[3]
-        avg_char_error_rate = split_line[7]
-        avg_sacrebleu_score = split_line[9]
-        num_correct_val_mols = split_line[10].split(": ")[1].rstrip()
+with open(file_path, 'r') as f:
+    for line in f:
+        parts = line.strip().split("\t")
+        if len(parts) == 5:  # Adjusted condition based on your file format
+            epochs.append(parts[0].split(" ")[1])
+            true_labels.append(parts[1].split("True: ")[1])
+            predictions.append(parts[2].split("Pred: ")[1])
+            tasks.append(parts[4])  # Adjusted index
 
-        # Store values in a dictionary and add it to the list
-        data.append({
-            "Epoch": epoch,
-            "Accuracy": accuracy,
-            "AVG ROUGE-F1": avg_rouge_f1,
-            "Avg Char Error Rate": avg_char_error_rate,
-            "Avg SacreBLEU Score": avg_sacrebleu_score,
-            "Num correct val mols": num_correct_val_mols,
-        })
-    return data
+df = pd.DataFrame({
+    'Epoch': epochs,
+    'True_Label': true_labels,
+    'Prediction': predictions,
+    'Task': tasks
+})
 
+# Filter the DataFrame for the 15th epoch
+df_15_epoch = df[df['Epoch'] == '15/18']
 
-# Load the new file and split it into lines
-with open("scores_130823_ex_updating_datasets_over_epochs_v3.txt", "r") as file:
-    lines_v3 = file.readlines()
+# Initialize an empty list to store the number of wrong characters for each sorted prediction
+wrong_char_counts_sorted_diff_len = []
 
-# Separate the lines into two groups: one for the training set and one for the test set.
-train_lines_v3 = lines_v3[::2]  # even lines
-test_lines_v3 = lines_v3[1::2]  # odd lines
+# Calculate the number of wrong characters for each sorted prediction compared to the sorted true label
+for true_label, prediction in zip(df_15_epoch['True_Label'], df_15_epoch['Prediction']):
+    # Remove quotes and brackets to compare the actual strings
+    true_label = true_label[2:-2]
+    prediction = prediction[2:-2]
 
-# Process each group of lines to extract the relevant values
-train_data_v3 = process_lines(train_lines_v3)
-test_data_v3 = process_lines(test_lines_v3)
+    # Sort the strings
+    true_label_sorted = ''.join(sorted(true_label))
+    prediction_sorted = ''.join(sorted(prediction))
 
-# Store the extracted values in data structures (dataframes) for further analysis
-train_df_v3 = pd.DataFrame(train_data_v3).apply(pd.to_numeric)
-test_df_v3 = pd.DataFrame(test_data_v3).apply(pd.to_numeric)
+    # Initialize count for this pair
+    wrong_count = 0
 
-# Normalize the 'Num correct val mols' values for the new dataset
-train_df_v3['Num correct val mols'] /= 4609
-test_df_v3['Num correct val mols'] /= 898
+    # Compare each character up to the length of the shorter string
+    for t_char, p_char in zip(true_label_sorted, prediction_sorted):
+        if t_char != p_char:
+            wrong_count += 1
 
-# Create the subplots
-fig, ax = plt.subplots(2, 2, figsize=(15, 10))
+    # Add the difference in lengths to the wrong_count (if any)
+    wrong_count += abs(len(true_label_sorted) - len(prediction_sorted))
 
-# Set main title for the entire plot
-plt.suptitle('Metrics Over Epochs for the New Dataset', fontsize=16)
+    # Append the count to the list
+    wrong_char_counts_sorted_diff_len.append(wrong_count)
 
-# Subplot 1: epoch vs Accuracy
-ax[0, 0].plot(train_df_v3['Epoch'], train_df_v3['Accuracy'], label='Train - v3', ls=':', alpha=0.5)
-ax[0, 0].plot(test_df_v3['Epoch'], test_df_v3['Accuracy'], label='Test - v3', ls=':', alpha=0.5)
-ax[0, 0].set_title('Epoch vs Accuracy')
-ax[0, 0].set_xlabel('Epoch')
-ax[0, 0].set_ylabel('Accuracy')
-ax[0, 0].legend()
-
-# Subplot 2: epoch vs AVG ROUGE-F1
-ax[0, 1].plot(train_df_v3['Epoch'], train_df_v3['AVG ROUGE-F1'], label='Train - v3', ls=':', alpha=0.5)
-ax[0, 1].plot(test_df_v3['Epoch'], test_df_v3['AVG ROUGE-F1'], label='Test - v3', ls=':', alpha=0.5)
-ax[0, 1].set_title('Epoch vs AVG ROUGE-F1')
-ax[0, 1].set_xlabel('Epoch')
-ax[0, 1].set_ylabel('AVG ROUGE-F1')
-ax[0, 1].legend()
-
-# Subplot 3: epoch vs Avg Char Error Rate
-ax[1, 0].plot(train_df_v3['Epoch'], train_df_v3['Avg Char Error Rate'], label='Train - v3', ls=':', alpha=0.5)
-ax[1, 0].plot(test_df_v3['Epoch'], test_df_v3['Avg Char Error Rate'], label='Test - v3', ls=':', alpha=0.5)
-ax[1, 0].set_title('Epoch vs Avg Char Error Rate')
-ax[1, 0].set_xlabel('Epoch')
-ax[1, 0].set_ylabel('Avg Char Error Rate')
-ax[1, 0].legend()
-
-# Subplot 4: epoch vs Normalized Num correct val mols
-ax[1, 1].plot(train_df_v3['Epoch'], train_df_v3['Num correct val mols'], label='Train - v3', ls=':', alpha=0.5)
-ax[1, 1].plot(test_df_v3['Epoch'], test_df_v3['Num correct val mols'], label='Test - v3', ls=':', alpha=0.5)
-ax[1, 1].set_title('Epoch vs Normalized Num correct val mols')
-ax[1, 1].set_xlabel('Epoch')
-ax[1, 1].set_ylabel('Normalized Num correct val mols')
-ax[1, 1].legend()
-
+# Plot the histogram for sorted strings, accounting for different lengths
+plt.hist(wrong_char_counts_sorted_diff_len, bins=20, edgecolor='black')
+plt.xlabel('Number of Wrong Characters')
+plt.ylabel('Frequency')
+plt.title('Distribution of Wrong Characters Pfam I2V')
 plt.show()
+
+# ### plots for scores new format
+# import pandas as pd
+# import matplotlib.pyplot as plt
+#
+#
+# # Function to process lines and extract values
+# def process_lines(lines):
+#     data = []
+#     for line in lines:
+#         split_line = line.split("\t")
+#         epoch = split_line[0][6:-3]
+#         accuracy = split_line[1].split(": ")[1]
+#         avg_rouge_f1 = split_line[3]
+#         avg_char_error_rate = split_line[7]
+#         avg_sacrebleu_score = split_line[9]
+#         num_correct_val_mols = split_line[10].split(": ")[1].rstrip()
+#
+#         # Store values in a dictionary and add it to the list
+#         data.append({
+#             "Epoch": epoch,
+#             "Accuracy": accuracy,
+#             "AVG ROUGE-F1": avg_rouge_f1,
+#             "Avg Char Error Rate": avg_char_error_rate,
+#             "Avg SacreBLEU Score": avg_sacrebleu_score,
+#             "Num correct val mols": num_correct_val_mols,
+#         })
+#     return data
+#
+#
+# # Load the new file and split it into lines
+# with open("scores_130823_ex_updating_datasets_over_epochs_v3.txt", "r") as file:
+#     lines_v3 = file.readlines()
+#
+# # Separate the lines into two groups: one for the training set and one for the test set.
+# train_lines_v3 = lines_v3[::2]  # even lines
+# test_lines_v3 = lines_v3[1::2]  # odd lines
+#
+# # Process each group of lines to extract the relevant values
+# train_data_v3 = process_lines(train_lines_v3)
+# test_data_v3 = process_lines(test_lines_v3)
+#
+# # Store the extracted values in data structures (dataframes) for further analysis
+# train_df_v3 = pd.DataFrame(train_data_v3).apply(pd.to_numeric)
+# test_df_v3 = pd.DataFrame(test_data_v3).apply(pd.to_numeric)
+#
+# # Normalize the 'Num correct val mols' values for the new dataset
+# train_df_v3['Num correct val mols'] /= 4609
+# test_df_v3['Num correct val mols'] /= 898
+#
+# # Create the subplots
+# fig, ax = plt.subplots(2, 2, figsize=(15, 10))
+#
+# # Set main title for the entire plot
+# plt.suptitle('Metrics Over Epochs for the New Dataset', fontsize=16)
+#
+# # Subplot 1: epoch vs Accuracy
+# ax[0, 0].plot(train_df_v3['Epoch'], train_df_v3['Accuracy'], label='Train - v3', ls=':', alpha=0.5)
+# ax[0, 0].plot(test_df_v3['Epoch'], test_df_v3['Accuracy'], label='Test - v3', ls=':', alpha=0.5)
+# ax[0, 0].set_title('Epoch vs Accuracy')
+# ax[0, 0].set_xlabel('Epoch')
+# ax[0, 0].set_ylabel('Accuracy')
+# ax[0, 0].legend()
+#
+# # Subplot 2: epoch vs AVG ROUGE-F1
+# ax[0, 1].plot(train_df_v3['Epoch'], train_df_v3['AVG ROUGE-F1'], label='Train - v3', ls=':', alpha=0.5)
+# ax[0, 1].plot(test_df_v3['Epoch'], test_df_v3['AVG ROUGE-F1'], label='Test - v3', ls=':', alpha=0.5)
+# ax[0, 1].set_title('Epoch vs AVG ROUGE-F1')
+# ax[0, 1].set_xlabel('Epoch')
+# ax[0, 1].set_ylabel('AVG ROUGE-F1')
+# ax[0, 1].legend()
+#
+# # Subplot 3: epoch vs Avg Char Error Rate
+# ax[1, 0].plot(train_df_v3['Epoch'], train_df_v3['Avg Char Error Rate'], label='Train - v3', ls=':', alpha=0.5)
+# ax[1, 0].plot(test_df_v3['Epoch'], test_df_v3['Avg Char Error Rate'], label='Test - v3', ls=':', alpha=0.5)
+# ax[1, 0].set_title('Epoch vs Avg Char Error Rate')
+# ax[1, 0].set_xlabel('Epoch')
+# ax[1, 0].set_ylabel('Avg Char Error Rate')
+# ax[1, 0].legend()
+#
+# # Subplot 4: epoch vs Normalized Num correct val mols
+# ax[1, 1].plot(train_df_v3['Epoch'], train_df_v3['Num correct val mols'], label='Train - v3', ls=':', alpha=0.5)
+# ax[1, 1].plot(test_df_v3['Epoch'], test_df_v3['Num correct val mols'], label='Test - v3', ls=':', alpha=0.5)
+# ax[1, 1].set_title('Epoch vs Normalized Num correct val mols')
+# ax[1, 1].set_xlabel('Epoch')
+# ax[1, 1].set_ylabel('Normalized Num correct val mols')
+# ax[1, 1].legend()
+#
+# plt.show()
 
 ### plots for scores old format
 
@@ -177,32 +242,32 @@ plt.show()
 from Bio.Blast import NCBIWWW
 from Bio import SeqIO
 
-
-import time
-from concurrent.futures import ThreadPoolExecutor
-from io import StringIO
-from Bio import SeqIO
-from Bio.Blast import NCBIWWW
-
-s = time.time()
-
-def search_homologous_sequences(args):
-    fasta_string, outname = args
-    if int(outname.split('_')[3]) >= 850:
-        database="nr"
-        e_value=0.01
-        fasta_string_with_header = f">seq\n{fasta_string}"
-        fasta_io = StringIO(fasta_string_with_header)
-        try:
-            record = SeqIO.read(fasta_io, format="fasta")
-            result_handle = NCBIWWW.qblast("blastp", database, record.seq, expect=e_value)
-            with open(f"blastp_temp_files/{outname}.txt", "w") as out_handle:
-                out_handle.write(result_handle.read())
-                print(out_handle)
-            result_handle.close()
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return
+#
+# import time
+# from concurrent.futures import ThreadPoolExecutor
+# from io import StringIO
+# from Bio import SeqIO
+# from Bio.Blast import NCBIWWW
+#
+# s = time.time()
+#
+# def search_homologous_sequences(args):
+#     fasta_string, outname = args
+#     if int(outname.split('_')[3]) >= 850:
+#         database="nr"
+#         e_value=0.01
+#         fasta_string_with_header = f">seq\n{fasta_string}"
+#         fasta_io = StringIO(fasta_string_with_header)
+#         try:
+#             record = SeqIO.read(fasta_io, format="fasta")
+#             result_handle = NCBIWWW.qblast("blastp", database, record.seq, expect=e_value)
+#             with open(f"blastp_temp_files/{outname}.txt", "w") as out_handle:
+#                 out_handle.write(result_handle.read())
+#                 print(out_handle)
+#             result_handle.close()
+#         except Exception as e:
+#             print(f"An error occurred: {e}")
+#             return
 
 # fasta_strings = []
 # outnames = []
@@ -378,86 +443,86 @@ def search_homologous_sequences(args):
 #                 c += 1
 # print(c)
 
-import re
-import os
-import argparse
-from Bio.Align import AlignInfo
-from Bio import AlignIO
-import math
-
-def shannon_entropy(list_input):
-    unique_base = set(list_input)
-    entropy = 0
-    for base in unique_base:
-        p_x = list_input.count(base) / len(list_input)
-        if p_x > 0:
-            entropy += - p_x * math.log2(p_x)
-    return entropy
-
-def process_files(start, end, job_id):
-    # Read the sorted list of files from the stored list
-    with open("file_order.txt", "r") as f:
-        file_list = [line.strip() for line in f]
-
-    file_list = file_list[start:end]
-
-    print("start")
-    for ii, filename in enumerate(file_list, start=start):
-        with open(f"blast_rest/{filename}", "r") as f:
-            query_list = []
-            subject_list = []
-            q_string, s_string = "", ""
-            for line in f:
-                if line.startswith('>'):
-                    if q_string and s_string:
-                        if len(query_list) == 0:
-                            query_list.append(re.sub(r'\s', '', q_string))
-                        subject_list.append(re.sub(r'\s', '', s_string))
-                    q_string, s_string = "", ""
-
-                if line.startswith('Query '):
-                    query = line[10:].strip()
-                    query = ''.join([i for i in query if not i.isdigit()])
-                    q_string += query
-
-                elif line.startswith('Sbjct '):
-                    subject = line[10:].strip()
-                    subject = ''.join([i for i in subject if not i.isdigit()])
-                    s_string += subject
-
-            if q_string and s_string:
-                if len(query_list) == 0:
-                    query_list.append(re.sub(r'\s', '', q_string))
-                subject_list.append(re.sub(r'\s', '', s_string))
-
-            subject_list.append(query_list[0])
-
-            with open(f"input_sequences_{job_id}.txt", "w") as f:
-                for i, seq in enumerate(subject_list):
-                    f.write(f">seq_{i}\n{seq}\n")
-            file_path = os.getcwd()
-            data_path = os.getcwd()
-            file = f'input_sequences_{job_id}.txt'
-            os.system(f"clustalo -i {file_path}/{file} --dealign -o {data_path}/{file[:-4]}.fasta --force --threads=10")
-            alignment = AlignIO.read(f"input_sequences_{job_id}.fasta", "fasta")
-            summary_align = AlignInfo.SummaryInfo(alignment)
-            scores = []
-            for i in range(len(alignment[0])):
-                column_bases = alignment[:, i]
-                scores.append(shannon_entropy(column_bases))
-
-            consensus = summary_align.dumb_consensus()
-
-            while len(consensus) > 850:
-                index = scores.index(max(scores))
-                consensus = consensus[:index] + consensus[index + 1:]
-                del scores[index]
-
-            shorten = consensus
-            print(len(shorten))
-            with open(f"shorten/shorten_{filename}", "w") as out:
-                print(shorten , file=out, end="")
-
+# import re
+# import os
+# import argparse
+# from Bio.Align import AlignInfo
+# from Bio import AlignIO
+# import math
+#
+# def shannon_entropy(list_input):
+#     unique_base = set(list_input)
+#     entropy = 0
+#     for base in unique_base:
+#         p_x = list_input.count(base) / len(list_input)
+#         if p_x > 0:
+#             entropy += - p_x * math.log2(p_x)
+#     return entropy
+#
+# def process_files(start, end, job_id):
+#     # Read the sorted list of files from the stored list
+#     with open("file_order.txt", "r") as f:
+#         file_list = [line.strip() for line in f]
+#
+#     file_list = file_list[start:end]
+#
+#     print("start")
+#     for ii, filename in enumerate(file_list, start=start):
+#         with open(f"blast_rest/{filename}", "r") as f:
+#             query_list = []
+#             subject_list = []
+#             q_string, s_string = "", ""
+#             for line in f:
+#                 if line.startswith('>'):
+#                     if q_string and s_string:
+#                         if len(query_list) == 0:
+#                             query_list.append(re.sub(r'\s', '', q_string))
+#                         subject_list.append(re.sub(r'\s', '', s_string))
+#                     q_string, s_string = "", ""
+#
+#                 if line.startswith('Query '):
+#                     query = line[10:].strip()
+#                     query = ''.join([i for i in query if not i.isdigit()])
+#                     q_string += query
+#
+#                 elif line.startswith('Sbjct '):
+#                     subject = line[10:].strip()
+#                     subject = ''.join([i for i in subject if not i.isdigit()])
+#                     s_string += subject
+#
+#             if q_string and s_string:
+#                 if len(query_list) == 0:
+#                     query_list.append(re.sub(r'\s', '', q_string))
+#                 subject_list.append(re.sub(r'\s', '', s_string))
+#
+#             subject_list.append(query_list[0])
+#
+#             with open(f"input_sequences_{job_id}.txt", "w") as f:
+#                 for i, seq in enumerate(subject_list):
+#                     f.write(f">seq_{i}\n{seq}\n")
+#             file_path = os.getcwd()
+#             data_path = os.getcwd()
+#             file = f'input_sequences_{job_id}.txt'
+#             os.system(f"clustalo -i {file_path}/{file} --dealign -o {data_path}/{file[:-4]}.fasta --force --threads=10")
+#             alignment = AlignIO.read(f"input_sequences_{job_id}.fasta", "fasta")
+#             summary_align = AlignInfo.SummaryInfo(alignment)
+#             scores = []
+#             for i in range(len(alignment[0])):
+#                 column_bases = alignment[:, i]
+#                 scores.append(shannon_entropy(column_bases))
+#
+#             consensus = summary_align.dumb_consensus()
+#
+#             while len(consensus) > 850:
+#                 index = scores.index(max(scores))
+#                 consensus = consensus[:index] + consensus[index + 1:]
+#                 del scores[index]
+#
+#             shorten = consensus
+#             print(len(shorten))
+#             with open(f"shorten/shorten_{filename}", "w") as out:
+#                 print(shorten , file=out, end="")
+#
 
 
 
@@ -555,144 +620,144 @@ def process_files(start, end, job_id):
 #     print(c)
 
 
-import os
-import torch
-from torch.utils.data import Dataset, DataLoader
-from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, AutoModel, AdamW
-import time
-from sklearn.metrics import accuracy_score, f1_score
-from torch.optim.lr_scheduler import CosineAnnealingLR
-import argparse as arg
-from torchmetrics.text import BLEUScore, ROUGEScore
-from torchmetrics import CharErrorRate, SacreBLEUScore
-from rdkit import Chem
-
-def is_valid_smiles(smiles: str) -> bool:
-    mol = Chem.MolFromSmiles(smiles)
-    return mol is not None
-
-parser = arg.ArgumentParser()
-parser.add_argument("-o", "--output_file_name", type=str, default="unknown", )
-args = parser.parse_args()
-
-
-class Dataset(Dataset):
-    def __init__(self, file_path, tokenizer, max_length=851):
-        self.file_path = file_path
-        self.data = self.load_data()
-        self.tokenizer = tokenizer
-        self.max_length = max_length
-
-    def load_data(self):
-        data = []
-        with open(self.file_path, 'r') as f:
-            for line in f:
-                text = line.split(': ')[1].split('\t')[0]
-                label = line.split('\t')[1].strip('\n')
-                text_list = text.split('_')
-
-                # Check if any element in text_list is longer than 2000 characters
-                if all(len(element) <= 851 for element in text_list):
-                    data.append((text_list, label))
-                else:
-                    truncated_text_list = [element[:851] for element in text_list]
-                    data.append((truncated_text_list, label))
-
-        print(len(data))
-        return data
-
-
-    def __len__(self):
-        return len(self.data)
-
-    def __getitem__(self, idx):
-        text, label = self.data[idx]
-        input_encoding = self.tokenizer(text, return_tensors="pt", max_length=self.max_length, padding="max_length")
-        target_encoding = self.tokenizer(label, return_tensors="pt", max_length=400, padding="max_length",
-                                         truncation=True)
-
-        return {
-            "input_ids": input_encoding["input_ids"].squeeze(),
-            "attention_mask": input_encoding["attention_mask"].squeeze(),
-            "labels": target_encoding["input_ids"].squeeze(),
-        }
-
-
-start_time = time.time()
-
-# Assume you have a T5 model and tokenizer already
-T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
-t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
-t5_model = torch.load("model_200623_T5_v11_saving_model.pt")
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-t5_model.to(device)
-
-
-test_dataset = Dataset("dataset/invalid2validSMILE/test_invalid2validSMILE_ex1.txt", t5_tokenizer)
-
-test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
-
-
-learning_rate = 5e-5
-optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
-
-rouge = ROUGEScore()
-bleu = BLEUScore()
-char_error_rate = CharErrorRate()
-sacre_bleu = SacreBLEUScore()
-
-num_epochs = 18
-t5_model.eval()
-# Training loop
-for epoch in range(num_epochs):
-
-    # Similar loop for testing
-
-    rouge_test_accumulated = 0.0
-    bleu_test_accumulated = 0.0
-    char_error_rate_test_accumulated = 0.0
-    sacre_bleu_test_accumulated = 0.0
-    num_test_batches = 0
-    Num_correct_val_mols_test = 0
-    test_outputs = []
-
-    for batch in test_loader:
-        num_test_batches += 1
-        inputs = batch["input_ids"].to(device)
-        attention_mask = batch["attention_mask"].to(device)
-        labels = batch["labels"].to(device)
-
-        with torch.no_grad():
-            outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
-            test_predicted_labels = t5_tokenizer.decode(outputs.logits[0].argmax(dim=-1).tolist(),
-                                                        skip_special_tokens=True, num_of_beams=10)
-            test_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
-
-            test_outputs.append({"predicted_label": test_predicted_labels, "true_label": test_true_labels[0]})
-
-            if is_valid_smiles(test_predicted_labels):
-                Num_correct_val_mols_test += 1
-
-            with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
-                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}",
-                      file=predictions_file)
-
-            test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
-            test_bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
-            test_char_error_rate_score = char_error_rate(test_predicted_labels, test_true_labels).item()
-            test_sacre_bleu_score = sacre_bleu([test_predicted_labels], [test_true_labels]).item()
-
-            rouge_test_accumulated += test_rouge_score
-            bleu_test_accumulated += test_bleu_score
-            char_error_rate_test_accumulated += test_char_error_rate_score
-            sacre_bleu_test_accumulated += test_sacre_bleu_score
-
-    # Print and save results for this epoch
-    with open(f"scores_{args.output_file_name}.txt", "a") as scores_file:
-
-        print(
-            f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
-            file=scores_file)
-    # save the model
-    # if epoch == 17:
-    #     torch.save(t5_model, f"model_{args.output_file_name}.pt")
+# import os
+# import torch
+# from torch.utils.data import Dataset, DataLoader
+# from transformers import T5Config, T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, AutoModel, AdamW
+# import time
+# from sklearn.metrics import accuracy_score, f1_score
+# from torch.optim.lr_scheduler import CosineAnnealingLR
+# import argparse as arg
+# from torchmetrics.text import BLEUScore, ROUGEScore
+# from torchmetrics import CharErrorRate, SacreBLEUScore
+# from rdkit import Chem
+#
+# def is_valid_smiles(smiles: str) -> bool:
+#     mol = Chem.MolFromSmiles(smiles)
+#     return mol is not None
+#
+# parser = arg.ArgumentParser()
+# parser.add_argument("-o", "--output_file_name", type=str, default="unknown", )
+# args = parser.parse_args()
+#
+#
+# class Dataset(Dataset):
+#     def __init__(self, file_path, tokenizer, max_length=851):
+#         self.file_path = file_path
+#         self.data = self.load_data()
+#         self.tokenizer = tokenizer
+#         self.max_length = max_length
+#
+#     def load_data(self):
+#         data = []
+#         with open(self.file_path, 'r') as f:
+#             for line in f:
+#                 text = line.split(': ')[1].split('\t')[0]
+#                 label = line.split('\t')[1].strip('\n')
+#                 text_list = text.split('_')
+#
+#                 # Check if any element in text_list is longer than 2000 characters
+#                 if all(len(element) <= 851 for element in text_list):
+#                     data.append((text_list, label))
+#                 else:
+#                     truncated_text_list = [element[:851] for element in text_list]
+#                     data.append((truncated_text_list, label))
+#
+#         print(len(data))
+#         return data
+#
+#
+#     def __len__(self):
+#         return len(self.data)
+#
+#     def __getitem__(self, idx):
+#         text, label = self.data[idx]
+#         input_encoding = self.tokenizer(text, return_tensors="pt", max_length=self.max_length, padding="max_length")
+#         target_encoding = self.tokenizer(label, return_tensors="pt", max_length=400, padding="max_length",
+#                                          truncation=True)
+#
+#         return {
+#             "input_ids": input_encoding["input_ids"].squeeze(),
+#             "attention_mask": input_encoding["attention_mask"].squeeze(),
+#             "labels": target_encoding["input_ids"].squeeze(),
+#         }
+#
+#
+# start_time = time.time()
+#
+# # Assume you have a T5 model and tokenizer already
+# T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+# t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
+# t5_model = torch.load("model_200623_T5_v11_saving_model.pt")
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# t5_model.to(device)
+#
+#
+# test_dataset = Dataset("dataset/invalid2validSMILE/test_invalid2validSMILE_ex1.txt", t5_tokenizer)
+#
+# test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
+#
+#
+# learning_rate = 5e-5
+# optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
+#
+# rouge = ROUGEScore()
+# bleu = BLEUScore()
+# char_error_rate = CharErrorRate()
+# sacre_bleu = SacreBLEUScore()
+#
+# num_epochs = 18
+# t5_model.eval()
+# # Training loop
+# for epoch in range(num_epochs):
+#
+#     # Similar loop for testing
+#
+#     rouge_test_accumulated = 0.0
+#     bleu_test_accumulated = 0.0
+#     char_error_rate_test_accumulated = 0.0
+#     sacre_bleu_test_accumulated = 0.0
+#     num_test_batches = 0
+#     Num_correct_val_mols_test = 0
+#     test_outputs = []
+#
+#     for batch in test_loader:
+#         num_test_batches += 1
+#         inputs = batch["input_ids"].to(device)
+#         attention_mask = batch["attention_mask"].to(device)
+#         labels = batch["labels"].to(device)
+#
+#         with torch.no_grad():
+#             outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
+#             test_predicted_labels = t5_tokenizer.decode(outputs.logits[0].argmax(dim=-1).tolist(),
+#                                                         skip_special_tokens=True, num_of_beams=10)
+#             test_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
+#
+#             test_outputs.append({"predicted_label": test_predicted_labels, "true_label": test_true_labels[0]})
+#
+#             if is_valid_smiles(test_predicted_labels):
+#                 Num_correct_val_mols_test += 1
+#
+#             with open(f"predictions_{args.output_file_name}.txt", "a") as predictions_file:
+#                 print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}",
+#                       file=predictions_file)
+#
+#             test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
+#             test_bleu_score = bleu(test_predicted_labels.split(), [test_true_labels[0].split()])
+#             test_char_error_rate_score = char_error_rate(test_predicted_labels, test_true_labels).item()
+#             test_sacre_bleu_score = sacre_bleu([test_predicted_labels], [test_true_labels]).item()
+#
+#             rouge_test_accumulated += test_rouge_score
+#             bleu_test_accumulated += test_bleu_score
+#             char_error_rate_test_accumulated += test_char_error_rate_score
+#             sacre_bleu_test_accumulated += test_sacre_bleu_score
+#
+#     # Print and save results for this epoch
+#     with open(f"scores_{args.output_file_name}.txt", "a") as scores_file:
+#
+#         print(
+#             f"Epoch {epoch + 1}/{num_epochs}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
+#             file=scores_file)
+#     # save the model
+#     # if epoch == 17:
+#     #     torch.save(t5_model, f"model_{args.output_file_name}.pt")
