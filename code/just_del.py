@@ -1,16 +1,16 @@
 ### Creation of i2v dataset
 
-with open("dataset/invalid2validSMILE/test_i2v_i2v.txt", "w") as f:
-    with open("predictions_test_150723_i2v_pfam_correct_dataset_v1.txt", "r") as infile:
-        for line in infile:
-            split = line.split("\t")
-            if split[0] == "Epoch 16/18":
-                true = split[1].split("True: ")[1][1:-1].split(", ")
-                pred = split[2].split("Pred: ")[1][1:-1].split(", ")
-                for p, t in zip(pred, true):
-                    p = p.replace("'", "")
-                    t = t.replace("'", "")
-                    print(f"invalid2validSMILE: {p}\t{t}", file=f)
+# with open("dataset/invalid2validSMILE/test_i2v_i2v.txt", "w") as f:
+#     with open("predictions_test_150723_i2v_pfam_correct_dataset_v1.txt", "r") as infile:
+#         for line in infile:
+#             split = line.split("\t")
+#             if split[0] == "Epoch 16/18":
+#                 true = split[1].split("True: ")[1][1:-1].split(", ")
+#                 pred = split[2].split("Pred: ")[1][1:-1].split(", ")
+#                 for p, t in zip(pred, true):
+#                     p = p.replace("'", "")
+#                     t = t.replace("'", "")
+#                     print(f"invalid2validSMILE: {p}\t{t}", file=f)
 
 # ### plot for distrubtion of char error
 #
@@ -152,94 +152,95 @@ with open("dataset/invalid2validSMILE/test_i2v_i2v.txt", "w") as f:
 
 ###
 
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# import seaborn as sns
-# import numpy as np
-# from scipy.stats import norm
-#
-#
-# # Function to read the file and return a list of wrong character counts for the 15th epoch
-# def read_and_process(file_path, ful):
-#     epochs = []
-#     true_labels = []
-#     predictions = []
-#     tasks = []
-#     with open(file_path, 'r') as f:
-#         for line in f:
-#             parts = line.strip().split("\t")
-#             if len(parts) == 5:
-#                 epochs.append(parts[0].split(" ")[1])
-#                 true_labels.append(parts[1].split("True: ")[1])
-#                 predictions.append(parts[2].split("Pred: ")[1])
-#                 tasks.append(parts[4])
-#     df = pd.DataFrame({
-#         'Epoch': epochs,
-#         'True_Label': true_labels,
-#         'Prediction': predictions,
-#         'Task': tasks
-#     })
-#     df_15_epoch = df[df['Epoch'] == f'15/{ful}']
-#     wrong_char_counts_sorted_diff_len = []
-#     for true_label, prediction in zip(df_15_epoch['True_Label'], df_15_epoch['Prediction']):
-#         true_label = true_label[2:-2]
-#         prediction = prediction[2:-2]
-#         true_label_sorted = ''.join(sorted(true_label))
-#         prediction_sorted = ''.join(sorted(prediction))
-#         wrong_count = 0
-#         for t_char, p_char in zip(true_label_sorted, prediction_sorted):
-#             if t_char != p_char:
-#                 wrong_count += 1
-#         wrong_count += abs(len(true_label_sorted) - len(prediction_sorted))
-#         wrong_char_counts_sorted_diff_len.append(wrong_count)
-#     return wrong_char_counts_sorted_diff_len
-#
-#
-# # File paths
-# file_path1 = 'predictions_test_150723_i2v_pfam_correct_dataset_v1.txt'  # Replace with your actual file path
-# file_path2 = 'predictions_test_110923_pfam.txt'  # Replace with your actual file path
-#
-# # Read and process both files
-# wrong_char_counts1 = read_and_process(file_path1, "18")
-# wrong_char_counts2 = read_and_process(file_path2, "20")
-#
-# # Set up the matplotlib figure
-# plt.figure(figsize=(12, 6))
-#
-# # Check if the wrong_char_counts for both datasets are non-empty to avoid warnings and errors
-# if wrong_char_counts1 and wrong_char_counts2:
-#     # Plot histogram using matplotlib (normalized) for both datasets
-#     # plt.hist(wrong_char_counts1, bins=20, color='red', edgecolor='black', alpha=0.5, density=True,
-#     #          label='Dataset 1 - Histogram')
-#     # plt.hist(wrong_char_counts2, bins=20, color='orange', edgecolor='black', alpha=0.5, density=True,
-#     #          label='Dataset 2 - Histogram')
-#
-#     # Plot density using seaborn for KDE for both datasets
-#     sns.kdeplot(wrong_char_counts1, fill=True, bw_adjust=0.5, color='blue', label='I2V - KDE Density')
-#     sns.kdeplot(wrong_char_counts2, fill=True, bw_adjust=0.5, color='green', label='pfam-only - KDE Density')
-#
-#     # Fit a normal distribution to the data for both datasets
-#     mu1, std1 = norm.fit(wrong_char_counts1)
-#     mu2, std2 = norm.fit(wrong_char_counts2)
-#
-#     # xmin, xmax = plt.xlim()
-#     # x = np.linspace(xmin, xmax, 100)
-#     # p1 = norm.pdf(x, mu1, std1)
-#     # p2 = norm.pdf(x, mu2, std2)
-#     #
-#     # plt.plot(x, p1, 'k', linewidth=2, label='I2V - Normal Density')
-#     # plt.plot(x, p2, 'm', linewidth=2, label='pfam-only - Normal Density')
-# else:
-#     plt.text(0.5, 0.5, 'One or both datasets have no data for the 15th epoch.', horizontalalignment='center',
-#              verticalalignment='center', fontsize=12)
-#
-# # Add labels and title
-# plt.xlabel('Number of Wrong Characters')
-# plt.ylabel('Density')
-# plt.title('Distribution and Density of Wrong Characters in both pfam-only and I2V')
-# plt.legend()
-# plt.xlim(0, 100)
-# plt.show()
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+from scipy.stats import norm
+
+
+# Function to read the file and return a list of wrong character counts for the 15th epoch
+def read_and_process(file_path, ful):
+    epochs = []
+    true_labels = []
+    predictions = []
+    tasks = []
+    with open(file_path, 'r') as f:
+        for line in f:
+            parts = line.strip().split("\t")
+            if len(parts) == 5:
+                epochs.append(parts[0].split(" ")[1])
+                true_labels.append(parts[1].split("True: ")[1])
+                predictions.append(parts[2].split("Pred: ")[1])
+                tasks.append(parts[4])
+    df = pd.DataFrame({
+        'Epoch': epochs,
+        'True_Label': true_labels,
+        'Prediction': predictions,
+        'Task': tasks
+    })
+    df_15_epoch = df[df['Epoch'] == f'15/{ful}']
+    wrong_char_counts_sorted_diff_len = []
+    for true_label, prediction in zip(df_15_epoch['True_Label'], df_15_epoch['Prediction']):
+        true_label = true_label[2:-2]
+        prediction = prediction[2:-2]
+        true_label_sorted = ''.join(sorted(true_label))
+        prediction_sorted = ''.join(sorted(prediction))
+        wrong_count = 0
+        for t_char, p_char in zip(true_label_sorted, prediction_sorted):
+            if t_char != p_char:
+                wrong_count += 1
+        wrong_count += abs(len(true_label_sorted) - len(prediction_sorted))
+        wrong_char_counts_sorted_diff_len.append(wrong_count)
+    return wrong_char_counts_sorted_diff_len
+
+
+# File paths
+file_path1 = 'predictions_test_150723_i2v_pfam_correct_dataset_v1.txt'  # Replace with your actual file path
+file_path2 = 'predictions_test_110923_pfam.txt'  # Replace with your actual file path
+
+# Read and process both files
+wrong_char_counts1 = read_and_process(file_path1, "18")
+wrong_char_counts2 = read_and_process(file_path2, "20")
+
+# Set up the matplotlib figure
+plt.figure(figsize=(12, 6))
+
+# Check if the wrong_char_counts for both datasets are non-empty to avoid warnings and errors
+if wrong_char_counts1 and wrong_char_counts2:
+    # Plot histogram using matplotlib (normalized) for both datasets
+    # plt.hist(wrong_char_counts1, bins=20, color='red', edgecolor='black', alpha=0.5, density=True,
+    #          label='Dataset 1 - Histogram')
+    # plt.hist(wrong_char_counts2, bins=20, color='orange', edgecolor='black', alpha=0.5, density=True,
+    #          label='Dataset 2 - Histogram')
+
+    # Plot density using seaborn for KDE for both datasets
+    sns.kdeplot(wrong_char_counts1, fill=True, bw_adjust=0.5, color='blue', label='I2V - KDE Density')
+    sns.kdeplot(wrong_char_counts2, fill=True, bw_adjust=0.5, color='green', label='Pfam-only - KDE Density')
+
+    # Fit a normal distribution to the data for both datasets
+    mu1, std1 = norm.fit(wrong_char_counts1)
+    mu2, std2 = norm.fit(wrong_char_counts2)
+
+    # xmin, xmax = plt.xlim()
+    # x = np.linspace(xmin, xmax, 100)
+    # p1 = norm.pdf(x, mu1, std1)
+    # p2 = norm.pdf(x, mu2, std2)
+    #
+    # plt.plot(x, p1, 'k', linewidth=2, label='I2V - Normal Density')
+    # plt.plot(x, p2, 'm', linewidth=2, label='pfam-only - Normal Density')
+else:
+    plt.text(0.5, 0.5, 'One or both datasets have no data for the 15th epoch.', horizontalalignment='center',
+             verticalalignment='center', fontsize=12)
+
+# Add labels and title
+plt.xlabel('Number of Wrong Characters')
+plt.ylabel('Density')
+plt.title('Distribution and Density of Wrong Characters in both pfam-only and I2V')
+plt.legend()
+plt.xlim(0, 100)
+plt.savefig('wrong_chars_density_i2v_pfam.pdf', format='pdf', dpi=1200)
+plt.show()
 
 # ### plots for scores new format
 # import pandas as pd
