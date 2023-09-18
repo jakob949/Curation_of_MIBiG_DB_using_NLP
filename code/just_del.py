@@ -150,193 +150,177 @@
 # plt.show()
 
 
-###
+### Density plots.
 
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
-from scipy.stats import norm
-
-
-# Function to read the file and return a list of wrong character counts for the 15th epoch
-def read_and_process(file_path, ful):
-    epochs = []
-    true_labels = []
-    predictions = []
-    tasks = []
-    with open(file_path, 'r') as f:
-        for line in f:
-            parts = line.strip().split("\t")
-            if len(parts) == 5:
-                epochs.append(parts[0].split(" ")[1])
-                true_labels.append(parts[1].split("True: ")[1])
-                predictions.append(parts[2].split("Pred: ")[1])
-                tasks.append(parts[4])
-    df = pd.DataFrame({
-        'Epoch': epochs,
-        'True_Label': true_labels,
-        'Prediction': predictions,
-        'Task': tasks
-    })
-    df_15_epoch = df[df['Epoch'] == f'15/{ful}']
-    wrong_char_counts_sorted_diff_len = []
-    for true_label, prediction in zip(df_15_epoch['True_Label'], df_15_epoch['Prediction']):
-        true_label = true_label[2:-2]
-        prediction = prediction[2:-2]
-        true_label_sorted = ''.join(sorted(true_label))
-        prediction_sorted = ''.join(sorted(prediction))
-        wrong_count = 0
-        for t_char, p_char in zip(true_label_sorted, prediction_sorted):
-            if t_char != p_char:
-                wrong_count += 1
-        wrong_count += abs(len(true_label_sorted) - len(prediction_sorted))
-        wrong_char_counts_sorted_diff_len.append(wrong_count)
-    return wrong_char_counts_sorted_diff_len
-
-
-# File paths
-file_path1 = 'predictions_test_150723_i2v_pfam_correct_dataset_v1.txt'  # Replace with your actual file path
-file_path2 = 'predictions_test_110923_pfam.txt'  # Replace with your actual file path
-
-# Read and process both files
-wrong_char_counts1 = read_and_process(file_path1, "18")
-wrong_char_counts2 = read_and_process(file_path2, "20")
-
-# Set up the matplotlib figure
-plt.figure(figsize=(12, 6))
-
-# Check if the wrong_char_counts for both datasets are non-empty to avoid warnings and errors
-if wrong_char_counts1 and wrong_char_counts2:
-    # Plot histogram using matplotlib (normalized) for both datasets
-    # plt.hist(wrong_char_counts1, bins=20, color='red', edgecolor='black', alpha=0.5, density=True,
-    #          label='Dataset 1 - Histogram')
-    # plt.hist(wrong_char_counts2, bins=20, color='orange', edgecolor='black', alpha=0.5, density=True,
-    #          label='Dataset 2 - Histogram')
-
-    # Plot density using seaborn for KDE for both datasets
-    sns.kdeplot(wrong_char_counts1, fill=True, bw_adjust=0.5, color='blue', label='I2V - KDE Density')
-    sns.kdeplot(wrong_char_counts2, fill=True, bw_adjust=0.5, color='green', label='Pfam-only - KDE Density')
-
-    # Fit a normal distribution to the data for both datasets
-    mu1, std1 = norm.fit(wrong_char_counts1)
-    mu2, std2 = norm.fit(wrong_char_counts2)
-
-    # xmin, xmax = plt.xlim()
-    # x = np.linspace(xmin, xmax, 100)
-    # p1 = norm.pdf(x, mu1, std1)
-    # p2 = norm.pdf(x, mu2, std2)
-    #
-    # plt.plot(x, p1, 'k', linewidth=2, label='I2V - Normal Density')
-    # plt.plot(x, p2, 'm', linewidth=2, label='pfam-only - Normal Density')
-else:
-    plt.text(0.5, 0.5, 'One or both datasets have no data for the 15th epoch.', horizontalalignment='center',
-             verticalalignment='center', fontsize=12)
-
-# Add labels and title
-plt.xlabel('Number of Wrong Characters')
-plt.ylabel('Density')
-plt.title('Distribution and Density of Wrong Characters in both pfam-only and I2V')
-plt.legend()
-plt.xlim(0, 100)
-plt.savefig('wrong_chars_density_i2v_pfam.pdf', format='pdf', dpi=1200)
-plt.show()
-
-# ### plots for scores new format
 # import pandas as pd
 # import matplotlib.pyplot as plt
+# import seaborn as sns
+# import numpy as np
+# from scipy.stats import norm
 #
 #
-# # Function to process lines and extract values
-# def process_lines(lines):
-#     data = []
-#     for line in lines:
-#         split_line = line.split("\t")
-#         epoch = split_line[0][6:-3]
-#         accuracy = split_line[1].split(": ")[1]
-#         avg_rouge_f1 = split_line[3]
-#         avg_char_error_rate = split_line[7]
-#         avg_sacrebleu_score = split_line[9]
-#         num_correct_val_mols = split_line[10].split(": ")[1].rstrip()
+# # Function to read the file and return a list of wrong character counts for the 15th epoch
+# def read_and_process(file_path, ful):
+#     epochs = []
+#     true_labels = []
+#     predictions = []
+#     tasks = []
+#     with open(file_path, 'r') as f:
+#         for line in f:
+#             parts = line.strip().split("\t")
+#             if len(parts) == 5:
+#                 epochs.append(parts[0].split(" ")[1])
+#                 true_labels.append(parts[1].split("True: ")[1])
+#                 predictions.append(parts[2].split("Pred: ")[1])
+#                 tasks.append(parts[4])
+#     df = pd.DataFrame({
+#         'Epoch': epochs,
+#         'True_Label': true_labels,
+#         'Prediction': predictions,
+#         'Task': tasks
+#     })
+#     df_15_epoch = df[df['Epoch'] == f'15/{ful}']
+#     wrong_char_counts_sorted_diff_len = []
+#     for true_label, prediction in zip(df_15_epoch['True_Label'], df_15_epoch['Prediction']):
+#         true_label = true_label[2:-2]
+#         prediction = prediction[2:-2]
+#         true_label_sorted = ''.join(sorted(true_label))
+#         prediction_sorted = ''.join(sorted(prediction))
+#         wrong_count = 0
+#         for t_char, p_char in zip(true_label_sorted, prediction_sorted):
+#             if t_char != p_char:
+#                 wrong_count += 1
+#         wrong_count += abs(len(true_label_sorted) - len(prediction_sorted))
+#         wrong_char_counts_sorted_diff_len.append(wrong_count)
+#     return wrong_char_counts_sorted_diff_len
 #
-#         # Store values in a dictionary and add it to the list
-#         data.append({
-#             "Epoch": epoch,
-#             "Accuracy": accuracy,
-#             "AVG ROUGE-F1": avg_rouge_f1,
-#             "Avg Char Error Rate": avg_char_error_rate,
-#             "Avg SacreBLEU Score": avg_sacrebleu_score,
-#             "Num correct val mols": num_correct_val_mols,
-#         })
-#     return data
 #
+# # File paths
+# file_path1 = 'predictions_test_150723_i2v_pfam_correct_dataset_v1.txt'  # Replace with your actual file path
+# file_path2 = 'predictions_test_110923_pfam.txt'  # Replace with your actual file path
 #
-# # Load the new file and split it into lines
-# with open("scores_130823_ex_updating_datasets_over_epochs_v3.txt", "r") as file:
-#     lines_v3 = file.readlines()
+# # Read and process both files
+# wrong_char_counts1 = read_and_process(file_path1, "18")
+# wrong_char_counts2 = read_and_process(file_path2, "20")
 #
-# # Separate the lines into two groups: one for the training set and one for the test set.
-# train_lines_v3 = lines_v3[::2]  # even lines
-# test_lines_v3 = lines_v3[1::2]  # odd lines
+# # Set up the matplotlib figure
+# plt.figure(figsize=(12, 6))
+# plt.rcParams.update({'font.size': 14})
 #
-# # Process each group of lines to extract the relevant values
-# train_data_v3 = process_lines(train_lines_v3)
-# test_data_v3 = process_lines(test_lines_v3)
+# # Check if the wrong_char_counts for both datasets are non-empty to avoid warnings and errors
+# if wrong_char_counts1 and wrong_char_counts2:
+#     # Plot histogram using matplotlib (normalized) for both datasets
+#     # plt.hist(wrong_char_counts1, bins=20, color='red', edgecolor='black', alpha=0.5, density=True,
+#     #          label='Dataset 1 - Histogram')
+#     # plt.hist(wrong_char_counts2, bins=20, color='orange', edgecolor='black', alpha=0.5, density=True,
+#     #          label='Dataset 2 - Histogram')
 #
-# # Store the extracted values in data structures (dataframes) for further analysis
-# train_df_v3 = pd.DataFrame(train_data_v3).apply(pd.to_numeric)
-# test_df_v3 = pd.DataFrame(test_data_v3).apply(pd.to_numeric)
+#     # Plot density using seaborn for KDE for both datasets
+#     sns.kdeplot(wrong_char_counts1, fill=True, bw_adjust=0.5, color='blue', label='w/o Invalid2Valid - KDE Density')
+#     sns.kdeplot(wrong_char_counts2, fill=True, bw_adjust=0.5, color='green', label='w/ Invalid2Valid - KDE Density')
 #
-# # Normalize the 'Num correct val mols' values for the new dataset
-# train_df_v3['Num correct val mols'] /= 4609
-# test_df_v3['Num correct val mols'] /= 898
+#     # Fit a normal distribution to the data for both datasets
+#     mu1, std1 = norm.fit(wrong_char_counts1)
+#     mu2, std2 = norm.fit(wrong_char_counts2)
 #
-# # Create the subplots
-# fig, ax = plt.subplots(2, 2, figsize=(15, 10))
+#     # xmin, xmax = plt.xlim()
+#     # x = np.linspace(xmin, xmax, 100)
+#     # p1 = norm.pdf(x, mu1, std1)
+#     # p2 = norm.pdf(x, mu2, std2)
+#     #
+#     # plt.plot(x, p1, 'k', linewidth=2, label='I2V - Normal Density')
+#     # plt.plot(x, p2, 'm', linewidth=2, label='pfam-only - Normal Density')
+# else:
+#     plt.text(0.5, 0.5, 'One or both datasets have no data for the 15th epoch.', horizontalalignment='center',
+#              verticalalignment='center', fontsize=12)
 #
-# # Set main title for the entire plot
-# plt.suptitle('Metrics Over Epochs for the New Dataset', fontsize=16)
-#
-# # Subplot 1: epoch vs Accuracy
-# ax[0, 0].plot(train_df_v3['Epoch'], train_df_v3['Accuracy'], label='Train - v3', ls=':', alpha=0.5)
-# ax[0, 0].plot(test_df_v3['Epoch'], test_df_v3['Accuracy'], label='Test - v3', ls=':', alpha=0.5)
-# ax[0, 0].set_title('Epoch vs Accuracy')
-# ax[0, 0].set_xlabel('Epoch')
-# ax[0, 0].set_ylabel('Accuracy')
-# ax[0, 0].legend()
-#
-# # Subplot 2: epoch vs AVG ROUGE-F1
-# ax[0, 1].plot(train_df_v3['Epoch'], train_df_v3['AVG ROUGE-F1'], label='Train - v3', ls=':', alpha=0.5)
-# ax[0, 1].plot(test_df_v3['Epoch'], test_df_v3['AVG ROUGE-F1'], label='Test - v3', ls=':', alpha=0.5)
-# ax[0, 1].set_title('Epoch vs AVG ROUGE-F1')
-# ax[0, 1].set_xlabel('Epoch')
-# ax[0, 1].set_ylabel('AVG ROUGE-F1')
-# ax[0, 1].legend()
-#
-# # Subplot 3: epoch vs Avg Char Error Rate
-# ax[1, 0].plot(train_df_v3['Epoch'], train_df_v3['Avg Char Error Rate'], label='Train - v3', ls=':', alpha=0.5)
-# ax[1, 0].plot(test_df_v3['Epoch'], test_df_v3['Avg Char Error Rate'], label='Test - v3', ls=':', alpha=0.5)
-# ax[1, 0].set_title('Epoch vs Avg Char Error Rate')
-# ax[1, 0].set_xlabel('Epoch')
-# ax[1, 0].set_ylabel('Avg Char Error Rate')
-# ax[1, 0].legend()
-#
-# # Subplot 4: epoch vs Normalized Num correct val mols
-# ax[1, 1].plot(train_df_v3['Epoch'], train_df_v3['Num correct val mols'], label='Train - v3', ls=':', alpha=0.5)
-# ax[1, 1].plot(test_df_v3['Epoch'], test_df_v3['Num correct val mols'], label='Test - v3', ls=':', alpha=0.5)
-# ax[1, 1].set_title('Epoch vs Normalized Num correct val mols')
-# ax[1, 1].set_xlabel('Epoch')
-# ax[1, 1].set_ylabel('Normalized Num correct val mols')
-# ax[1, 1].legend()
-#
+# # Add labels and title
+# plt.xlabel('Number of Wrong Characters', fontsize=16)
+# plt.ylabel('Density', fontsize=16)
+# # plt.title('Distribution and Density of Wrong Characters in both pfam-only and I2V', fontsize=18)
+# plt.legend(fontsize=14)
+# plt.xlim(0, 100)
+# plt.savefig('wrong_chars_density_i2v_pfam.pdf', format='pdf', dpi=2000)
 # plt.show()
 
-### plots for scores old format
+### plots for scores new format
+import pandas as pd
+import matplotlib.pyplot as plt
 
+def process_lines(lines):
+    data = []
+    for line in lines:
+        split_line = line.split("\t")
+        epoch = split_line[0][6:-3]
+        accuracy = split_line[1].split(": ")[1]
+        avg_rouge_f1 = split_line[3]
+        avg_char_error_rate = split_line[7]
+        avg_sacrebleu_score = split_line[9]
+        num_correct_val_mols = split_line[10].split(": ")[1].rstrip()
+
+        data.append({
+            "Epoch": epoch,
+            "Accuracy": accuracy,
+            "ROUGE-F1": avg_rouge_f1,
+            "Char Error Rate": avg_char_error_rate,
+            "Avg SacreBLEU Score": avg_sacrebleu_score,
+            "Num correct val mols": num_correct_val_mols,
+        })
+    return data
+
+# Load files and split them into lines
+with open("scores_130723_pfam2SMILES_v2.txt", "r") as file:
+    lines_v3 = file.readlines()
+
+with open("scores_150723_i2v_pfam_correct_dataset_v1.txt", "r") as file:
+    lines_v5 = file.readlines()
+
+# Process lines for both files
+train_lines_v3, test_lines_v3 = lines_v3[::2], lines_v3[1::2]
+train_data_v3, test_data_v3 = process_lines(train_lines_v3), process_lines(test_lines_v3)
+train_df_v3, test_df_v3 = pd.DataFrame(train_data_v3).apply(pd.to_numeric, errors='ignore'), pd.DataFrame(test_data_v3).apply(pd.to_numeric, errors='ignore')
+
+train_lines_v5, test_lines_v5 = lines_v5[::2], lines_v5[1::2]
+train_data_v5, test_data_v5 = process_lines(train_lines_v5), process_lines(test_lines_v5)
+train_df_v5, test_df_v5 = pd.DataFrame(train_data_v5).apply(pd.to_numeric, errors='ignore'), pd.DataFrame(test_data_v5).apply(pd.to_numeric, errors='ignore')
+
+# Normalization
+train_df_v3['Num correct val mols'] /= 1191
+test_df_v3['Num correct val mols'] /= 298
+train_df_v5['Num correct val mols'] /= 4609
+test_df_v5['Num correct val mols'] /= 898
+
+# Create the subplots
+fig, ax = plt.subplots(2, 2, figsize=(15, 10))
+
+# Adjust global font size
+plt.rcParams.update({'font.size': 14})
+
+# Create subplots for all metrics
+for i, metric in enumerate(['Accuracy', 'ROUGE-F1', 'Char Error Rate', 'Num correct val mols']):
+    row, col = divmod(i, 2)
+    ax[row, col].plot(train_df_v3['Epoch'], train_df_v3[metric], ls=':', alpha=0.5,
+                      color='green')
+    ax[row, col].plot(test_df_v3['Epoch'], test_df_v3[metric], label=f'w/o Invalid2Valid', color='green')
+    ax[row, col].plot(train_df_v5['Epoch'], train_df_v5[metric], ls=':', alpha=0.5, color='blue')
+    ax[row, col].plot(test_df_v5['Epoch'], test_df_v5[metric], label=f'w/ Invalid2Valid', color='blue')
+
+    # ax[row, col].set_title(f'Epoch vs {metric}', fontsize=16)
+    ax[row, col].set_xlabel('Epoch', fontsize=16)
+    ax[row, col].set_ylabel(metric, fontsize=16)
+    ax[row, col].legend(fontsize=14)
+# save
+plt.tight_layout()
+plt.savefig('scores_i2v_vs_pfam_.pdf', format='pdf', dpi=2000)
+plt.show()
+
+
+### plots for scores old format
+#
 # import matplotlib.pyplot as plt
 #
 # # List of file names
-# files = ["scores_130823_ex_updating_datasets_over_epochs_v3.txt", "scores_070523_molt5_base.txt"]
+# files = ["scores_140723_pfam_invalid2valid_v2.txt", "scores_130723_pfam2SMILES_v2.txt"]
 #
 # # Initialize lists to store the extracted data
 # data = {}
@@ -418,9 +402,9 @@ plt.show()
 # # Create a single plot with 4 subplots arranged in a 2x2 grid
 # plot_metrics(data, metric_names)
 
-from Bio.Blast import NCBIWWW
-from Bio import SeqIO
-
+# from Bio.Blast import NCBIWWW
+# from Bio import SeqIO
+#
 #
 # import time
 # from concurrent.futures import ThreadPoolExecutor
