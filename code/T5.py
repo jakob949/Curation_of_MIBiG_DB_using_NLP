@@ -106,7 +106,7 @@ t5_model.to(device)
 train_dataset = Dataset("dataset/train_i2v_activities.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/test_i2v_activities.txt", t5_tokenizer)
 
-batch_size_train = 12
+batch_size_train = 6
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
