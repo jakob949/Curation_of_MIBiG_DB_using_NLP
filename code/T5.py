@@ -103,8 +103,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 #load data
-train_dataset = Dataset("dataset/train_i2v_activities.txt", t5_tokenizer)
-test_dataset = Dataset("dataset/test_i2v_activities.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/invalid2validSMILE/train_i2v_i2v.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/invalid2validSMILE/test_i2v_i2v.txt", t5_tokenizer)
 
 batch_size_train = 6
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
@@ -219,56 +219,6 @@ for epoch in range(num_epochs):
             sacre_bleu_test_accumulated += test_sacre_bleu_score
 
             print(test_rouge_score, test_bleu_score, test_char_error_rate_score, test_sacre_bleu_score, batch_test_accuracy, Num_correct_val_mols_test)
-
-            # Initialize re-inference evaluation metrics
-            re_rouge_test_accumulated = 0.0
-            re_bleu_test_accumulated = 0.0
-            re_char_error_rate_test_accumulated = 0.0
-            re_sacre_bleu_test_accumulated = 0.0
-            re_test_accuracy_accumulated = 0.0
-
-            # Inside the testing loop
-            for batch in test_loader:
-                # ... (existing code for initial inference)
-
-                # New Loop for re-inference
-                re_predicted_labels = []  # To store re-predicted labels
-                for pred_label in test_predicted_labels:
-                    re_input_encoding = t5_tokenizer(pred_label, return_tensors="pt", max_length=1050,
-                                                     padding="max_length").to(device)
-                    with torch.no_grad():
-                        re_outputs = t5_model(input_ids=re_input_encoding["input_ids"],
-                                              attention_mask=re_input_encoding["attention_mask"])
-                    re_pred_label = t5_tokenizer.decode(re_outputs.logits.argmax(dim=-1).tolist()[0],
-                                                        skip_special_tokens=True)
-                    re_predicted_labels.append(re_pred_label)
-
-                # Calculate evaluation metrics for re-predicted labels
-                Num_correct_val_mols_re_test = count_valid_smiles(re_predicted_labels)
-                re_test_rouge_score = rouge(re_predicted_labels, test_true_labels)["rouge1_fmeasure"]
-                re_test_bleu_score = bleu(re_predicted_labels, test_true_labels)
-                re_test_char_error_rate_score = char_error_rate(re_predicted_labels, test_true_labels)
-                re_test_sacre_bleu_scores = [sacre_bleu([pred], [[true]]) for pred, true in
-                                             zip(re_predicted_labels, test_true_labels)]
-                re_test_sacre_bleu_score = sum(re_test_sacre_bleu_scores) / len(re_test_sacre_bleu_scores)
-                re_batch_test_accuracy = accuracy_score(test_true_labels, re_predicted_labels)
-
-                # Update re-inference metrics
-                re_test_accuracy_accumulated += re_batch_test_accuracy
-                re_rouge_test_accumulated += re_test_rouge_score
-                re_bleu_test_accumulated += re_test_bleu_score
-                re_char_error_rate_test_accumulated += re_test_char_error_rate_score
-                re_sacre_bleu_test_accumulated += re_test_sacre_bleu_score
-
-                # Log or print your re-inference metrics
-                print(
-                    f"Re-Inference Metrics: Rouge: {re_test_rouge_score}, Bleu: {re_test_bleu_score}, Char Error Rate: {re_test_char_error_rate_score}, SacreBleu: {re_test_sacre_bleu_score}, Accuracy: {re_batch_test_accuracy}, Num Correct Val Mols: {Num_correct_val_mols_re_test}")
-
-            # Calculate and print or log the average re-inference metrics
-            with open(f"scores_re_{args.output_file_name}.txt", "a") as scores_file:
-                print(
-                    f"Epoch {epoch + 1}/{num_epochs}\tRe-Test Accuracy: {re_test_accuracy_accumulated / num_test_batches}\t Avg Re-Test ROUGE-1 F1 Score\t {re_rouge_test_accumulated / num_test_batches}\tAvg Re-Test BLEU Score\t {re_bleu_test_accumulated / num_test_batches}\tAvg Re-Test Char Error Rate\t {re_char_error_rate_test_accumulated / num_test_batches}\tAvg Re-Test SacreBLEU Score\t {re_sacre_bleu_test_accumulated / num_test_batches}",
-                    file=scores_file)
 
     # Print and save results for this epoch
     with open(f"scores_{args.output_file_name}.txt", "a") as scores_file:
