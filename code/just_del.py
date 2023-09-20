@@ -1,16 +1,16 @@
 ### Creation of i2v dataset
 
-# with open("dataset/invalid2validSMILE/test_i2v_i2v.txt", "w") as f:
-#     with open("predictions_test_150723_i2v_pfam_correct_dataset_v1.txt", "r") as infile:
-#         for line in infile:
-#             split = line.split("\t")
-#             if split[0] == "Epoch 16/18":
-#                 true = split[1].split("True: ")[1][1:-1].split(", ")
-#                 pred = split[2].split("Pred: ")[1][1:-1].split(", ")
-#                 for p, t in zip(pred, true):
-#                     p = p.replace("'", "")
-#                     t = t.replace("'", "")
-#                     print(f"invalid2validSMILE: {p}\t{t}", file=f)
+with open("dataset/train_i2v_activities.txt", "w") as f:
+    with open("predictions_train_150723_smiles2act_removed_single_labels_v2.txt", "r") as infile:
+        for line in infile:
+            split = line.split("\t")
+            if split[0] == "Epoch 16/18":
+                true = split[1].split("True: ")[1][1:-1].split(", ")
+                pred = split[2].split("Pred: ")[1][1:-1].split(", ")
+                for p, t in zip(pred, true):
+                    p = p.replace("'", "")
+                    t = t.replace("'", "")
+                    print(f"invalid2validSMILE: {p}\t{t}", file=f)
 
 # ### plot for distrubtion of char error
 #
@@ -216,8 +216,8 @@
 #     #          label='Dataset 2 - Histogram')
 #
 #     # Plot density using seaborn for KDE for both datasets
-#     sns.kdeplot(wrong_char_counts1, fill=True, bw_adjust=0.5, color='blue', label='w/o Invalid2Valid - KDE Density')
-#     sns.kdeplot(wrong_char_counts2, fill=True, bw_adjust=0.5, color='green', label='w/ Invalid2Valid - KDE Density')
+#     sns.kdeplot(wrong_char_counts1, fill=True, bw_adjust=0.5, color='blue', label='w/ Invalid2Valid')
+#     sns.kdeplot(wrong_char_counts2, fill=True, bw_adjust=0.5, color='green', label='w/o Invalid2Valid')
 #
 #     # Fit a normal distribution to the data for both datasets
 #     mu1, std1 = norm.fit(wrong_char_counts1)
@@ -244,76 +244,149 @@
 # plt.show()
 
 ### plots for scores new format
-import pandas as pd
-import matplotlib.pyplot as plt
+# import pandas as pd
+# import matplotlib.pyplot as plt
+#
+# def process_lines(lines):
+#     data = []
+#     for line in lines:
+#         split_line = line.split("\t")
+#         epoch = split_line[0][6:-3]
+#         accuracy = split_line[1].split(": ")[1]
+#         avg_rouge_f1 = split_line[3]
+#         avg_char_error_rate = split_line[7]
+#         avg_sacrebleu_score = split_line[9]
+#         num_correct_val_mols = split_line[10].split(": ")[1].rstrip()
+#
+#         data.append({
+#             "Epoch": epoch,
+#             "Accuracy": accuracy,
+#             "ROUGE-F1": avg_rouge_f1,
+#             "Char Error Rate": avg_char_error_rate,
+#             "Avg SacreBLEU Score": avg_sacrebleu_score,
+#             "Num correct val mols": num_correct_val_mols,
+#         })
+#     return data
+#
+# # Load files and split them into lines
+# with open("scores_130723_pfam2SMILES_v2.txt", "r") as file:
+#     lines_v3 = file.readlines()
+#
+# with open("scores_150723_i2v_pfam_correct_dataset_v1.txt", "r") as file:
+#     lines_v5 = file.readlines()
+#
+# # Process lines for both files
+# train_lines_v3, test_lines_v3 = lines_v3[::2], lines_v3[1::2]
+# train_data_v3, test_data_v3 = process_lines(train_lines_v3), process_lines(test_lines_v3)
+# train_df_v3, test_df_v3 = pd.DataFrame(train_data_v3).apply(pd.to_numeric, errors='ignore'), pd.DataFrame(test_data_v3).apply(pd.to_numeric, errors='ignore')
+#
+# train_lines_v5, test_lines_v5 = lines_v5[::2], lines_v5[1::2]
+# train_data_v5, test_data_v5 = process_lines(train_lines_v5), process_lines(test_lines_v5)
+# train_df_v5, test_df_v5 = pd.DataFrame(train_data_v5).apply(pd.to_numeric, errors='ignore'), pd.DataFrame(test_data_v5).apply(pd.to_numeric, errors='ignore')
+#
+# # Normalization
+# train_df_v3['Num correct val mols'] /= 1191
+# test_df_v3['Num correct val mols'] /= 298
+# train_df_v5['Num correct val mols'] /= 4609
+# test_df_v5['Num correct val mols'] /= 898
+#
+# # Create the subplots
+# fig, ax = plt.subplots(2, 2, figsize=(15, 10))
+#
+# # Adjust global font size
+# plt.rcParams.update({'font.size': 14})
+#
+# # Create subplots for all metrics
+# for i, metric in enumerate(['Accuracy', 'ROUGE-F1', 'Char Error Rate', 'Num correct val mols']):
+#     row, col = divmod(i, 2)
+#     ax[row, col].plot(train_df_v3['Epoch'], train_df_v3[metric], ls=':', alpha=0.5,
+#                       color='green')
+#     ax[row, col].plot(test_df_v3['Epoch'], test_df_v3[metric], label=f'w/o Invalid2Valid', color='green')
+#     ax[row, col].plot(train_df_v5['Epoch'], train_df_v5[metric], ls=':', alpha=0.5, color='blue')
+#     ax[row, col].plot(test_df_v5['Epoch'], test_df_v5[metric], label=f'w/ Invalid2Valid', color='blue')
+#
+#     # ax[row, col].set_title(f'Epoch vs {metric}', fontsize=16)
+#     ax[row, col].set_xlabel('Epoch', fontsize=16)
+#     ax[row, col].set_ylabel(metric, fontsize=16)
+#     ax[row, col].legend(fontsize=14)
+# # save
+# plt.tight_layout()
+# plt.savefig('scores_i2v_vs_pfam_.pdf', format='pdf', dpi=2000)
+# plt.show()
 
-def process_lines(lines):
-    data = []
-    for line in lines:
-        split_line = line.split("\t")
-        epoch = split_line[0][6:-3]
-        accuracy = split_line[1].split(": ")[1]
-        avg_rouge_f1 = split_line[3]
-        avg_char_error_rate = split_line[7]
-        avg_sacrebleu_score = split_line[9]
-        num_correct_val_mols = split_line[10].split(": ")[1].rstrip()
+### Plot for SMILES2Activity
 
-        data.append({
-            "Epoch": epoch,
-            "Accuracy": accuracy,
-            "ROUGE-F1": avg_rouge_f1,
-            "Char Error Rate": avg_char_error_rate,
-            "Avg SacreBLEU Score": avg_sacrebleu_score,
-            "Num correct val mols": num_correct_val_mols,
-        })
-    return data
-
-# Load files and split them into lines
-with open("scores_130723_pfam2SMILES_v2.txt", "r") as file:
-    lines_v3 = file.readlines()
-
-with open("scores_150723_i2v_pfam_correct_dataset_v1.txt", "r") as file:
-    lines_v5 = file.readlines()
-
-# Process lines for both files
-train_lines_v3, test_lines_v3 = lines_v3[::2], lines_v3[1::2]
-train_data_v3, test_data_v3 = process_lines(train_lines_v3), process_lines(test_lines_v3)
-train_df_v3, test_df_v3 = pd.DataFrame(train_data_v3).apply(pd.to_numeric, errors='ignore'), pd.DataFrame(test_data_v3).apply(pd.to_numeric, errors='ignore')
-
-train_lines_v5, test_lines_v5 = lines_v5[::2], lines_v5[1::2]
-train_data_v5, test_data_v5 = process_lines(train_lines_v5), process_lines(test_lines_v5)
-train_df_v5, test_df_v5 = pd.DataFrame(train_data_v5).apply(pd.to_numeric, errors='ignore'), pd.DataFrame(test_data_v5).apply(pd.to_numeric, errors='ignore')
-
-# Normalization
-train_df_v3['Num correct val mols'] /= 1191
-test_df_v3['Num correct val mols'] /= 298
-train_df_v5['Num correct val mols'] /= 4609
-test_df_v5['Num correct val mols'] /= 898
-
-# Create the subplots
-fig, ax = plt.subplots(2, 2, figsize=(15, 10))
-
-# Adjust global font size
-plt.rcParams.update({'font.size': 14})
-
-# Create subplots for all metrics
-for i, metric in enumerate(['Accuracy', 'ROUGE-F1', 'Char Error Rate', 'Num correct val mols']):
-    row, col = divmod(i, 2)
-    ax[row, col].plot(train_df_v3['Epoch'], train_df_v3[metric], ls=':', alpha=0.5,
-                      color='green')
-    ax[row, col].plot(test_df_v3['Epoch'], test_df_v3[metric], label=f'w/o Invalid2Valid', color='green')
-    ax[row, col].plot(train_df_v5['Epoch'], train_df_v5[metric], ls=':', alpha=0.5, color='blue')
-    ax[row, col].plot(test_df_v5['Epoch'], test_df_v5[metric], label=f'w/ Invalid2Valid', color='blue')
-
-    # ax[row, col].set_title(f'Epoch vs {metric}', fontsize=16)
-    ax[row, col].set_xlabel('Epoch', fontsize=16)
-    ax[row, col].set_ylabel(metric, fontsize=16)
-    ax[row, col].legend(fontsize=14)
-# save
-plt.tight_layout()
-plt.savefig('scores_i2v_vs_pfam_.pdf', format='pdf', dpi=2000)
-plt.show()
-
+# import pandas as pd
+# import matplotlib.pyplot as plt
+#
+#
+# def process_lines(lines):
+#     data = []
+#     for line in lines:
+#         split_line = line.split("\t")
+#         epoch = split_line[0][6:-3]
+#         accuracy = split_line[1].split(": ")[1]
+#         avg_rouge_f1 = split_line[3]
+#         avg_char_error_rate = split_line[7]
+#         avg_sacrebleu_score = split_line[9]
+#         num_correct_val_mols = split_line[10].split(": ")[1].rstrip()
+#
+#         data.append({
+#             "Epoch": epoch,
+#             "Accuracy": accuracy,
+#             "ROUGE-F1": avg_rouge_f1,
+#             "Char Error Rate": avg_char_error_rate,
+#             "Avg SacreBLEU Score": avg_sacrebleu_score,
+#             "Num correct val mols": num_correct_val_mols,
+#         })
+#     return data
+#
+#
+# # Load files and split them into lines
+# with open("scores_150723_grammarcheck_activities_v1.txt", "r") as file:
+#     lines_v1 = file.readlines()
+#
+# with open("scores_150723_smiles2act_removed_single_labels_v2.txt", "r") as file:
+#     lines_v2 = file.readlines()
+#
+# # Process lines for both files
+# train_lines_v1, test_lines_v1 = lines_v1[::2], lines_v1[1::2]
+# train_data_v1, test_data_v1 = process_lines(train_lines_v1), process_lines(test_lines_v1)
+# train_df_v1, test_df_v1 = pd.DataFrame(train_data_v1).apply(pd.to_numeric, errors='ignore'), pd.DataFrame(
+#     test_data_v1).apply(pd.to_numeric, errors='ignore')
+#
+# train_lines_v2, test_lines_v2 = lines_v2[::2], lines_v2[1::2]
+# train_data_v2, test_data_v2 = process_lines(train_lines_v2), process_lines(test_lines_v2)
+# train_df_v2, test_df_v2 = pd.DataFrame(train_data_v2).apply(pd.to_numeric, errors='ignore'), pd.DataFrame(
+#     test_data_v2).apply(pd.to_numeric, errors='ignore')
+#
+# # Normalization (Note: Update normalization factors based on your data)
+# train_df_v1['Num correct val mols'] /= 1  # Update this
+# test_df_v1['Num correct val mols'] /= 1  # Update this
+# train_df_v2['Num correct val mols'] /= 1  # Update this
+# test_df_v2['Num correct val mols'] /= 1  # Update this
+#
+# # Create the subplots focusing only on 'Accuracy' and 'ROUGE-F1'
+# fig, ax = plt.subplots(1, 2, figsize=(15, 5))
+#
+# # Adjust global font size
+# plt.rcParams.update({'font.size': 14})
+#
+# # Create subplots for selected metrics ('Accuracy' and 'ROUGE-F1')
+# for i, metric in enumerate(['Accuracy', 'ROUGE-F1']):
+#     ax[i].plot(train_df_v1['Epoch'], train_df_v1[metric], ls=':', alpha=0.5, color='blue')
+#     ax[i].plot(test_df_v1['Epoch'], test_df_v1[metric], label='w/ Invalid2Valid', color='blue')
+#     ax[i].plot(train_df_v2['Epoch'], train_df_v2[metric], ls=':', alpha=0.5, color='green')
+#     ax[i].plot(test_df_v2['Epoch'], test_df_v2[metric], label='w/o Invalid2Valid', color='green')
+#
+#     ax[i].set_xlabel('Epoch', fontsize=16)
+#     ax[i].set_ylabel(metric, fontsize=16)
+#     ax[i].legend(fontsize=14)
+#
+# # Save and show the updated plot
+# plt.tight_layout()
+# plt.savefig("scores_SMILES2acts.pdf", format='pdf', dpi=2000)
+# plt.show()
 
 ### plots for scores old format
 #
