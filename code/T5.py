@@ -106,7 +106,7 @@ t5_model.to(device)
 train_dataset = Dataset("dataset/invalid2validSMILE/train_invalid2validSMILE.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/invalid2validSMILE/test_invalid2validSMILE.txt", t5_tokenizer)
 
-batch_size_train = 8
+batch_size_train = 9
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
@@ -119,7 +119,7 @@ bleu = BLEUScore()
 char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 
-num_epochs = 11
+num_epochs = 18
 
 # Training loop
 for epoch in range(num_epochs):
@@ -230,5 +230,5 @@ for epoch in range(num_epochs):
             f"Epoch {epoch + 1}/{num_epochs}\tTest Accuracy: {test_accuracy_accumulated / num_test_batches}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
             file=scores_file)
     # save the model
-    if epoch == 10:
-        torch.save(t5_model, f"model_{args.output_file_name}.pt")
+
+    torch.save(t5_model, f"model_{args.output_file_name}_Epoch:_{epoch+1}.pt")
