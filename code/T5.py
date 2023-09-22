@@ -103,7 +103,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 #load data
-train_dataset = Dataset("dataset/train_i2v_activities.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/train_i2v_classes.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/test_i2v_classes.txt", t5_tokenizer)
 
 batch_size_train = 8
