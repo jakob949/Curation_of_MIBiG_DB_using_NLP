@@ -1,10 +1,10 @@
 ### Creation of i2v dataset
 
-with open("dataset/train_i2v_activities.txt", "w") as f:
-    with open("predictions_train_150723_smiles2act_removed_single_labels_v2.txt", "r") as infile:
+with open("dataset/train_i2v_classes.txt", "w") as f:
+    with open("predictions_train_220923_classes_v2.txt", "r") as infile:
         for line in infile:
             split = line.split("\t")
-            if split[0] == "Epoch 16/18":
+            if split[0] == "Epoch 3/20":
                 true = split[1].split("True: ")[1][1:-1].split(", ")
                 pred = split[2].split("Pred: ")[1][1:-1].split(", ")
                 for p, t in zip(pred, true):
