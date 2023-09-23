@@ -134,13 +134,13 @@ def split_data(data, test_size=0.2):
 
 def multi():
     # Load data
-    data = load_data("dataset/Multitask/dataset_multitask_v2.txt")
+    data = load_data("dataset/pfam2SMILES/dataset_pfam2SMILES_v2.txt")
 
     # Split data
     train_data, test_data = split_data(data)
 
     # Save train and test data
-    train_data.to_csv("train_data_mult.txt", sep='\t', index=False)
-    test_data.to_csv("test_data_mult.txt", sep='\t', index=False)
+    train_data.to_csv("train_pfam_v2.txt", sep='\t', index=False)
+    test_data.to_csv("test_pfam_v2.txt", sep='\t', index=False)
 
-#multi()
+multi()

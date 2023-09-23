@@ -1,16 +1,50 @@
 ### Creation of i2v dataset
 
-with open("dataset/train_i2v_classes.txt", "w") as f:
-    with open("predictions_train_220923_classes_v2.txt", "r") as infile:
-        for line in infile:
-            split = line.split("\t")
-            if split[0] == "Epoch 3/20":
-                true = split[1].split("True: ")[1][1:-1].split(", ")
-                pred = split[2].split("Pred: ")[1][1:-1].split(", ")
-                for p, t in zip(pred, true):
-                    p = p.replace("'", "")
-                    t = t.replace("'", "")
-                    print(f"invalid2validSMILE: {p}\t{t}", file=f)
+# with open("dataset/test_i2v_BGC2SMM_230923.txt", "w") as f:
+#     with open("predictions_test_120923_pfam_text_chem_T5.txt", "r") as infile:
+#         for line in infile:
+#             split = line.split("\t")
+#             if split[0] == "Epoch 16/20":
+#                 true = split[1].split("True: ")[1][1:-1].split(", ")
+#                 pred = split[2].split("Pred: ")[1][1:-1].split(", ")
+#                 for p, t in zip(pred, true):
+#                     p = p.replace("'", "")
+#                     t = t.replace("'", "")
+#                     print(f"invalid2validSMILE: {p}\t{t}", file=f)
+
+### check for data leakage between test and train set (only target)
+def get_set(file_path,target):
+    with open (file_path, "r") as f:
+        if target:
+            target_set = set()
+            for line in f:
+                # find when a line already is in the set
+                label = line.split("\t")[1]
+                if label in target_set:
+                    print(label)
+                else:
+                    target_set.add(label)
+            return target_set
+        else:
+            target_set=set()
+            for line in f:
+                # find when a line already is in the set
+                if line in target_set:
+                    print(line)
+                else:
+                    target_set.add(line)
+            return target_set
+test = get_set("train_pfam_v2.txt", False)
+train = get_set("test_pfam_v2.txt", False)
+# datset = get_set("dataset/pfam2SMILES/dataset_pfam2SMILES_v2.txt", True)
+# find intersection
+print(len(test))
+print(len(train))
+# print(len(datset))
+# print(datset)
+intersection = test.intersection(train)
+print(len(intersection))
+print(intersection)
 
 # ### plot for distrubtion of char error
 #
