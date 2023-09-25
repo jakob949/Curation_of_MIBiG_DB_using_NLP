@@ -1,10 +1,10 @@
 ### Creation of i2v dataset
 
-# with open("dataset/test_i2v_BGC2SMM_230923.txt", "w") as f:
-#     with open("predictions_test_120923_pfam_text_chem_T5.txt", "r") as infile:
+# with open("dataset/test_i2v_BGC2SMM_250923.txt", "a") as f:
+#     with open("predictions_test_230923_pfam_BGC2SMM_v4.txt", "r") as infile:
 #         for line in infile:
 #             split = line.split("\t")
-#             if split[0] == "Epoch 16/20":
+#             if split[0] == "Epoch 16/18":
 #                 true = split[1].split("True: ")[1][1:-1].split(", ")
 #                 pred = split[2].split("Pred: ")[1][1:-1].split(", ")
 #                 for p, t in zip(pred, true):
@@ -34,8 +34,8 @@ def get_set(file_path,target):
                 else:
                     target_set.add(line)
             return target_set
-test = get_set("train_pfam_v2.txt", False)
-train = get_set("test_pfam_v2.txt", False)
+test = get_set("dataset/test_i2v_BGC2SMM_250923.txt", False)
+train = get_set("dataset/train_i2v_BGC2SMM_250923.txt", False)
 # datset = get_set("dataset/pfam2SMILES/dataset_pfam2SMILES_v2.txt", True)
 # find intersection
 print(len(test))
@@ -43,8 +43,8 @@ print(len(train))
 # print(len(datset))
 # print(datset)
 intersection = test.intersection(train)
-print(len(intersection))
-print(intersection)
+print(len(intersection), "inter")
+# print(intersection)
 
 # ### plot for distrubtion of char error
 #
