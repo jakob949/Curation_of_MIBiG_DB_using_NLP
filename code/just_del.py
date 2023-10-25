@@ -1,7 +1,7 @@
 ### Creation of i2v dataset
 
-# with open("dataset/test_i2v_BGC2SMM_250923.txt", "a") as f:
-#     with open("predictions_test_230923_pfam_BGC2SMM_v4.txt", "r") as infile:
+# with open("dataset/train_i2v_BGC2SMM_251023.txt", "a") as f:
+#     with open("predictions_train_230923_pfam_BGC2SMM_v4.txt", "r") as infile:
 #         for line in infile:
 #             split = line.split("\t")
 #             if split[0] == "Epoch 16/18":
@@ -21,7 +21,8 @@ def get_set(file_path,target):
                 # find when a line already is in the set
                 label = line.split("\t")[1]
                 if label in target_set:
-                    print(label)
+                    # print(label)
+                    pass
                 else:
                     target_set.add(label)
             return target_set
@@ -30,18 +31,17 @@ def get_set(file_path,target):
             for line in f:
                 # find when a line already is in the set
                 if line in target_set:
-                    print(line)
+                    print(line, "Full line")
                 else:
                     target_set.add(line)
             return target_set
-test = get_set("dataset/test_i2v_BGC2SMM_250923.txt", False)
-train = get_set("dataset/train_i2v_BGC2SMM_250923.txt", False)
+
+test = get_set("test_pfam_i2v.txt", False)
+train = get_set("train_pfam_i2v.txt", False)
 # datset = get_set("dataset/pfam2SMILES/dataset_pfam2SMILES_v2.txt", True)
 # find intersection
 print(len(test))
 print(len(train))
-# print(len(datset))
-# print(datset)
 intersection = test.intersection(train)
 print(len(intersection), "inter")
 # print(intersection)
