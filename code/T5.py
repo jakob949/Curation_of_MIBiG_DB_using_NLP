@@ -92,8 +92,8 @@ class Dataset(Dataset):
 start_time = time.time()
 
 
-T5_model_name = 'google/t5-efficient-tiny'
-# T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+# T5_model_name = 'google/t5-efficient-tiny'
+T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 # T5_model_name = 'model_020623_geneProduct2SMILES_v3.pt'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 # t5_model = torch.load(T5_model_name)
