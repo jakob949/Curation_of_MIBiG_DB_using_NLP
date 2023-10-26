@@ -9,6 +9,7 @@ import argparse as arg
 from torchmetrics.text import BLEUScore, ROUGEScore
 from torchmetrics import CharErrorRate, SacreBLEUScore
 from rdkit import Chem
+from peft import get_peft_model, LoraConfig, TaskType
 
 def count_valid_smiles(smiles_list: list) -> int:
     valid_count = 0
@@ -97,8 +98,13 @@ T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 # T5_model_name = 'model_020623_geneProduct2SMILES_v3.pt'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 # t5_model = torch.load(T5_model_name)
-#
+
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name)
+# Lora peft
+peft_config = LoraConfig(
+    task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=8, lora_alpha=32, lora_dropout=0.3
+)
+t5_model = get_peft_model(t5_model, peft_config)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
@@ -121,6 +127,12 @@ char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 
 num_epochs = 18
+
+with open(f"Information_{args.output_file_name}.txt", "w") as predictions_file:
+    print("T5 model: ", T5_model_name, file=predictions_file)
+    print(f"Learning rate: {learning_rate}, num of epoch: {num_epochs}, batch size: {batch_size_train}", file=predictions_file)
+    print(f"Dataset: {train_dataset.file_path}", file=predictions_file)
+    print("peft: ", t5_model.print_trainable_parameters(), file=predictions_file)
 
 # Training loop
 for epoch in range(num_epochs):
