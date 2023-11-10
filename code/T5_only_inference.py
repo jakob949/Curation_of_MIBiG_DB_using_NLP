@@ -83,13 +83,14 @@ loader = DataLoader(dataset, batch_size=1, shuffle=False)
 #     print("T5 model: ", T5_model_name, file=predictions_file)
 #     print(f"Dataset: {dataset.file_path}", file=predictions_file)
 print("starting inference")
-for batch in loader:
-    with torch.no_grad():
-        inputs = batch["input_ids"].to(device)
-        attention_mask = batch["attention_mask"].to(device)
-        outputs = t5_model.generate(input_ids=inputs, attention_mask=attention_mask)
-        true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
-        # Decode the predictions
-        decoded_predictions = [t5_tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
+with open("test_text2SMILES_I2V.txt", "w") as predictions_file:
+    for batch in loader:
+        with torch.no_grad():
+            inputs = batch["input_ids"].to(device)
+            attention_mask = batch["attention_mask"].to(device)
+            outputs = t5_model.generate(input_ids=inputs, attention_mask=attention_mask)
+            true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
+            # Decode the predictions
+            decoded_predictions = [t5_tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
 
-        print("predicted: ", decoded_predictions[0]," Label: ", true_labels[0])
+            print("text2SMILES_I2V: ", decoded_predictions[0], "\t", true_labels[0], file=predictions_file, sep="")
