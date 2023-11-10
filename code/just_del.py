@@ -1,3 +1,11 @@
+### Convert dataset from Gio format to my format
+with open("dataset/Text2SMILES_Gio/Original_format/train.text", "r") as infile:
+    with open("dataset/Text2SMILES_Gio/train.text", "w") as outfile:
+        for line in infile:
+            split = line.split("\t")
+            print(split[2], split[1], file=outfile)
+
+
 ### Creation of i2v dataset
 
 # with open("dataset/train_i2v_BGC2SMM_251023.txt", "a") as f:
@@ -13,38 +21,38 @@
 #                     print(f"invalid2validSMILE: {p}\t{t}", file=f)
 
 ### check for data leakage between test and train set (only target)
-def get_set(file_path,target):
-    with open (file_path, "r") as f:
-        if target:
-            target_set = set()
-            for line in f:
-                # find when a line already is in the set
-                label = line.split("\t")[1]
-                if label in target_set:
-                    # print(label)
-                    pass
-                else:
-                    target_set.add(label)
-            return target_set
-        else:
-            target_set=set()
-            for line in f:
-                # find when a line already is in the set
-                if line in target_set:
-                    print(line, "Full line")
-                else:
-                    target_set.add(line)
-            return target_set
-
-test = get_set("test_pfam_i2v.txt", False)
-train = get_set("train_pfam_i2v.txt", False)
-# datset = get_set("dataset/pfam2SMILES/dataset_pfam2SMILES_v2.txt", True)
-# find intersection
-print(len(test))
-print(len(train))
-intersection = test.intersection(train)
-print(len(intersection), "inter")
-# print(intersection)
+# def get_set(file_path,target):
+#     with open (file_path, "r") as f:
+#         if target:
+#             target_set = set()
+#             for line in f:
+#                 # find when a line already is in the set
+#                 label = line.split("\t")[1]
+#                 if label in target_set:
+#                     # print(label)
+#                     pass
+#                 else:
+#                     target_set.add(label)
+#             return target_set
+#         else:
+#             target_set=set()
+#             for line in f:
+#                 # find when a line already is in the set
+#                 if line in target_set:
+#                     print(line, "Full line")
+#                 else:
+#                     target_set.add(line)
+#             return target_set
+#
+# test = get_set("test_pfam_i2v.txt", False)
+# train = get_set("train_pfam_i2v.txt", False)
+# # datset = get_set("dataset/pfam2SMILES/dataset_pfam2SMILES_v2.txt", True)
+# # find intersection
+# print(len(test))
+# print(len(train))
+# intersection = test.intersection(train)
+# print(len(intersection), "inter")
+# # print(intersection)
 
 # ### plot for distrubtion of char error
 #
