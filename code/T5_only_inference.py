@@ -39,7 +39,7 @@ class Dataset(Dataset):
                 if task == 'invalid2validSMILE':
                     data.append((text, label))
 
-                if len(text) > 800:
+                if len(text) > 80000:
                     data.append((text[:800], label))
                     num_of_truncs += 1
                 else:
@@ -87,10 +87,9 @@ for batch in loader:
     with torch.no_grad():
         inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
-        labels = batch["labels"].to(device)
         outputs = t5_model.generate(input_ids=inputs, attention_mask=attention_mask)
-
+        true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
         # Decode the predictions
         decoded_predictions = [t5_tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
 
-        print("predicted: ", decoded_predictions[0]," Label: ", labels[0])
+        print("predicted: ", decoded_predictions[0]," Label: ", true_labels[0])

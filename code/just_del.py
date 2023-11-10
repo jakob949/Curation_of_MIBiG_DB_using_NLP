@@ -1,11 +1,11 @@
 ### Convert dataset from Gio format to my format
-with open("dataset/Text2SMILES_Gio/Original_format/test.txt", "r") as infile:
-    with open("dataset/Text2SMILES_Gio/test.txt", "w") as outfile:
+with open("dataset/Text2SMILES_Gio/Original_format/train.txt", "r") as infile:
+    with open("dataset/Text2SMILES_Gio/train.txt", "w") as outfile:
         for i, line in enumerate(infile):
             if i == 0:
                 continue
             split = line.split("\t")
-            print(split[2].strip(), "\t", split[1], file=outfile)
+            print("Text2SMILES: ", split[2].strip(), "\t", split[1], file=outfile)
 
 
 ### Creation of i2v dataset
