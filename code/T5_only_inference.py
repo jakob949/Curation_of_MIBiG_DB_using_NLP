@@ -82,7 +82,7 @@ loader = DataLoader(dataset, batch_size=1, shuffle=False)
 # with open(f"Information_{args.output_file_name}.txt", "w") as predictions_file:
 #     print("T5 model: ", T5_model_name, file=predictions_file)
 #     print(f"Dataset: {dataset.file_path}", file=predictions_file)
-
+print("starting inference")
 for batch in loader:
     with torch.no_grad():
         inputs = batch["input_ids"].to(device)
