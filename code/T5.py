@@ -21,7 +21,8 @@ def count_valid_smiles(smiles_list: list) -> int:
 
 
 parser = arg.ArgumentParser()
-parser.add_argument("-o", "--output_file_name", type=str, default="unknown", )
+parser.add_argument("-o", "--output_file_name", type=str, default="unknown")
+parser.add_argument("-i", "information", type=str, default="None")
 args = parser.parse_args()
 
 
@@ -101,17 +102,17 @@ t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name)
 # Lora peft
-peft_config = LoraConfig(
-    task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=8, lora_alpha=32, lora_dropout=0.3
-)
-t5_model = get_peft_model(t5_model, peft_config)
+# peft_config = LoraConfig(
+#     task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=8, lora_alpha=32, lora_dropout=0.3
+# )
+# t5_model = get_peft_model(t5_model, peft_config)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 #load data
 # dataset/train_i2v_BGC2SMM_250923.txt => no bias set
-train_dataset = Dataset("train_pfam_i2v.txt", t5_tokenizer)
-test_dataset = Dataset("test_pfam_i2v.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/Text2SMILES_Gio/train_text2SMILES_I2V.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/Text2SMILES_Gio/test_text2SMILES_I2V.txt", t5_tokenizer)
 
 batch_size_train = 8
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
@@ -128,15 +129,16 @@ sacre_bleu = SacreBLEUScore()
 
 num_epochs = 18
 
-with open(f"Information_{args.output_file_name}.txt", "w") as predictions_file:
-    print("T5 model: ", T5_model_name, file=predictions_file)
-    print(f"Learning rate: {learning_rate}, num of epoch: {num_epochs}, batch size: {batch_size_train}", file=predictions_file)
-    print(f"Dataset: {train_dataset.file_path}", file=predictions_file)
-    print("peft: ", t5_model.print_trainable_parameters(), file=predictions_file)
+with open(f">Information_{args.output_file_name}.txt", "w") as predictions_file:
+    print(">T5 model: ", T5_model_name, file=predictions_file)
+    print(f">Learning rate: {learning_rate}, num of epoch: {num_epochs}, train batch size: {batch_size_train}", file=predictions_file)
+    print(f">Dataset: {train_dataset.file_path}", file=predictions_file)
+    print(f">Information: {args.information}", file=predictions_file)
+    # print(">peft: ", t5_model.print_trainable_parameters(), file=predictions_file)
 
 # Training loop
 for epoch in range(num_epochs):
-    print(f"Epoch {epoch + 1}/{num_epochs}")
+    # print(f"Epoch {epoch + 1}/{num_epochs}")
     t5_model.train()
     rouge_train_accumulated, bleu_train_accumulated, char_error_rate_train_accumulated, sacre_bleu_train_accumulated = 0.0, 0.0, 0.0, 0.0
     num_train_batches = 0
@@ -152,7 +154,7 @@ for epoch in range(num_epochs):
         labels = batch["labels"].to(device)
         num_train_batches += 1
         train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
-        print('true: ', train_true_labels)
+        # print('true: ', train_true_labels)
         # compute the model output
         outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
         loss = outputs.loss
@@ -167,10 +169,10 @@ for epoch in range(num_epochs):
             train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
             Num_correct_val_mols_train += count_valid_smiles(train_predicted_labels)
 
-            print('predicted: ', train_predicted_labels, 'true: ', train_true_labels)
+            # print('predicted: ', train_predicted_labels, 'true: ', train_true_labels)
 
             with open(f"predictions_train_{args.output_file_name}.txt", "a") as predictions_file:
-                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {train_true_labels}\tPred: {train_predicted_labels}\task\t{task_train}", file=predictions_file)
+                print(f"Epoch\t{epoch + 1}\tTrue:\t{train_true_labels}\tPred:\t{train_predicted_labels}\task\t{task_train}", file=predictions_file)
 
             train_rouge_score = rouge(train_predicted_labels, train_true_labels)["rouge1_fmeasure"]
             train_bleu_score = bleu(train_predicted_labels, train_true_labels)
@@ -215,7 +217,7 @@ for epoch in range(num_epochs):
             Num_correct_val_mols_test += count_valid_smiles(test_predicted_labels)
 
             with open(f"predictions_test_{args.output_file_name}.txt", "a") as predictions_file:
-                print(f"Epoch {epoch + 1}/{num_epochs}\tTrue: {test_true_labels}\tPred: {test_predicted_labels}\ttask\t{task_test}",
+                print(f"Epoch {epoch + 1}\tTrue:\t{test_true_labels}\tPred:\t{test_predicted_labels}\ttask\t{task_test}",
                       file=predictions_file)
 
             test_rouge_score = rouge(test_predicted_labels, test_true_labels)["rouge1_fmeasure"]
@@ -236,11 +238,11 @@ for epoch in range(num_epochs):
     # Print and save results for this epoch
     with open(f"scores_{args.output_file_name}.txt", "a") as scores_file:
         print(
-            f"Epoch {epoch + 1}/{num_epochs}\tTrain Accuracy: {train_accuracy_accumulated / num_train_batches}\t Avg Train ROUGE-1 F1 Score\t {rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t {bleu_train_accumulated / num_train_batches}\tAvg Train Char Error Rate\t {char_error_rate_train_accumulated / num_train_batches}\tAvg Train SacreBLEU Score\t {sacre_bleu_train_accumulated / num_train_batches}\tNum correct val mols train: {Num_correct_val_mols_train}",
+            f"Epoch\t{epoch + 1}\tTrain Accuracy:\t{train_accuracy_accumulated / num_train_batches}\tAvg Train ROUGE-1 F1 Score\t{rouge_train_accumulated / num_train_batches}\tAvg Train BLEU Score\t{bleu_train_accumulated / num_train_batches}\tAvg Train Char Error Rate\t{char_error_rate_train_accumulated / num_train_batches}\tAvg Train SacreBLEU Score\t{sacre_bleu_train_accumulated / num_train_batches}\tNum correct val mols train\t{Num_correct_val_mols_train}",
             file=scores_file)
 
         print(
-            f"Epoch {epoch + 1}/{num_epochs}\tTest Accuracy: {test_accuracy_accumulated / num_test_batches}\t Avg Test ROUGE-1 F1 Score\t {rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t {bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t {char_error_rate_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t {sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test: {Num_correct_val_mols_test}",
+            f"Epoch\t{epoch + 1}\tTest Accuracy:\t{test_accuracy_accumulated / num_test_batches}\tAvg Test ROUGE-1 F1 Score\t{rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t{bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t{char_error_rate_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t{sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test\t{Num_correct_val_mols_test}",
             file=scores_file)
     # save the model
     # if epoch == 17:
