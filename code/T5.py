@@ -22,7 +22,7 @@ def count_valid_smiles(smiles_list: list) -> int:
 
 parser = arg.ArgumentParser()
 parser.add_argument("-o", "--output_file_name", type=str, default="unknown")
-parser.add_argument("-i", "information", type=str, default="None")
+parser.add_argument("-i", "--information", type=str, default="None")
 args = parser.parse_args()
 
 
