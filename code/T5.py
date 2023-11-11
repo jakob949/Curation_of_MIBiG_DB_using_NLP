@@ -130,7 +130,7 @@ sacre_bleu = SacreBLEUScore()
 num_epochs = 18
 
 with open(f">Information_{args.output_file_name}.txt", "w") as predictions_file:
-    print(">T5 model: ", T5_model_name, file=predictions_file)
+    print(">T5 model: ", T5_model_name, " Cuda available:", device, file=predictions_file)
     print(f">Learning rate: {learning_rate}, num of epoch: {num_epochs}, train batch size: {batch_size_train}", file=predictions_file)
     print(f">Dataset: {train_dataset.file_path}", file=predictions_file)
     print(f">Information: {args.information}", file=predictions_file)
