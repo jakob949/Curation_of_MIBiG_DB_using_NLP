@@ -74,12 +74,12 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 #load data
-dataset = Dataset("dataset/Text2SMILES_Gio/train.txt", t5_tokenizer)
+dataset = Dataset("dataset/Text2SMILES_Gio/test.txt", t5_tokenizer)
 
 loader = DataLoader(dataset, batch_size=1, shuffle=False)
 
 print("starting inference")
-with open("train_text2SMILES_I2V.txt", "w") as predictions_file:
+with open("test_text2SMILES_I2V.txt", "w") as predictions_file:
     for batch in loader:
         with torch.no_grad():
             inputs = batch["input_ids"].to(device)
