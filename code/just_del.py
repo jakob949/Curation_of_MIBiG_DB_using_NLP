@@ -1,11 +1,29 @@
-### Convert dataset from Gio format to my format
-with open("dataset/Text2SMILES_Gio/Original_format/train.txt", "r") as infile:
-    with open("dataset/Text2SMILES_Gio/train.txt", "w") as outfile:
-        for i, line in enumerate(infile):
-            if i == 0:
-                continue
-            split = line.split("\t")
-            print("Text2SMILES: ", split[2].strip(), "\t", split[1], file=outfile)
+from torchmetrics.text import BLEUScore, ROUGEScore
+rouge = ROUGEScore()
+
+
+with open("dataset/Text2SMILES_Gio/train_text2SMILES_I2V.txt", "r") as file:
+    count = 0
+    l = []
+    for i, line in enumerate(file):
+        split = line.split("\t")
+        pred = split[0].split(": ")[1]
+        true = split[1].strip()
+        if pred == true:
+            count += 1
+        # rouge_score = rouge(pred, true)["rouge1_fmeasure"]
+        # l.append(rouge_score)
+    # print(sum(l)/len(l))
+print()
+
+# ### Convert dataset from Gio format to my format
+# with open("dataset/Text2SMILES_Gio/Original_format/train.txt", "r") as infile:
+#     with open("dataset/Text2SMILES_Gio/train.txt", "w") as outfile:
+#         for i, line in enumerate(infile):
+#             if i == 0:
+#                 continue
+#             split = line.split("\t")
+#             print("Text2SMILES: ", split[2].strip(), "\t", split[1], file=outfile)
 
 
 ### Creation of i2v dataset

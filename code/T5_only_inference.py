@@ -84,7 +84,7 @@ with open("train_text2SMILES_I2V.txt", "w") as predictions_file:
         with torch.no_grad():
             inputs = batch["input_ids"].to(device)
             attention_mask = batch["attention_mask"].to(device)
-            outputs = t5_model.generate(input_ids=inputs, attention_mask=attention_mask)
+            outputs = t5_model.generate(input_ids=inputs, attention_mask=attention_mask, num_beams=10, max_length=512)
             true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
             # Decode the predictions
             decoded_predictions = [t5_tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
