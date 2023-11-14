@@ -1,20 +1,48 @@
-from torchmetrics.text import BLEUScore, ROUGEScore
-rouge = ROUGEScore()
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+
+max_length = 512
+num_beams = 10
 
 
-with open("dataset/Text2SMILES_Gio/train_text2SMILES_I2V.txt", "r") as file:
-    count = 0
-    l = []
-    for i, line in enumerate(file):
-        split = line.split("\t")
-        pred = split[0].split(": ")[1]
-        true = split[1].strip()
-        if pred == true:
-            count += 1
-        # rouge_score = rouge(pred, true)["rouge1_fmeasure"]
-        # l.append(rouge_score)
-    # print(sum(l)/len(l))
-print()
+
+model = AutoModelForSeq2SeqLM.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-small-augm")
+tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-small-augm")
+
+instance = "The molecule is a steroid ester that is methyl (17E)-pregna-4,17-dien-21-oate substituted by oxo groups at positions 3 and 11. It is a 3-oxo-Delta(4) steroid, an 11-oxo steroid, a steroid ester and a methyl ester. It derives from a hydride of a pregnane."
+input_text = f"Write in SMILES the described molecule: {instance}"
+
+text = tokenizer(input_text, return_tensors="pt")
+output = model.generate(input_ids=text["input_ids"], max_length=max_length, num_beams=num_beams)
+output = tokenizer.decode(output[0].cpu())
+
+output = output.split(tokenizer.eos_token)[0]
+output = output.replace(tokenizer.pad_token,"")
+output = output.replace("<unk>","\\\\")
+output = output.strip()
+
+print(output)
+
+
+# from torchmetrics.text import BLEUScore, ROUGEScore
+# rouge = ROUGEScore()
+#
+#
+# with open("dataset/Text2SMILES_Gio/test_text2SMILES_I2V.txt", "r") as file:
+#     count = 0
+#     l = []
+#     for i, line in enumerate(file):
+#         split = line.split("\t")
+#         pred = split[0].split(": ")[1]
+#         true = split[1].strip()
+#         if pred == true:
+#             count += 1
+#             print(pred, true)
+#
+#     print("Acc =", count/i)
+#     #     rouge_score = rouge(pred, true)["rougeL_fmeasure"]
+#     #     l.append(rouge_score)
+#     # print(sum(l)/len(l))
+# print()
 
 # ### Convert dataset from Gio format to my format
 # with open("dataset/Text2SMILES_Gio/Original_format/train.txt", "r") as infile:
