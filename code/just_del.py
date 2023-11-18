@@ -1,28 +1,4 @@
-# from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
-#
-# max_length = 512
-# num_beams = 10
-#
-#
-#
-# model = AutoModelForSeq2SeqLM.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-small-augm")
-# tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-small-augm")
-#
-# instance = "The molecule is a steroid ester that is methyl (17E)-pregna-4,17-dien-21-oate substituted by oxo groups at positions 3 and 11. It is a 3-oxo-Delta(4) steroid, an 11-oxo steroid, a steroid ester and a methyl ester. It derives from a hydride of a pregnane."
-# input_text = f"Write in SMILES the described molecule: {instance}"
-#
-# text = tokenizer(input_text, return_tensors="pt")
-# output = model.generate(input_ids=text["input_ids"], max_length=max_length, num_beams=num_beams)
-# output = tokenizer.decode(output[0].cpu())
-#
-# output = output.split(tokenizer.eos_token)[0]
-# output = output.replace(tokenizer.pad_token,"")
-# output = output.replace("<unk>","\\\\")
-# output = output.strip()
-#
-# print(output)
-
-
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from rdkit import Chem
 from torchmetrics.text import BLEUScore, ROUGEScore
 
@@ -34,24 +10,86 @@ def canonical_smiles(smiles):
         return Chem.MolToSmiles(mol, isomericSmiles=True)
     else:
         return None
-with open("test_text2SMILES_I2V.txt", "r") as file:
-    count = 0
-    total = 0
-    for line in file:
-        split = line.split("\t")
-        pred = split[0].split(": ")[1]
-        true = split[1].strip()
 
-        pred_canonical = canonical_smiles(pred)
-        true_canonical = canonical_smiles(true)
+max_length = 512
+num_beams = 10
 
-        if pred_canonical is not None and true_canonical is not None:
-            total += 1
-            if pred_canonical == true_canonical:
+
+
+model = AutoModelForSeq2SeqLM.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-small-augm")
+tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-small-augm")
+
+# instance = "The molecule is a steroid ester that is methyl (17E)-pregna-4,17-dien-21-oate substituted by oxo groups at positions 3 and 11. It is a 3-oxo-Delta(4) steroid, an 11-oxo steroid, a steroid ester and a methyl ester. It derives from a hydride of a pregnane."
+# input_text = f"Write in SMILES the described molecule: {instance}"
+count = 0
+with open("test_text2SMILES_I2V_gio_method_for_pred.txt", "w") as file:
+    with open("dataset/Text2SMILES_Gio/test_text2SMILES_I2V.txt", "r") as infile:
+        for i, line in enumerate(infile):
+            split = line.split("\t")
+            input_text = split[0]
+            target = split[1].strip()
+            text = tokenizer(input_text, return_tensors="pt")
+            output = model.generate(input_ids=text["input_ids"], max_length=max_length, num_beams=num_beams)
+            output = tokenizer.decode(output[0].cpu())
+
+            output = output.split(tokenizer.eos_token)[0]
+            output = output.replace(tokenizer.pad_token,"")
+            output = output.replace("<unk>","\\\\")
+            output = output.strip()
+
+            pred_canonical = canonical_smiles(output)
+            true_canonical = canonical_smiles(target)
+            if true_canonical == pred_canonical:
                 count += 1
+            print(f"Pred:\t{output}\tTrue:\t{target}", file=file)
+            print(i)
+print("count", count, "total", i, "acc", count/i)
 
-    accuracy = count / total if total > 0 else 0
-    print("Acc =", accuracy)
+
+
+
+
+# with open("test_text2SMILES_I2V.txt", "r") as file:
+#     count = 0
+#     total = 0
+#     for line in file:
+#         split = line.split("\t")
+#         pred = split[0].split(": ")[1]
+#         true = split[1].strip()
+#
+#         pred_canonical = canonical_smiles(pred)
+#         true_canonical = canonical_smiles(true)
+#
+#         if pred_canonical is not None and true_canonical is not None:
+#             total += 1
+#             if pred_canonical == true_canonical:
+#                 count += 1
+#
+#     accuracy = count / total if total > 0 else 0
+#     print("Acc =", accuracy)
+
+### new preds format for molecule validation
+# with open("predictions_test_111123_text2SMILES_I2V.txt", "r") as file:
+#     count = 0
+#     total = 0
+#     for line in file:
+#
+#         split = line.split("\t")
+#         if split[0][-1] == "3":
+#
+#             pred = split[2][2:-2]
+#             true = split[4][2:-2]
+#             pred_canonical = canonical_smiles(pred)
+#             true_canonical = canonical_smiles(true)
+#
+#             if pred_canonical is not None and true_canonical is not None:
+#                 total += 1
+#                 if pred_canonical == true_canonical:
+#                     count += 1
+#
+#     accuracy = count / total if total > 0 else 0
+#     print("Acc =", accuracy)
+
 
 # ### Convert dataset from Gio format to my format
 # with open("dataset/Text2SMILES_Gio/Original_format/train.txt", "r") as infile:
