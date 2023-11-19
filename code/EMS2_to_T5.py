@@ -33,7 +33,7 @@ class ProteinDataset(torch.utils.data.Dataset):
                 text_list = text.split('_')
 
                 # Check if any element in text_list is longer than 2000 characters
-                if all(len(element) <= 851 for element in text_list):
+                if all(len(element) <= 3000 for element in text_list):
                     data.append((text_list, label))
         print(len(data))
         return data
@@ -109,7 +109,7 @@ T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
-t5_model = get_peft_model(t5_model, peft_config)
+# t5_model = get_peft_model(t5_model, peft_config)
 
 esm_model_name = "facebook/esm2_t6_8M_UR50D"
 esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
@@ -123,8 +123,8 @@ t5_model.to(device)
 esm_model.to(device)
 projection.to(device)
 print(device)
-train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_4_shorten_0.txt", t5_tokenizer, esm_tokenizer)
-test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_4_shorten_0.txt", t5_tokenizer, esm_tokenizer)
+train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_0.txt", t5_tokenizer, esm_tokenizer)
+test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_0.txt", t5_tokenizer, esm_tokenizer)
 
 train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
