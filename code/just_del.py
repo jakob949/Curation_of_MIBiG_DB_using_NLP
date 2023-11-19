@@ -41,6 +41,7 @@ with open("test_text2SMILES_I2V_gio_method_for_pred_2.txt", "w") as file:
             true_canonical = canonical_smiles(target)
             if true_canonical == pred_canonical:
                 count += 1
+                print("correct")
             print(f"Pred:\t{output}\tTrue:\t{target}", file=file)
             print(i)
 print("count", count, "total", i, "acc", count/i)
