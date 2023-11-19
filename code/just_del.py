@@ -23,7 +23,7 @@ tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5
 # input_text = f"Write in SMILES the described molecule: {instance}"
 count = 0
 with open("test_text2SMILES_I2V_gio_method_for_pred.txt", "w") as file:
-    with open("dataset/Text2SMILES_Gio/test_text2SMILES_I2V.txt", "r") as infile:
+    with open("dataset/Text2SMILES_Gio/test.txt", "r") as infile:
         for i, line in enumerate(infile):
             split = line.split("\t")
             input_text = split[0]
@@ -69,23 +69,24 @@ print("count", count, "total", i, "acc", count/i)
 #     print("Acc =", accuracy)
 
 ### new preds format for molecule validation
-# with open("predictions_test_111123_text2SMILES_I2V.txt", "r") as file:
+# with open("test_text2SMILES_I2V_gio_method_for_pred.txt", "r") as file:
 #     count = 0
 #     total = 0
 #     for line in file:
 #
 #         split = line.split("\t")
 #         if split[0][-1] == "3":
+#             pass
 #
-#             pred = split[2][2:-2]
-#             true = split[4][2:-2]
-#             pred_canonical = canonical_smiles(pred)
-#             true_canonical = canonical_smiles(true)
+#         pred = split[1]
+#         true = split[3]
 #
-#             if pred_canonical is not None and true_canonical is not None:
-#                 total += 1
-#                 if pred_canonical == true_canonical:
-#                     count += 1
+#         pred_canonical = canonical_smiles(pred)
+#         true_canonical = canonical_smiles(true)
+#
+#         total += 1
+#         if pred_canonical == true_canonical:
+#             count += 1
 #
 #     accuracy = count / total if total > 0 else 0
 #     print("Acc =", accuracy)
