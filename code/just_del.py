@@ -1,50 +1,50 @@
-# from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
-# from rdkit import Chem
-# from torchmetrics.text import BLEUScore, ROUGEScore
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from rdkit import Chem
+from torchmetrics.text import BLEUScore, ROUGEScore
 #
 # # Function to get canonical SMILES
 #
-# def canonical_smiles(smiles):
-#     mol = Chem.MolFromSmiles(smiles)
-#     if mol is not None:
-#         return Chem.MolToSmiles(mol, isomericSmiles=True)
-#     else:
-#         return None
-#
-# max_length = 512
-# num_beams = 10
-#
-#
-#
-# model = AutoModelForSeq2SeqLM.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-small-augm")
-# tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-small-augm")
-#
-# # instance = "The molecule is a steroid ester that is methyl (17E)-pregna-4,17-dien-21-oate substituted by oxo groups at positions 3 and 11. It is a 3-oxo-Delta(4) steroid, an 11-oxo steroid, a steroid ester and a methyl ester. It derives from a hydride of a pregnane."
-# # input_text = f"Write in SMILES the described molecule: {instance}"
-# count = 0
-# with open("test_text2SMILES_I2V_gio_method_for_pred_2.txt", "w") as file:
-#     with open("dataset/Text2SMILES_Gio/test.txt", "r") as infile:
-#         for i, line in enumerate(infile):
-#             split = line.split("\t")
-#             input_text = split[0]
-#             target = split[1].strip()
-#             text = tokenizer(input_text, return_tensors="pt")
-#             output = model.generate(input_ids=text["input_ids"], max_length=max_length, num_beams=num_beams)
-#             output = tokenizer.decode(output[0].cpu())
-#
-#             output = output.split(tokenizer.eos_token)[0]
-#             output = output.replace(tokenizer.pad_token,"")
-#             output = output.replace("<unk>","\\\\")
-#             output = output.strip()
-#
-#             pred_canonical = canonical_smiles(output)
-#             true_canonical = canonical_smiles(target)
-#             if true_canonical == pred_canonical:
-#                 count += 1
-#                 print("correct")
-#             print(f"Pred:\t{output}\tTrue:\t{target}", file=file)
-#             print(i)
-# print("count", count, "total", i, "acc", count/i)
+def canonical_smiles(smiles):
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is not None:
+        return Chem.MolToSmiles(mol, isomericSmiles=True)
+    else:
+        return None
+
+max_length = 512
+num_beams = 10
+
+
+
+model = AutoModelForSeq2SeqLM.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
+tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
+
+# instance = "The molecule is a steroid ester that is methyl (17E)-pregna-4,17-dien-21-oate substituted by oxo groups at positions 3 and 11. It is a 3-oxo-Delta(4) steroid, an 11-oxo steroid, a steroid ester and a methyl ester. It derives from a hydride of a pregnane."
+# input_text = f"Write in SMILES the described molecule: {instance}"
+count = 0
+with open("dataset/Text2SMILES_Gio/test.txt", "r") as infile:
+    for i, line in enumerate(infile):
+        split = line.split("\t")
+        input_text = split[0]
+        target = split[1].strip()
+        text = tokenizer(input_text, return_tensors="pt")
+        output = model.generate(input_ids=text["input_ids"], max_length=max_length, num_beams=num_beams)
+        output = tokenizer.decode(output[0].cpu())
+
+        output = output.split(tokenizer.eos_token)[0]
+        output = output.replace(tokenizer.pad_token,"")
+        output = output.replace("<unk>","\\\\")
+        output = output.strip()
+
+        pred_canonical = canonical_smiles(output)
+        true_canonical = canonical_smiles(target)
+        if true_canonical == pred_canonical:
+            count += 1
+            print("correct")
+        with open("test_text2SMILES_I2V_gio_method_for_pred_base.txt", "w") as file:
+            print(f"Pred:\t{output}\tTrue:\t{target}", file=file)
+        print(i)
+print("count", count, "total", i, "acc", count/i)
 
 
 
@@ -68,9 +68,9 @@
 #
 #     accuracy = count / total if total > 0 else 0
 #     print("Acc =", accuracy)
-
-### new preds format for molecule validation
-# with open("test_text2SMILES_I2V_gio_method_for_pred.txt", "r") as file:
+#
+# ### new preds format for molecule validation
+# with open("test_text2SMILES_I2V_gio_method_for_pred_2.txt", "r") as file:
 #     count = 0
 #     total = 0
 #     for line in file:
@@ -79,8 +79,8 @@
 #         if split[0][-1] == "3":
 #             pass
 #
-#         pred = split[1]
-#         true = split[3]
+#         pred = split[1].strip()
+#         true = split[3].strip()
 #
 #         pred_canonical = canonical_smiles(pred)
 #         true_canonical = canonical_smiles(true)
@@ -120,39 +120,39 @@
 #                     print(f"invalid2validSMILE: {p}\t{t}", file=f)
 
 ### check for data leakage between test and train set (only target)
-def get_set(file_path, target):
-    with open (file_path, "r") as f:
-        if target:
-            target_set = set()
-            for line in f:
-                # find when a line already is in the set
-                label = line.split("\t")[1]
-                if label in target_set:
-                    # print(label)
-                    pass
-                else:
-                    target_set.add(label)
-            return target_set
-        else:
-            target_set=set()
-            for line in f:
-                # find when a line already is in the set
-                if line in target_set:
-                    # print(line, "Full line")
-                    pass
-                else:
-                    target_set.add(line)
-            return target_set
-
-test = get_set("test_pfam_i2v.txt", False)
-train = get_set("train_pfam_i2v.txt", False)
-# datset = get_set("dataset/pfam2SMILES/dataset_pfam2SMILES_v2.txt", True)
-# find intersection
-print(len(test))
-print(len(train))
-intersection = test.intersection(train)
-print(len(intersection), "inter")
-# print(intersection)
+# def get_set(file_path, target):
+#     with open (file_path, "r") as f:
+#         if target:
+#             target_set = set()
+#             for line in f:
+#                 # find when a line already is in the set
+#                 label = line.split("\t")[1]
+#                 if label in target_set:
+#                     # print(label)
+#                     pass
+#                 else:
+#                     target_set.add(label)
+#             return target_set
+#         else:
+#             target_set=set()
+#             for line in f:
+#                 # find when a line already is in the set
+#                 if line in target_set:
+#                     # print(line, "Full line")
+#                     pass
+#                 else:
+#                     target_set.add(line)
+#             return target_set
+#
+# test = get_set("test_pfam_i2v.txt", False)
+# train = get_set("train_pfam_i2v.txt", False)
+# # datset = get_set("dataset/pfam2SMILES/dataset_pfam2SMILES_v2.txt", True)
+# # find intersection
+# print(len(test))
+# print(len(train))
+# intersection = test.intersection(train)
+# print(len(intersection), "inter")
+# # print(intersection)
 
 # ### plot for distrubtion of char error
 #
