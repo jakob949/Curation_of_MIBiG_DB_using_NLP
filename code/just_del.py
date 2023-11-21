@@ -64,7 +64,7 @@ tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5
 
 max_length = 512
 num_beams = 10
-batch_size = 32
+batch_size = 3
 
 input_batch, target_batch = [], []
 total_count = 0
