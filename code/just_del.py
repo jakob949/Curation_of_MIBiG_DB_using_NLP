@@ -33,6 +33,7 @@ def canonical_smiles(smiles):
 def process_batch(input_batch, target_batch, model, tokenizer, max_length, num_beams):
     i = 0
     count = 0
+    print("start of batch")
     texts = tokenizer(input_batch, padding=True, return_tensors="pt")
     outputs = model.generate(**texts, max_length=max_length, num_beams=num_beams)
 
