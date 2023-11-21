@@ -97,7 +97,7 @@ tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5
 # instance = "The molecule is a steroid ester that is methyl (17E)-pregna-4,17-dien-21-oate substituted by oxo groups at positions 3 and 11. It is a 3-oxo-Delta(4) steroid, an 11-oxo steroid, a steroid ester and a methyl ester. It derives from a hydride of a pregnane."
 # input_text = f"Write in SMILES the described molecule: {instance}"
 count = 0
-with open("dataset/Text2SMILES_Gio/test.txt", "r") as infile:
+with open("dataset/Text2SMILES_Gio/train.txt", "r") as infile:
     for i, line in enumerate(infile):
         split = line.split("\t")
         input_text = split[0]
@@ -116,7 +116,7 @@ with open("dataset/Text2SMILES_Gio/test.txt", "r") as infile:
         if true_canonical == pred_canonical:
             count += 1
             print("correct")
-        with open("test_text2SMILES_I2V_gio_method_for_pred_base.txt", "a") as file:
+        with open("train_text2SMILES_I2V_gio_method_for_pred_base.txt", "a") as file:
             print(f"Pred:\t{output}\tTrue:\t{target}", file=file)
         print(i)
 print("count", count, "total", i, "acc", count/i)
