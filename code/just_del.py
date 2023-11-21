@@ -31,11 +31,14 @@ def canonical_smiles(smiles):
 
 
 def process_batch(input_batch, target_batch, model, tokenizer, max_length, num_beams):
+    i = 0
     count = 0
     texts = tokenizer(input_batch, padding=True, return_tensors="pt")
     outputs = model.generate(**texts, max_length=max_length, num_beams=num_beams)
 
     for output, target in zip(outputs, target_batch):
+        print(i)
+        i+=1
         decoded_output = tokenizer.decode(output, skip_special_tokens=True).strip()
 
         # Process the output
