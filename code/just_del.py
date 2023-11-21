@@ -30,96 +30,96 @@ def canonical_smiles(smiles):
         return None
 
 
-def process_batch(input_batch, target_batch, model, tokenizer, max_length, num_beams):
-    i = 0
-    count = 0
-    print("start of batch")
-    texts = tokenizer(input_batch, padding=True, return_tensors="pt")
-    outputs = model.generate(**texts, max_length=max_length, num_beams=num_beams)
-
-    for output, target in zip(outputs, target_batch):
-        print(i)
-        i+=1
-        decoded_output = tokenizer.decode(output, skip_special_tokens=True).strip()
-
-        # Process the output
-        decoded_output = decoded_output.replace(tokenizer.pad_token, "")
-        decoded_output = decoded_output.replace("<unk>", "\\\\")
-        decoded_output = decoded_output.strip()
-
-        pred_canonical = canonical_smiles(decoded_output)
-        true_canonical = canonical_smiles(target)
-        if true_canonical == pred_canonical:
-            count += 1
-            print("correct")
-
-        with open("test_text2SMILES_I2V_gio_method_for_pred_base.txt", "a") as file:
-            print(f"Pred:\t{decoded_output}\tTrue:\t{target}", file=file)
-
-    return count
-
-model = AutoModelForSeq2SeqLM.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
-tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
-
-
-max_length = 512
-num_beams = 10
-batch_size = 3
-
-input_batch, target_batch = [], []
-total_count = 0
-
-with open("dataset/Text2SMILES_Gio/test.txt", "r") as infile:
-    for i, line in enumerate(infile):
-        split = line.split("\t")
-        input_batch.append(split[0])
-        target_batch.append(split[1].strip())
-
-        if len(input_batch) == batch_size:
-            total_count += process_batch(input_batch, target_batch, model, tokenizer, max_length, num_beams)
-            input_batch, target_batch = [], []  # Reset the batch
-
-    # Process the remaining batch
-    if input_batch:
-        total_count += process_batch(input_batch, target_batch, model, tokenizer, max_length, num_beams)
-
-print("Total correct predictions:", total_count, "Total processed:", i + 1)
+# def process_batch(input_batch, target_batch, model, tokenizer, max_length, num_beams):
+#     i = 0
+#     count = 0
+#     print("start of batch")
+#     texts = tokenizer(input_batch, padding=True, return_tensors="pt")
+#     outputs = model.generate(**texts, max_length=max_length, num_beams=num_beams)
 #
+#     for output, target in zip(outputs, target_batch):
+#         print(i)
+#         i+=1
+#         decoded_output = tokenizer.decode(output, skip_special_tokens=True).strip()
 #
-# max_length = 512
-# num_beams = 10
+#         # Process the output
+#         decoded_output = decoded_output.replace(tokenizer.pad_token, "")
+#         decoded_output = decoded_output.replace("<unk>", "\\\\")
+#         decoded_output = decoded_output.strip()
 #
-#
-#
-# model = AutoModelForSeq2SeqLM.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
-# tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
-#
-# # instance = "The molecule is a steroid ester that is methyl (17E)-pregna-4,17-dien-21-oate substituted by oxo groups at positions 3 and 11. It is a 3-oxo-Delta(4) steroid, an 11-oxo steroid, a steroid ester and a methyl ester. It derives from a hydride of a pregnane."
-# # input_text = f"Write in SMILES the described molecule: {instance}"
-# count = 0
-# with open("dataset/Text2SMILES_Gio/test.txt", "r") as infile:
-#     for i, line in enumerate(infile):
-#         split = line.split("\t")
-#         input_text = split[0]
-#         target = split[1].strip()
-#         text = tokenizer(input_text, return_tensors="pt")
-#         output = model.generate(input_ids=text["input_ids"], max_length=max_length, num_beams=num_beams)
-#         output = tokenizer.decode(output[0].cpu())
-#
-#         output = output.split(tokenizer.eos_token)[0]
-#         output = output.replace(tokenizer.pad_token,"")
-#         output = output.replace("<unk>","\\\\")
-#         output = output.strip()
-#
-#         pred_canonical = canonical_smiles(output)
+#         pred_canonical = canonical_smiles(decoded_output)
 #         true_canonical = canonical_smiles(target)
 #         if true_canonical == pred_canonical:
 #             count += 1
 #             print("correct")
+#
 #         with open("test_text2SMILES_I2V_gio_method_for_pred_base.txt", "a") as file:
-#             print(f"Pred:\t{output}\tTrue:\t{target}", file=file)
-#         print(i)
-# print("count", count, "total", i, "acc", count/i)
+#             print(f"Pred:\t{decoded_output}\tTrue:\t{target}", file=file)
+#
+#     return count
+#
+# model = AutoModelForSeq2SeqLM.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
+# tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
+#
+#
+# max_length = 512
+# num_beams = 10
+# batch_size = 3
+#
+# input_batch, target_batch = [], []
+# total_count = 0
+#
+# with open("dataset/Text2SMILES_Gio/test.txt", "r") as infile:
+#     for i, line in enumerate(infile):
+#         split = line.split("\t")
+#         input_batch.append(split[0])
+#         target_batch.append(split[1].strip())
+#
+#         if len(input_batch) == batch_size:
+#             total_count += process_batch(input_batch, target_batch, model, tokenizer, max_length, num_beams)
+#             input_batch, target_batch = [], []  # Reset the batch
+#
+#     # Process the remaining batch
+#     if input_batch:
+#         total_count += process_batch(input_batch, target_batch, model, tokenizer, max_length, num_beams)
+#
+# print("Total correct predictions:", total_count, "Total processed:", i + 1)
+
+
+max_length = 512
+num_beams = 10
+
+
+
+model = AutoModelForSeq2SeqLM.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
+tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
+
+# instance = "The molecule is a steroid ester that is methyl (17E)-pregna-4,17-dien-21-oate substituted by oxo groups at positions 3 and 11. It is a 3-oxo-Delta(4) steroid, an 11-oxo steroid, a steroid ester and a methyl ester. It derives from a hydride of a pregnane."
+# input_text = f"Write in SMILES the described molecule: {instance}"
+count = 0
+with open("dataset/Text2SMILES_Gio/test.txt", "r") as infile:
+    for i, line in enumerate(infile):
+        split = line.split("\t")
+        input_text = split[0]
+        target = split[1].strip()
+        text = tokenizer(input_text, return_tensors="pt")
+        output = model.generate(input_ids=text["input_ids"], max_length=max_length, num_beams=num_beams)
+        output = tokenizer.decode(output[0].cpu())
+
+        output = output.split(tokenizer.eos_token)[0]
+        output = output.replace(tokenizer.pad_token,"")
+        output = output.replace("<unk>","\\\\")
+        output = output.strip()
+
+        pred_canonical = canonical_smiles(output)
+        true_canonical = canonical_smiles(target)
+        if true_canonical == pred_canonical:
+            count += 1
+            print("correct")
+        with open("test_text2SMILES_I2V_gio_method_for_pred_base.txt", "a") as file:
+            print(f"Pred:\t{output}\tTrue:\t{target}", file=file)
+        print(i)
+print("count", count, "total", i, "acc", count/i)
 
 
 
