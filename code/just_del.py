@@ -87,7 +87,7 @@ def canonical_smiles(smiles):
 
 
 max_length = 512
-num_beams = 6
+num_beams = 1
 
 
 
