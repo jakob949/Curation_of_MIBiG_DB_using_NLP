@@ -1,22 +1,3 @@
-# import random
-#
-# Giver_gave =    ["Far", "Mor", "Lene", "Martin", "Nanna", "Alexander", "Sara", "Jabob"]
-# Modtager_gave = ["Far", "Mor", "Lene", "Martin", "Nanna", "Alexander", "Sara", "Jabob"]
-#
-# for person in Giver_gave:
-#     gave = random.choice(Modtager_gave)
-#     Modtager_gave.remove(gave)
-#
-#     print(person, "Giver til =>", gave)
-
-
-
-
-
-
-
-
-
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from rdkit import Chem
 from torchmetrics.text import BLEUScore, ROUGEScore
@@ -85,17 +66,21 @@ def canonical_smiles(smiles):
 #
 # print("Total correct predictions:", total_count, "Total processed:", i + 1)
 
+import torch
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+
+# Check if CUDA is available
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 max_length = 512
-num_beams = 1
-
-
+num_beams = 3
 
 model = AutoModelForSeq2SeqLM.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
 tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
 
-# instance = "The molecule is a steroid ester that is methyl (17E)-pregna-4,17-dien-21-oate substituted by oxo groups at positions 3 and 11. It is a 3-oxo-Delta(4) steroid, an 11-oxo steroid, a steroid ester and a methyl ester. It derives from a hydride of a pregnane."
-# input_text = f"Write in SMILES the described molecule: {instance}"
+# Move model to the selected device (GPU or CPU)
+model.to(device)
+
 count = 0
 with open("dataset/Text2SMILES_Gio/train.txt", "r") as infile:
     for i, line in enumerate(infile):
@@ -103,7 +88,11 @@ with open("dataset/Text2SMILES_Gio/train.txt", "r") as infile:
         input_text = split[0]
         target = split[1].strip()
         text = tokenizer(input_text, return_tensors="pt")
-        output = model.generate(input_ids=text["input_ids"], max_length=max_length, num_beams=num_beams)
+
+        # Move tensors to the same device as model
+        text = {k: v.to(device) for k, v in text.items()}
+
+        output = model.generate(**text, max_length=max_length, num_beams=num_beams)
         output = tokenizer.decode(output[0].cpu())
 
         output = output.split(tokenizer.eos_token)[0]
@@ -121,6 +110,7 @@ with open("dataset/Text2SMILES_Gio/train.txt", "r") as infile:
         print(i)
 print("count", count, "total", i, "acc", count/i)
 
+#
 
 
 
@@ -1214,3 +1204,63 @@ print("count", count, "total", i, "acc", count/i)
 #     # save the model
 #     # if epoch == 17:
 #     #     torch.save(t5_model, f"model_{args.output_file_name}.pt")
+
+
+# import smtplib
+# from email.mime.text import MIMEText
+# from email.mime.multipart import MIMEMultipart
+# import random
+#
+# # Email and password (use an app password if 2FA is enabled)
+# email = "jakob.larsen949@gmail.com"
+# password = "hxtb pryh elfq vtfj "
+# # password = "your_app_password"
+#
+# # Setup the server
+# server = smtplib.SMTP('smtp.gmail.com', 587)
+# server.starttls()
+# server.login(email, password)
+#
+# # Assigning gift-giving pairs
+# Mails = {"Lene":"lene.idsenga@gmail.com", "Jabob": "jakob949@hotmail.com",
+#          "Far": "tarup-mark@hotmail.com", "Mor": "irenekleinlarsen@hotmail.com",
+#          "Martin": "martin.lunden@pwc.com", "Sara": "sara_sofie_larsen@hotmail.com",
+#          "Alexander":"Alexander.faurschou@gmail.com", "Nanna": "nanna.lunden@maersk.com"}
+#
+# Giver_gave = ["Far", "Mor", "Lene", "Martin", "Nanna", "Alexander", "Sara", "Jabob"]
+# Modtager_gave = Giver_gave.copy()
+#
+# for person in Giver_gave:
+#     gave = random.choice(Modtager_gave)
+#     # Check for specific pair conditions
+#     while (
+#         (person == "Far" and gave == "Mor") or
+#         (person == "Mor" and gave == "Far") or
+#         (person == "Martin" and gave == "Nanna") or
+#         (person == "Nanna" and gave == "Martin") or
+#         (person == "Alexander" and gave == "Sara") or
+#         (person == "Sara" and gave == "Alexander") or
+#         (person == gave)
+#     ):
+#         gave = random.choice(Modtager_gave)
+#
+#     Modtager_gave.remove(gave)
+#
+#     # Send email to each person
+#     send_to_email = Mails[person]
+#     # send_to_email = "jakob949@hotmail.com"
+#     subject = f"{person}! Hvem er du julemand/julekvinde for?"
+#     message = f"Du skal give en gave til {gave}. \n\nPS jeg havde lavet en stavefejl i mors mail. Så det er denne mail der er den rigtige"
+#
+#     # Setup the MIME
+#     msg = MIMEMultipart()
+#     msg['From'] = email
+#     msg['To'] = send_to_email
+#     msg['Subject'] = subject
+#     msg.attach(MIMEText(message, 'plain'))
+#
+#     # Send the email
+#     server.sendmail(email, send_to_email, msg.as_string())
+#
+# # Logout of the server
+# server.quit()
