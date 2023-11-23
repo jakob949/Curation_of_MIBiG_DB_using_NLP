@@ -82,7 +82,7 @@ tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5
 model.to(device)
 
 count = 0
-with open("dataset/Text2SMILES_Gio/test.txt", "r") as infile:
+with open("dataset/Text2SMILES_Gio/train.txt", "r") as infile:
     for i, line in enumerate(infile):
         split = line.split("\t")
         input_text = split[0]
@@ -105,7 +105,7 @@ with open("dataset/Text2SMILES_Gio/test.txt", "r") as infile:
         if true_canonical == pred_canonical:
             count += 1
             print("correct")
-        with open("test_text2SMILES_I2V_gio_method_for_pred_base.txt", "a") as file:
+        with open("train_text2SMILES_I2V_gio_method_for_pred_base.txt", "a") as file:
             print(f"Pred:\t{output}\tTrue:\t{target}", file=file)
         print(i)
 print("count", count, "total", i, "acc", count/i)
