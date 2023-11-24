@@ -111,10 +111,10 @@ t5_model.to(device)
 
 #load data
 # dataset/train_i2v_BGC2SMM_250923.txt => no bias set
-train_dataset = Dataset("train_pfam_i2v.txt", t5_tokenizer)
-test_dataset = Dataset("test_pfam_i2v.txt", t5_tokenizer)
+train_dataset = Dataset("train_text2SMILES_I2V_gio_method_for_pred_base.txt", t5_tokenizer)
+test_dataset = Dataset("test_text2SMILES_I2V_gio_method_for_pred_base.txt", t5_tokenizer)
 
-batch_size_train = 8
+batch_size_train = 12
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
