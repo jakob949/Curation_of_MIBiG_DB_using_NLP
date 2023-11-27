@@ -2,25 +2,25 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from rdkit import Chem
 from torchmetrics.text import BLEUScore, ROUGEScore
 # Function to get canonical SMILES
-
-with open("train_text2SMILES_I2V_gio_method_for_pred_base.txt", "r") as infile:
-    with open("train_text2SMILES_I2V_gio_method_base_correct_format.txt", "w") as outfile:
-        for line in infile:
-            split = line.split("\t")
-            pred = split[1].strip()
-            true = split[3].strip()
-
-
-            print(f"iv2_text2SMILES: {pred}\t{true}", file=outfile)
-
-
-
-def canonical_smiles(smiles):
-    mol = Chem.MolFromSmiles(smiles)
-    if mol is not None:
-        return Chem.MolToSmiles(mol, isomericSmiles=True)
-    else:
-        return None
+#
+# with open("train_text2SMILES_I2V_gio_method_for_pred_base.txt", "r") as infile:
+#     with open("train_text2SMILES_I2V_gio_method_base_correct_format.txt", "w") as outfile:
+#         for line in infile:
+#             split = line.split("\t")
+#             pred = split[1].strip()
+#             true = split[3].strip()
+#
+#
+#             print(f"iv2_text2SMILES: {pred}\t{true}", file=outfile)
+#
+#
+#
+# def canonical_smiles(smiles):
+#     mol = Chem.MolFromSmiles(smiles)
+#     if mol is not None:
+#         return Chem.MolToSmiles(mol, isomericSmiles=True)
+#     else:
+#         return None
 
 
 # def process_batch(input_batch, target_batch, model, tokenizer, max_length, num_beams):
@@ -197,39 +197,39 @@ def canonical_smiles(smiles):
 #                     print(f"invalid2validSMILE: {p}\t{t}", file=f)
 
 ### check for data leakage between test and train set (only target)
-# def get_set(file_path, target):
-#     with open (file_path, "r") as f:
-#         if target:
-#             target_set = set()
-#             for line in f:
-#                 # find when a line already is in the set
-#                 label = line.split("\t")[1]
-#                 if label in target_set:
-#                     # print(label)
-#                     pass
-#                 else:
-#                     target_set.add(label)
-#             return target_set
-#         else:
-#             target_set=set()
-#             for line in f:
-#                 # find when a line already is in the set
-#                 if line in target_set:
-#                     # print(line, "Full line")
-#                     pass
-#                 else:
-#                     target_set.add(line)
-#             return target_set
-#
-# test = get_set("test_pfam_i2v.txt", False)
-# train = get_set("train_pfam_i2v.txt", False)
-# # datset = get_set("dataset/pfam2SMILES/dataset_pfam2SMILES_v2.txt", True)
-# # find intersection
-# print(len(test))
-# print(len(train))
-# intersection = test.intersection(train)
-# print(len(intersection), "inter")
-# # print(intersection)
+def get_set(file_path, target):
+    with open (file_path, "r") as f:
+        if target:
+            target_set = set()
+            for line in f:
+                # find when a line already is in the set
+                label = line.split("\t")[1]
+                if label in target_set:
+                    # print(label)
+                    pass
+                else:
+                    target_set.add(label)
+            return target_set
+        else:
+            target_set=set()
+            for line in f:
+                # find when a line already is in the set
+                if line in target_set:
+                    # print(line, "Full line")
+                    pass
+                else:
+                    target_set.add(line)
+            return target_set
+
+test = get_set("dataset/pfam2SMILES/test_pfam_v2.txt", False)
+train = get_set("dataset/pfam2SMILES/train_pfam_v2.txt", False)
+# datset = get_set("dataset/pfam2SMILES/dataset_pfam2SMILES_v2.txt", True)
+# find intersection
+print(len(test))
+print(len(train))
+intersection = test.intersection(train)
+print(len(intersection), "inter")
+# print(intersection)
 
 # ### plot for distrubtion of char error
 #

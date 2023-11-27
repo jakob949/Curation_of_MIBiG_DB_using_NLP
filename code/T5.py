@@ -111,8 +111,8 @@ t5_model.to(device)
 
 #load data
 # dataset/train_i2v_BGC2SMM_250923.txt => no bias set
-train_dataset = Dataset("train_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
-test_dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/pfam2SMILES/test_pfam_v2.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/pfam2SMILES/train_pfam_v2.txt", t5_tokenizer)
 
 batch_size_train = 6
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
@@ -127,9 +127,13 @@ bleu = BLEUScore()
 char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 
-num_epochs = 18
+num_epochs = 11
+train_sampling_predictions = []
+test_sampling_predictions = []
+sampling = True
+num_gen_seqs = 5
 
-with open(f">Information_{args.output_file_name}.txt", "w") as predictions_file:
+with open(f">information_{args.output_file_name}.txt", "w") as predictions_file:
     print(">T5 model: ", T5_model_name, " Cuda available:", device, file=predictions_file)
     print(f">Learning rate: {learning_rate}, num of epoch: {num_epochs}, train batch size: {batch_size_train}", file=predictions_file)
     print(f">Dataset: {train_dataset.file_path}", file=predictions_file)
@@ -154,9 +158,24 @@ for epoch in range(num_epochs):
         labels = batch["labels"].to(device)
         num_train_batches += 1
         train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
-        # print('true: ', train_true_labels)
-        # compute the model output
         outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
+
+        if epoch == 11 and sampling:
+            # Generate predictions
+            generated_ids = t5_model.generate(inputs, attention_mask=attention_mask, num_return_sequences=num_gen_seqs, temperature=0.7)
+            # Decode generated ids to text and save them
+            generated_texts = [t5_tokenizer.decode(generated_id, skip_special_tokens=True) for generated_id in generated_ids]
+            # saving predictions
+            train_sampling_predictions.append((generated_texts, train_true_labels))
+
+            with open(f'train_sampling_{num_gen_seqs}_for_iv2_{args.output_file_name}.txt', 'w') as file:
+                for batch in train_sampling_predictions:
+                    generated_texts, true_labels = batch
+                    for i, true_label in enumerate(true_labels):
+                        for j in range(num_gen_seqs):
+                            line = f"iv2_sampling_{num_gen_seqs}: {generated_texts[i * num_gen_seqs + j]}\t{true_label}\n"
+                            file.write(line)
+
         loss = outputs.loss
         loss.backward()
         optimizer.step()
@@ -168,8 +187,6 @@ for epoch in range(num_epochs):
 
             train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
             Num_correct_val_mols_train += count_valid_smiles(train_predicted_labels)
-
-            # print('predicted: ', train_predicted_labels, 'true: ', train_true_labels)
 
             with open(f"predictions_train_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch\t{epoch + 1}\tTrue:\t{train_true_labels}\tPred:\t{train_predicted_labels}\task\t{task_train}", file=predictions_file)
@@ -208,6 +225,22 @@ for epoch in range(num_epochs):
         inputs = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
+
+        if epoch == 11 and sampling:
+            # Generate predictions
+            generated_ids = t5_model.generate(inputs, attention_mask=attention_mask, num_return_sequences=num_gen_seqs, temperature=0.7)
+            # Decode generated ids to text and save them
+            generated_texts = [t5_tokenizer.decode(generated_id, skip_special_tokens=True) for generated_id in generated_ids]
+            # saving predictions
+            test_sampling_predictions.append((generated_texts, train_true_labels))
+
+            with open(f'test_sampling_{num_gen_seqs}_for_iv2_{args.output_file_name}.txt', 'w') as file:
+                for batch in test_sampling_predictions:
+                    generated_texts, true_labels = batch
+                    for i, true_label in enumerate(true_labels):
+                        for j in range(num_gen_seqs):
+                            line = f"iv2_sampling_{num_gen_seqs}: {generated_texts[i * num_gen_seqs + j]}\t{true_label}\n"
+                            file.write(line)
 
         with torch.no_grad():
             outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
