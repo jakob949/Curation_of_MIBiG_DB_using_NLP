@@ -130,7 +130,7 @@ bleu = BLEUScore()
 char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 
-num_epochs = 10
+num_epochs = 11
 train_sampling_predictions = []
 test_sampling_predictions = []
 sampling = args.sampling
