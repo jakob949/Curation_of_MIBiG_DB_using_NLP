@@ -108,13 +108,15 @@ t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name)
 # t5_model = get_peft_model(t5_model, peft_config)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
+t5_model = torch.nn.DataParallel(t5_model)
+
 
 #load data
 # dataset/train_i2v_BGC2SMM_250923.txt => no bias set
-train_dataset = Dataset("dataset/pfam2SMILES/test_pfam_v2.txt", t5_tokenizer)
-test_dataset = Dataset("dataset/pfam2SMILES/train_pfam_v2.txt", t5_tokenizer)
+train_dataset = Dataset("train_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
+test_dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
 
-batch_size_train = 6
+batch_size_train = 18
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
@@ -280,3 +282,4 @@ for epoch in range(num_epochs):
     # save the model
     # if epoch == 17:
     torch.save(t5_model, f"model_{args.output_file_name}_{epoch}.pt")
+    t5_model.config.to_json_file(f"config_{args.output_file_name}_{epoch}.json")
