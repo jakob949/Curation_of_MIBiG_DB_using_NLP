@@ -133,7 +133,7 @@ test_sampling_predictions = []
 sampling = True
 num_gen_seqs = 5
 
-with open(f">information_{args.output_file_name}.txt", "w") as predictions_file:
+with open(f"information_{args.output_file_name}.txt", "w") as predictions_file:
     print(">T5 model: ", T5_model_name, " Cuda available:", device, file=predictions_file)
     print(f">Learning rate: {learning_rate}, num of epoch: {num_epochs}, train batch size: {batch_size_train}", file=predictions_file)
     print(f">Dataset: {train_dataset.file_path}", file=predictions_file)

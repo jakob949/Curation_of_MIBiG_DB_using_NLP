@@ -15,32 +15,32 @@ from torchmetrics.text import BLEUScore, ROUGEScore
 #
 #
 #
-# def canonical_smiles(smiles):
-#     mol = Chem.MolFromSmiles(smiles)
-#     if mol is not None:
-#         return Chem.MolToSmiles(mol, isomericSmiles=True)
-#     else:
-#         return None
+def canonical_smiles(smiles):
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is not None:
+        return Chem.MolToSmiles(mol, isomericSmiles=True)
+    else:
+        return None
 
 
-def is_smile_valid(smile):
-    molecule = Chem.MolFromSmiles(smile)
-    return molecule is not None
-
-is_smile_valid("CC(=O)O[C@@H]1C[C@@H]2[C@](C=CC(=O)C2(C)C)([C@@H]3[C@@]1(C4=CC(=O)[C@H]([C@@]4(CC3)C)C5=COC=C5)C)C")
-with open("test_text2SMILES_I2V_gio_method_base_correct_format.txt", "r") as file:
-    for line in file:
-        split = line.split("\t")
-        pred = split[0].split(": ")[1]
-        true = split[1].strip()
-        if is_smile_valid(pred):
-            pass
-        else:
-            print("invalid - pred")
-        if is_smile_valid(true):
-            pass
-        else:
-            print("invalid - true")
+# def is_smile_valid(smile):
+#     molecule = Chem.MolFromSmiles(smile)
+#     return molecule is not None
+#
+# is_smile_valid("CC(=O)O[C@@H]1C[C@@H]2[C@](C=CC(=O)C2(C)C)([C@@H]3[C@@]1(C4=CC(=O)[C@H]([C@@]4(CC3)C)C5=COC=C5)C)C")
+# with open("test_text2SMILES_I2V_gio_method_base_correct_format.txt", "r") as file:
+#     for line in file:
+#         split = line.split("\t")
+#         pred = split[0].split(": ")[1]
+#         true = split[1].strip()
+#         if is_smile_valid(pred):
+#             pass
+#         else:
+#             print("invalid - pred")
+#         if is_smile_valid(true):
+#             pass
+#         else:
+#             print("invalid - true")
 
 
 # def process_batch(input_batch, target_batch, model, tokenizer, max_length, num_beams):
@@ -98,51 +98,56 @@ with open("test_text2SMILES_I2V_gio_method_base_correct_format.txt", "r") as fil
 #
 # print("Total correct predictions:", total_count, "Total processed:", i + 1)
 
-# import torch
-# from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
-#
-# # Check if CUDA is available
-# device = 'cuda' if torch.cuda.is_available() else 'cpu'
-#
-# max_length = 512
-# num_beams = 3
-#
+import torch
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+
+# Check if CUDA is available
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+max_length = 512
+num_beams = 3
+
 # model = AutoModelForSeq2SeqLM.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
 # tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
-#
-# # Move model to the selected device (GPU or CPU)
-# model.to(device)
-#
-# count = 0
-# with open("dataset/Text2SMILES_Gio/train.txt", "r") as infile:
-#     for i, line in enumerate(infile):
-#         split = line.split("\t")
-#         input_text = split[0]
-#         target = split[1].strip()
-#         text = tokenizer(input_text, return_tensors="pt")
-#
-#         # Move tensors to the same device as model
-#         text = {k: v.to(device) for k, v in text.items()}
-#
-#         output = model.generate(**text, max_length=max_length, num_beams=num_beams)
-#         output = tokenizer.decode(output[0].cpu())
-#
-#         output = output.split(tokenizer.eos_token)[0]
-#         output = output.replace(tokenizer.pad_token,"")
-#         output = output.replace("<unk>","\\\\")
-#         output = output.strip()
-#
-#         pred_canonical = canonical_smiles(output)
-#         true_canonical = canonical_smiles(target)
-#         if true_canonical == pred_canonical:
-#             count += 1
-#             print("correct")
-#         with open("train_text2SMILES_I2V_gio_method_for_pred_base.txt", "a") as file:
-#             print(f"Pred:\t{output}\tTrue:\t{target}", file=file)
-#         print(i)
-# print("count", count, "total", i, "acc", count/i)
 
-#
+model_path = "model_241123_text2SMILES_I2V_2.pt"
+model = AutoModelForSeq2SeqLM.from_pretrained(model_path, local_files_only=True)
+tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
+
+
+# Move model to the selected device (GPU or CPU)
+model.to(device)
+
+count = 0
+with open("dataset/Text2SMILES_Gio/train.txt", "r") as infile:
+    for i, line in enumerate(infile):
+        split = line.split("\t")
+        input_text = split[0]
+        target = split[1].strip()
+        text = tokenizer(input_text, return_tensors="pt")
+
+        # Move tensors to the same device as model
+        text = {k: v.to(device) for k, v in text.items()}
+
+        output = model.generate(**text, max_length=max_length, num_beams=num_beams)
+        output = tokenizer.decode(output[0].cpu())
+
+        output = output.split(tokenizer.eos_token)[0]
+        output = output.replace(tokenizer.pad_token,"")
+        output = output.replace("<unk>","\\\\")
+        output = output.strip()
+
+        pred_canonical = canonical_smiles(output)
+        true_canonical = canonical_smiles(target)
+        if true_canonical == pred_canonical:
+            count += 1
+            print("correct")
+        with open("train_text2SMILES_I2V_gio_method_for_pred_base.txt", "a") as file:
+            print(f"Pred:\t{output}\tTrue:\t{target}", file=file)
+        print(i)
+print("count", count, "total", i, "acc", count/i)
+
+
 
 
 
