@@ -23,6 +23,7 @@ def count_valid_smiles(smiles_list: list) -> int:
 parser = arg.ArgumentParser()
 parser.add_argument("-o", "--output_file_name", type=str, default="unknown")
 parser.add_argument("-i", "--information", type=str, default="None")
+parser.add_argument("-s", "--sampling", type=bool, default=False)
 args = parser.parse_args()
 
 
@@ -129,10 +130,10 @@ bleu = BLEUScore()
 char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 
-num_epochs = 11
+num_epochs = 10
 train_sampling_predictions = []
 test_sampling_predictions = []
-sampling = True
+sampling = args.sampling
 num_gen_seqs = 5
 
 with open(f"information_{args.output_file_name}.txt", "w") as predictions_file:
@@ -281,5 +282,6 @@ for epoch in range(num_epochs):
             file=scores_file)
     # save the model
     # if epoch == 17:
+    # if epoch > 2:
     torch.save(t5_model, f"model_{args.output_file_name}_{epoch}.pt")
     t5_model.config.to_json_file(f"config_{args.output_file_name}_{epoch}.json")
