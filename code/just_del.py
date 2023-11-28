@@ -23,6 +23,26 @@ from torchmetrics.text import BLEUScore, ROUGEScore
 #         return None
 
 
+def is_smile_valid(smile):
+    molecule = Chem.MolFromSmiles(smile)
+    return molecule is not None
+
+is_smile_valid("CC(=O)O[C@@H]1C[C@@H]2[C@](C=CC(=O)C2(C)C)([C@@H]3[C@@]1(C4=CC(=O)[C@H]([C@@]4(CC3)C)C5=COC=C5)C)C")
+with open("test_text2SMILES_I2V_gio_method_base_correct_format.txt", "r") as file:
+    for line in file:
+        split = line.split("\t")
+        pred = split[0].split(": ")[1]
+        true = split[1].strip()
+        if is_smile_valid(pred):
+            pass
+        else:
+            print("invalid - pred")
+        if is_smile_valid(true):
+            pass
+        else:
+            print("invalid - true")
+
+
 # def process_batch(input_batch, target_batch, model, tokenizer, max_length, num_beams):
 #     i = 0
 #     count = 0
@@ -197,39 +217,39 @@ from torchmetrics.text import BLEUScore, ROUGEScore
 #                     print(f"invalid2validSMILE: {p}\t{t}", file=f)
 
 ### check for data leakage between test and train set (only target)
-def get_set(file_path, target):
-    with open (file_path, "r") as f:
-        if target:
-            target_set = set()
-            for line in f:
-                # find when a line already is in the set
-                label = line.split("\t")[1]
-                if label in target_set:
-                    # print(label)
-                    pass
-                else:
-                    target_set.add(label)
-            return target_set
-        else:
-            target_set=set()
-            for line in f:
-                # find when a line already is in the set
-                if line in target_set:
-                    # print(line, "Full line")
-                    pass
-                else:
-                    target_set.add(line)
-            return target_set
-
-test = get_set("dataset/pfam2SMILES/test_pfam_v2.txt", False)
-train = get_set("dataset/pfam2SMILES/train_pfam_v2.txt", False)
-# datset = get_set("dataset/pfam2SMILES/dataset_pfam2SMILES_v2.txt", True)
-# find intersection
-print(len(test))
-print(len(train))
-intersection = test.intersection(train)
-print(len(intersection), "inter")
-# print(intersection)
+# def get_set(file_path, target):
+#     with open (file_path, "r") as f:
+#         if target:
+#             target_set = set()
+#             for line in f:
+#                 # find when a line already is in the set
+#                 label = line.split("\t")[1]
+#                 if label in target_set:
+#                     # print(label)
+#                     pass
+#                 else:
+#                     target_set.add(label)
+#             return target_set
+#         else:
+#             target_set=set()
+#             for line in f:
+#                 # find when a line already is in the set
+#                 if line in target_set:
+#                     # print(line, "Full line")
+#                     pass
+#                 else:
+#                     target_set.add(line)
+#             return target_set
+#
+# test = get_set("dataset/pfam2SMILES/test_pfam_v2.txt", False)
+# train = get_set("dataset/pfam2SMILES/train_pfam_v2.txt", False)
+# # datset = get_set("dataset/pfam2SMILES/dataset_pfam2SMILES_v2.txt", True)
+# # find intersection
+# print(len(test))
+# print(len(train))
+# intersection = test.intersection(train)
+# print(len(intersection), "inter")
+# # print(intersection)
 
 # ### plot for distrubtion of char error
 #

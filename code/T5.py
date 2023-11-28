@@ -160,7 +160,7 @@ for epoch in range(num_epochs):
         train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
         outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
 
-        if epoch == 11 and sampling:
+        if epoch == 10 and sampling:
             # Generate predictions
             generated_ids = t5_model.generate(inputs, attention_mask=attention_mask, num_return_sequences=num_gen_seqs, temperature=0.7)
             # Decode generated ids to text and save them
@@ -226,7 +226,7 @@ for epoch in range(num_epochs):
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
 
-        if epoch == 11 and sampling:
+        if epoch == 10 and sampling:
             # Generate predictions
             generated_ids = t5_model.generate(inputs, attention_mask=attention_mask, num_return_sequences=num_gen_seqs, temperature=0.7)
             # Decode generated ids to text and save them
