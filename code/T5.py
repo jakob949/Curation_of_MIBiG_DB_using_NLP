@@ -180,6 +180,7 @@ for epoch in range(num_epochs):
                             file.write(line)
 
         loss = outputs.loss
+        loss.mean()
         loss.backward()
         optimizer.step()
         optimizer.zero_grad()
@@ -283,5 +284,5 @@ for epoch in range(num_epochs):
     # save the model
     # if epoch == 17:
     # if epoch > 2:
-    torch.save(t5_model, f"model_{args.output_file_name}_{epoch}.pt")
-    t5_model.config.to_json_file(f"config_{args.output_file_name}_{epoch}.json")
+    torch.save(t5_model, f"models/model_{args.output_file_name}_{epoch}.pt")
+    t5_model.module.config.to_json_file(f"models/config_{args.output_file_name}_{epoch}.json")
