@@ -117,7 +117,7 @@ t5_model = torch.nn.DataParallel(t5_model)
 train_dataset = Dataset("train_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
 test_dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
 
-batch_size_train = 14
+batch_size_train = 12
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
@@ -130,7 +130,7 @@ bleu = BLEUScore()
 char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 
-num_epochs = 11
+num_epochs = 20
 train_sampling_predictions = []
 test_sampling_predictions = []
 sampling = args.sampling
