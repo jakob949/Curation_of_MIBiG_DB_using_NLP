@@ -117,7 +117,7 @@ t5_model = torch.nn.DataParallel(t5_model)
 train_dataset = Dataset("dataset/pfam2SMILES/train_pfam_v2.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/pfam2SMILES/test_pfam_v2.txt", t5_tokenizer)
 
-batch_size_train = 6
+batch_size_train = 3
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
