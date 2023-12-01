@@ -1,6 +1,10 @@
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from rdkit import Chem
 from torchmetrics.text import BLEUScore, ROUGEScore
+
+
+
+
 # Function to get canonical SMILES
 #
 # with open("train_text2SMILES_I2V_gio_method_for_pred_base.txt", "r") as infile:
@@ -20,13 +24,16 @@ def canonical_smiles(smiles):
     if mol is not None:
         return Chem.MolToSmiles(mol, isomericSmiles=True)
     else:
-        return None
+        return smiles
+from torchmetrics.text import ROUGEScore
+def rouge_score(pred, true):
+    rouge.update(pred, true)
+    r_score = rouge.compute()
+    print(r_score)
+def is_smile_valid(smile):
+    molecule = Chem.MolFromSmiles(smile)
+    return molecule is not None
 
-
-# def is_smile_valid(smile):
-#     molecule = Chem.MolFromSmiles(smile)
-#     return molecule is not None
-#
 # is_smile_valid("CC(=O)O[C@@H]1C[C@@H]2[C@](C=CC(=O)C2(C)C)([C@@H]3[C@@]1(C4=CC(=O)[C@H]([C@@]4(CC3)C)C5=COC=C5)C)C")
 # with open("test_text2SMILES_I2V_gio_method_base_correct_format.txt", "r") as file:
 #     for line in file:
@@ -36,11 +43,13 @@ def canonical_smiles(smiles):
 #         if is_smile_valid(pred):
 #             pass
 #         else:
-#             print("invalid - pred")
+#             print(f"invalid - pred {pred} => True {true}")
+#
 #         if is_smile_valid(true):
 #             pass
 #         else:
 #             print("invalid - true")
+
 
 
 # def process_batch(input_batch, target_batch, model, tokenizer, max_length, num_beams):
@@ -97,26 +106,25 @@ def canonical_smiles(smiles):
 #         total_count += process_batch(input_batch, target_batch, model, tokenizer, max_length, num_beams)
 #
 # print("Total correct predictions:", total_count, "Total processed:", i + 1)
-
 import torch
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
-
+#
 # Check if CUDA is available
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 max_length = 512
 num_beams = 3
 
-# model = AutoModelForSeq2SeqLM.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
-# tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
+# rouge = ROUGEScore()
 
-model_path = "model_241123_text2SMILES_I2V_2.pt"
-model = AutoModelForSeq2SeqLM.from_pretrained(model_path, local_files_only=True)
+model_path = "model_241123_text2SMILES_I2V_3.pt"
+model = torch.load(model_path)
 tokenizer = AutoTokenizer.from_pretrained("GT4SD/multitask-text-and-chemistry-t5-base-augm")
+
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+model.to(device)
 
 
 # Move model to the selected device (GPU or CPU)
-model.to(device)
 
 count = 0
 with open("test_text2SMILES_I2V_gio_method_base_correct_format.txt", "r") as infile:
@@ -142,7 +150,7 @@ with open("test_text2SMILES_I2V_gio_method_base_correct_format.txt", "r") as inf
         if true_canonical == pred_canonical:
             count += 1
             print("correct")
-        with open("test_text2SMILES_I2V_gio_method_for_pred_base_281123.txt", "a") as file:
+        with open("test_text2SMILES_I2V_num_beam_3_011223.txt", "a") as file:
             print(f"Pred:\t{output}\tTrue:\t{target}", file=file)
         print(i)
 print("count", count, "total", i, "acc", count/i)
