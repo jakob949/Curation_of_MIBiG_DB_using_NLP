@@ -114,10 +114,10 @@ t5_model = torch.nn.DataParallel(t5_model)
 
 #load data
 # dataset/train_i2v_BGC2SMM_250923.txt => no bias set
-# train_dataset = Dataset("train_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
-train_dataset = Dataset("train_iv2_classes.txt", t5_tokenizer)
-# test_dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
-test_dataset = Dataset("test_iv2_classes.txt", t5_tokenizer)
+train_dataset = Dataset("train_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
+# train_dataset = Dataset("train_iv2_classes.txt", t5_tokenizer)
+test_dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
+# test_dataset = Dataset("test_iv2_classes.txt", t5_tokenizer)
 
 batch_size_train = 2
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
