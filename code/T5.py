@@ -9,7 +9,7 @@ import argparse as arg
 from torchmetrics.text import BLEUScore, ROUGEScore
 from torchmetrics import CharErrorRate, SacreBLEUScore
 from rdkit import Chem
-from peft import get_peft_model, LoraConfig, TaskType
+# from peft import get_peft_model, LoraConfig, TaskType
 
 def count_valid_smiles(smiles_list: list) -> int:
     valid_count = 0
@@ -181,6 +181,7 @@ for epoch in range(num_epochs):
 
         loss = outputs.loss
         loss.mean()
+        print(loss)
         loss.backward()
         optimizer.step()
         optimizer.zero_grad()
