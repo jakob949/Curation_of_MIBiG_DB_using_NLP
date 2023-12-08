@@ -131,7 +131,7 @@ with open("test_text2SMILES_I2V_gio_method_base_correct_format.txt", "r") as fil
         if pred_canonical == true_canonical:
             count += 1
 
-    accuracy = count / total if total > 0 else 0
+    accuracy = count / total
     print("Acc =", accuracy)
 
 # ### new preds format for molecule validation

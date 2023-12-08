@@ -127,7 +127,7 @@ train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=Tr
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # Optimizer
-learning_rate = 7e-4
+learning_rate = 7e-3
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay = 0.05)
 
 rouge = ROUGEScore()
