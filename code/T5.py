@@ -122,12 +122,15 @@ train_dataset = Dataset("train_text2SMILES_I2V_gio_method_base_correct_format.tx
 test_dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
 # test_dataset = Dataset("test_iv2_classes.txt", t5_tokenizer)
 
-batch_size_train = 18
-train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
+num_workers = 12
+batch_size_train = 20
+
+# Modify the DataLoader instances
+train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, num_workers=num_workers)
+test_loader = DataLoader(test_dataset, batch_size=10, shuffle=False, num_workers=num_workers)
 
 # Optimizer
-learning_rate = 7e-3
+learning_rate = 4e-4
 optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay = 0.05)
 
 rouge = ROUGEScore()
