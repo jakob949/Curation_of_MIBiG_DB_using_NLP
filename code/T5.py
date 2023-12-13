@@ -174,7 +174,7 @@ for epoch in range(num_epochs):
 
         if epoch == 0 and sampling:
             # Generate predictions
-            generated_ids = t5_model.generate(inputs, attention_mask=attention_mask, num_return_sequences=num_gen_seqs, temperature=0.7)
+            generated_ids = t5_model.module.generate(inputs, attention_mask=attention_mask, num_return_sequences=num_gen_seqs, temperature=0.7)
             # Decode generated ids to text and save them
             generated_texts = [t5_tokenizer.decode(generated_id, skip_special_tokens=True) for generated_id in generated_ids]
             # saving predictions
@@ -183,6 +183,7 @@ for epoch in range(num_epochs):
             with open(f'train_sampling_{num_gen_seqs}_for_iv2_{args.output_file_name}.txt', 'w') as file:
                 for batch in train_sampling_predictions:
                     generated_texts, true_labels = batch
+                    print("sampling text: ", generated_texts, true_labels)
                     for i, true_label in enumerate(true_labels):
                         for j in range(num_gen_seqs):
                             line = f"iv2_sampling_{num_gen_seqs}: {generated_texts[i * num_gen_seqs + j]}\t{true_label}\n"
@@ -242,7 +243,7 @@ for epoch in range(num_epochs):
 
         if epoch == 0 and sampling:
             # Generate predictions
-            generated_ids = t5_model.generate(inputs, attention_mask=attention_mask, num_return_sequences=num_gen_seqs, temperature=0.7)
+            generated_ids = t5_model.module.generate(inputs, attention_mask=attention_mask, num_return_sequences=num_gen_seqs, temperature=0.7)
             # Decode generated ids to text and save them
             generated_texts = [t5_tokenizer.decode(generated_id, skip_special_tokens=True) for generated_id in generated_ids]
             # saving predictions
