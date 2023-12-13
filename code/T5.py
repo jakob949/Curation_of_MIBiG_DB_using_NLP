@@ -174,7 +174,7 @@ for epoch in range(num_epochs):
 
         if epoch == 0 and sampling:
             # Generate predictions
-            generated_ids = t5_model.module.generate(inputs, attention_mask=attention_mask, num_return_sequences=num_gen_seqs, temperature=0.7)
+            generated_ids = t5_model.module.generate(inputs, attention_mask=attention_mask, num_beams=5, num_return_sequences=num_gen_seqs, temperature=0.7)
             # Decode generated ids to text and save them
             generated_texts = [t5_tokenizer.decode(generated_id, skip_special_tokens=True) for generated_id in generated_ids]
             # saving predictions
@@ -243,7 +243,7 @@ for epoch in range(num_epochs):
 
         if epoch == 0 and sampling:
             # Generate predictions
-            generated_ids = t5_model.module.generate(inputs, attention_mask=attention_mask, num_return_sequences=num_gen_seqs, temperature=0.7)
+            generated_ids = t5_model.module.generate(inputs, attention_mask=attention_mask, num_beams=5, num_return_sequences=num_gen_seqs, temperature=0.7)
             # Decode generated ids to text and save them
             generated_texts = [t5_tokenizer.decode(generated_id, skip_special_tokens=True) for generated_id in generated_ids]
             # saving predictions
