@@ -189,8 +189,8 @@ for epoch in range(num_epochs):
                 # Saving predictions
                 with open(f'train_sampling_{num_gen_seqs}_for_iv2_{args.output_file_name}.txt', 'a') as file:
                     for generated_text in generated_texts:
-                        print(f"Input: {input_text}\tGenerated: {generated_text}\n")
-                        line = f"Input: {input_text}\tGenerated: {generated_text}\n"
+                        print(f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{train_true_labels}")
+                        line = f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{train_true_labels}\n"
                         file.write(line)
 
         loss = outputs.loss
@@ -253,7 +253,7 @@ for epoch in range(num_epochs):
             # saving predictions
             test_sampling_predictions.append((generated_texts, train_true_labels))
 
-            with open(f'test_sampling_{num_gen_seqs}_for_iv2_{args.output_file_name}.txt', 'w') as file:
+            with open(f'test_sampling_{num_gen_seqs}_for_iv2_{args.output_file_name}.txt', 'a') as file:
                 for batch in test_sampling_predictions:
                     generated_texts, true_labels = batch
                     for i, true_label in enumerate(true_labels):
