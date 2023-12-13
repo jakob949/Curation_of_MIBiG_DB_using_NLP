@@ -173,7 +173,7 @@ for epoch in range(num_epochs):
         outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
 
         if epoch == 0 and sampling:
-            # Generate predictions
+            # Generate predictions for each input
             generated_ids = t5_model.module.generate(inputs, attention_mask=attention_mask, num_beams=5,
                                                      num_return_sequences=num_gen_seqs, temperature=0.7)
 
@@ -184,13 +184,12 @@ for epoch in range(num_epochs):
             for i in range(inputs.size(0)):
                 generated_texts = [t5_tokenizer.decode(generated_id, skip_special_tokens=True) for generated_id in
                                    generated_ids[i]]
-                true_label = t5_tokenizer.decode(batch["labels"][i].tolist(), skip_special_tokens=True)
+                input_text = t5_tokenizer.decode(batch["input_ids"][i].tolist(), skip_special_tokens=True)
 
                 # Saving predictions
                 with open(f'train_sampling_{num_gen_seqs}_for_iv2_{args.output_file_name}.txt', 'a') as file:
                     for generated_text in generated_texts:
-                        print(generated_text, true_label)
-                        line = f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{true_label}\n"
+                        line = f"Input: {input_text}\tGenerated: {generated_text}\n"
                         file.write(line)
 
         loss = outputs.loss
