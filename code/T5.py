@@ -189,7 +189,7 @@ for epoch in range(num_epochs):
                 # Saving predictions
                 with open(f'train_sampling_{num_gen_seqs}_for_iv2_{args.output_file_name}.txt', 'a') as file:
                     for generated_text in generated_texts:
-                        print(f"Input: {input_text}\tGenerated: {generated_text}")
+                        print(f"Input: {input_text}\tGenerated: {generated_text}\n")
                         line = f"Input: {input_text}\tGenerated: {generated_text}\n"
                         file.write(line)
 
