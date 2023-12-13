@@ -117,13 +117,13 @@ t5_model = torch.nn.DataParallel(t5_model)
 
 #load data
 # dataset/train_i2v_BGC2SMM_250923.txt => no bias set
-train_dataset = Dataset("train_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
-# train_dataset = Dataset("train_iv2_classes.txt", t5_tokenizer)
-test_dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
-# test_dataset = Dataset("test_iv2_classes.txt", t5_tokenizer)
+# train_dataset = Dataset("train_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/pfam2SMILES/train_pfam_v2.txt", t5_tokenizer)
+# test_dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/pfam2SMILES/test_pfam_v2.txt", t5_tokenizer)
 
-num_workers = 12
-batch_size_train = 20
+num_workers = 4
+batch_size_train = 1
 
 # Modify the DataLoader instances
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, num_workers=num_workers)
@@ -142,6 +142,7 @@ num_epochs = 20
 train_sampling_predictions = []
 test_sampling_predictions = []
 sampling = args.sampling
+print(sampling, "type: ", type(sampling))
 num_gen_seqs = 5
 
 with open(f"information_{args.output_file_name}.txt", "w") as predictions_file:
@@ -171,7 +172,7 @@ for epoch in range(num_epochs):
         train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
         outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
 
-        if epoch == 10 and sampling:
+        if epoch == 0 and sampling:
             # Generate predictions
             generated_ids = t5_model.generate(inputs, attention_mask=attention_mask, num_return_sequences=num_gen_seqs, temperature=0.7)
             # Decode generated ids to text and save them
@@ -239,7 +240,7 @@ for epoch in range(num_epochs):
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
 
-        if epoch == 10 and sampling:
+        if epoch == 0 and sampling:
             # Generate predictions
             generated_ids = t5_model.generate(inputs, attention_mask=attention_mask, num_return_sequences=num_gen_seqs, temperature=0.7)
             # Decode generated ids to text and save them
