@@ -189,6 +189,7 @@ for epoch in range(num_epochs):
                 # Saving predictions
                 with open(f'train_sampling_{num_gen_seqs}_for_iv2_{args.output_file_name}.txt', 'a') as file:
                     for generated_text in generated_texts:
+                        print(generated_text, true_label)
                         line = f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{true_label}\n"
                         file.write(line)
 
