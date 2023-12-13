@@ -123,7 +123,7 @@ train_dataset = Dataset("dataset/pfam2SMILES/train_pfam_v2.txt", t5_tokenizer)
 test_dataset = Dataset("dataset/pfam2SMILES/test_pfam_v2.txt", t5_tokenizer)
 
 num_workers = 4
-batch_size_train = 3
+batch_size_train = 2
 
 # Modify the DataLoader instances
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, num_workers=num_workers)
