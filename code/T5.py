@@ -138,7 +138,7 @@ bleu = BLEUScore()
 char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 
-num_epochs = 11
+num_epochs = 16
 train_sampling_predictions = []
 test_sampling_predictions = []
 sampling = args.sampling
@@ -172,7 +172,7 @@ for epoch in range(num_epochs):
         train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
         outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
 
-        if epoch == 10 and sampling:
+        if epoch == 15 and sampling:
             # Generate predictions for each input
             generated_ids = t5_model.module.generate(inputs, attention_mask=attention_mask, num_beams=5,
                                                      num_return_sequences=num_gen_seqs, temperature=0.7, max_new_tokens=500)
@@ -245,7 +245,7 @@ for epoch in range(num_epochs):
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
 
-        if epoch == 10 and sampling:
+        if epoch == 15 and sampling:
             # Generate predictions
             generated_ids = t5_model.module.generate(inputs, attention_mask=attention_mask, num_beams=5,
                                                      num_return_sequences=num_gen_seqs, temperature=0.7, max_new_tokens=500)
