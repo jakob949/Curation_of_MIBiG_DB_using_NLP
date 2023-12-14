@@ -127,7 +127,7 @@ batch_size_train = 6
 
 # Modify the DataLoader instances
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, num_workers=num_workers)
-test_loader = DataLoader(test_dataset, batch_size=10, shuffle=False, num_workers=num_workers)
+test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=num_workers)
 
 # Optimizer
 learning_rate = 4e-4
