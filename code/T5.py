@@ -193,6 +193,7 @@ for epoch in range(num_epochs):
                     for generated_text in generated_texts:
                         line = f"{generated_text}\t{true_label}\n"  # Pair each prediction with the true label
                         file.write(line)
+                        print(f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{true_label}")
 
         loss = outputs.loss
         loss = loss.mean()
