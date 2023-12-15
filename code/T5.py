@@ -172,7 +172,7 @@ for epoch in range(num_epochs):
         train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
         outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
 
-        if epoch == 15 and sampling:
+        if epoch == 0 and sampling:
             # Generate predictions for each input
             generated_ids = t5_model.module.generate(inputs, attention_mask=attention_mask, num_beams=5,
                                                      num_return_sequences=num_gen_seqs, temperature=0.7, max_new_tokens=500)
@@ -191,13 +191,12 @@ for epoch in range(num_epochs):
                 # Saving predictions with corresponding true labels
                 with open(f'train_sampling_{num_gen_seqs}_for_iv2_{args.output_file_name}.txt', 'a') as file:
                     for generated_text in generated_texts:
-                        line = f"{generated_text}\t{true_label}\n"  # Pair each prediction with the true label
+                        line = f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{true_label}\n"  # Pair each prediction with the true label
                         file.write(line)
                         print(f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{true_label}")
 
         loss = outputs.loss
         loss = loss.mean()
-        print(loss)
         loss.backward()
         optimizer.step()
         optimizer.zero_grad()
@@ -207,7 +206,7 @@ for epoch in range(num_epochs):
             train_predicted_labels = [t5_tokenizer.decode(logits.argmax(dim=-1).tolist(), skip_special_tokens=True) for logits in outputs.logits]
 
             train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
-            Num_correct_val_mols_train += count_valid_smiles(train_predicted_labels)
+            # Num_correct_val_mols_train += count_valid_smiles(train_predicted_labels)
 
             with open(f"predictions_train_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch\t{epoch + 1}\tTrue:\t{train_true_labels}\tPred:\t{train_predicted_labels}\task\t{task_train}", file=predictions_file)
@@ -272,7 +271,7 @@ for epoch in range(num_epochs):
             test_predicted_labels = [t5_tokenizer.decode(logits.argmax(dim=-1).tolist(), skip_special_tokens=True) for logits in outputs.logits]
             test_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
 
-            Num_correct_val_mols_test += count_valid_smiles(test_predicted_labels)
+            # Num_correct_val_mols_test += count_valid_smiles(test_predicted_labels)
 
             with open(f"predictions_test_{args.output_file_name}.txt", "a") as predictions_file:
                 print(f"Epoch {epoch + 1}\tTrue:\t{test_true_labels}\tPred:\t{test_predicted_labels}\ttask\t{task_test}",
