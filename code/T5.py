@@ -143,7 +143,7 @@ train_sampling_predictions = []
 test_sampling_predictions = []
 sampling = args.sampling
 print(sampling, "type: ", type(sampling))
-num_gen_seqs = 2
+num_gen_seqs = 5
 
 with open(f"information_{args.output_file_name}.txt", "w") as predictions_file:
     print(">T5 model: ", T5_model_name, " Cuda available:", device, file=predictions_file)
