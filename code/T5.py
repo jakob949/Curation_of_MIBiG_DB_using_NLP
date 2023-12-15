@@ -172,7 +172,7 @@ for epoch in range(num_epochs):
         train_true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
         outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
 
-        if epoch == 0 and sampling:
+        if epoch == 15 and sampling:
             # Generate predictions for each input
             generated_ids = t5_model.module.generate(inputs, attention_mask=attention_mask, num_beams=5,
                                                      num_return_sequences=num_gen_seqs, temperature=0.7, max_new_tokens=500)
@@ -193,7 +193,7 @@ for epoch in range(num_epochs):
                     for generated_text in generated_texts:
                         line = f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{true_label}\n"  # Pair each prediction with the true label
                         file.write(line)
-                        print(f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{true_label}")
+                        # print(f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{true_label}")
 
         loss = outputs.loss
         loss = loss.mean()
@@ -247,7 +247,7 @@ for epoch in range(num_epochs):
         labels = batch["labels"].to(device)
 
         if epoch == 15 and sampling:
-            # Generate predictions
+            # Generate predictions for each input
             generated_ids = t5_model.module.generate(inputs, attention_mask=attention_mask, num_beams=5,
                                                      num_return_sequences=num_gen_seqs, temperature=0.7, max_new_tokens=500)
 
@@ -256,15 +256,18 @@ for epoch in range(num_epochs):
 
             # Decode generated ids to text and save them
             for i in range(inputs.size(0)):
-                generated_texts = [t5_tokenizer.decode(generated_id, skip_special_tokens=True) for generated_id in generated_ids[i]]
+                generated_texts = [t5_tokenizer.decode(generated_id, skip_special_tokens=True)
+                                   for generated_id in generated_ids[i]]
                 input_text = t5_tokenizer.decode(batch["input_ids"][i].tolist(), skip_special_tokens=True)
+                true_label = t5_tokenizer.decode(batch["labels"][i].tolist(),
+                                                 skip_special_tokens=True)  # Get the true label for the current input
 
-                # Saving predictions
+                # Saving predictions with corresponding true labels
                 with open(f'test_sampling_{num_gen_seqs}_for_iv2_{args.output_file_name}.txt', 'a') as file:
                     for generated_text in generated_texts:
-                        print(f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{test_true_labels}")
-                        line = f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{test_true_labels}\n"
+                        line = f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{true_label}\n"  # Pair each prediction with the true label
                         file.write(line)
+                        # print(f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{true_label}")
 
         with torch.no_grad():
             outputs = t5_model(input_ids=inputs, attention_mask=attention_mask, labels=labels)
