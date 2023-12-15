@@ -182,15 +182,16 @@ for epoch in range(num_epochs):
 
             # Decode generated ids to text and save them
             for i in range(inputs.size(0)):
-                generated_texts = [t5_tokenizer.decode(generated_id, skip_special_tokens=True) for generated_id in
-                                   generated_ids[i]]
+                generated_texts = [t5_tokenizer.decode(generated_id, skip_special_tokens=True)
+                                   for generated_id in generated_ids[i]]
                 input_text = t5_tokenizer.decode(batch["input_ids"][i].tolist(), skip_special_tokens=True)
+                true_label = t5_tokenizer.decode(batch["labels"][i].tolist(),
+                                                 skip_special_tokens=True)  # Get the true label for the current input
 
-                # Saving predictions
+                # Saving predictions with corresponding true labels
                 with open(f'train_sampling_{num_gen_seqs}_for_iv2_{args.output_file_name}.txt', 'a') as file:
                     for generated_text in generated_texts:
-                        print(f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{train_true_labels}")
-                        line = f"iv2_sampling_{num_gen_seqs}: {generated_text}\t{train_true_labels}\n"
+                        line = f"{generated_text}\t{true_label}\n"  # Pair each prediction with the true label
                         file.write(line)
 
         loss = outputs.loss
