@@ -117,21 +117,21 @@ t5_model = torch.nn.DataParallel(t5_model)
 
 #load data
 # dataset/train_i2v_BGC2SMM_250923.txt => no bias set
-# train_dataset = Dataset("train_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
-train_dataset = Dataset("train_sampling_5_for_iv2_151223_pfam2SMILES_sampling_5.txt", t5_tokenizer)
-# test_dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
-test_dataset = Dataset("test_sampling_5_for_iv2_151223_pfam2SMILES_sampling_5.txt", t5_tokenizer)
+train_dataset = Dataset("train_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
+# train_dataset = Dataset("train_sampling_5_for_iv2_151223_pfam2SMILES_sampling_5.txt", t5_tokenizer)
+test_dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
+# test_dataset = Dataset("test_sampling_5_for_iv2_151223_pfam2SMILES_sampling_5.txt", t5_tokenizer)
 
-num_workers = 4
-batch_size_train = 4
+num_workers = 10
+batch_size_train = 8
 
 # Modify the DataLoader instances
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, num_workers=num_workers)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=num_workers)
 
 # Optimizer
-learning_rate = 4e-4
-optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay = 0.05)
+learning_rate = 2e-4
+optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate, weight_decay = 0.015)
 
 rouge = ROUGEScore()
 bleu = BLEUScore()
