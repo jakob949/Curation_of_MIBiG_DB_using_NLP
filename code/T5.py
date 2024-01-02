@@ -139,12 +139,12 @@ bleu = BLEUScore()
 char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 
-num_epochs = 11
+num_epochs = 5
 train_sampling_predictions = []
 test_sampling_predictions = []
 sampling = args.sampling
 print(sampling, "type: ", type(sampling))
-num_gen_seqs = 5
+num_gen_seqs = 1
 
 with open(f"information_{args.output_file_name}.txt", "w") as predictions_file:
     print(">T5 model: ", T5_model_name, " Cuda available:", device, file=predictions_file)
@@ -306,7 +306,7 @@ for epoch in range(num_epochs):
             f"Epoch\t{epoch + 1}\tTest Accuracy:\t{test_accuracy_accumulated / num_test_batches}\tAvg Test ROUGE-1 F1 Score\t{rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t{bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t{char_error_rate_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t{sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test\t{Num_correct_val_mols_test}",
             file=scores_file)
     # save the model
-    if epoch == 10:
+    if epoch == 4 or epoch == 3:
 
         t5_model.save_pretrained(f"models/model_{args.output_file_name}_{epoch}.pt")
     # torch.save(t5_model, f"models/model_{args.output_file_name}_{epoch}.pt")
