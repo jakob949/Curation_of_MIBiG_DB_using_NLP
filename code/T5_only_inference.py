@@ -66,20 +66,22 @@ class Dataset(Dataset):
         }
 
 
-T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+# T5_model_name = 'google/t5-efficient-tiny'
+# T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+T5_model_name = 'model_220923_i2v_BGC2SMM.pt'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
-t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name)
+# t5_model = torch.load(T5_model_name)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
 #load data
-dataset = Dataset("dataset/Text2SMILES_Gio/test.txt", t5_tokenizer)
+dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
 
 loader = DataLoader(dataset, batch_size=1, shuffle=False)
 
 print("starting inference")
-with open("test_text2SMILES_I2V.txt", "w") as predictions_file:
+with open("test_i2v_gios_data_using_a_saved_BGC2SMM_model_for_inference.txt", "w") as predictions_file:
     for batch in loader:
         with torch.no_grad():
             inputs = batch["input_ids"].to(device)
@@ -90,3 +92,4 @@ with open("test_text2SMILES_I2V.txt", "w") as predictions_file:
             decoded_predictions = [t5_tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
 
             print("text2SMILES_I2V: ", decoded_predictions[0], "\t", true_labels[0], file=predictions_file, sep="")
+            print("text2SMILES_I2V: ", decoded_predictions[0], "\t", true_labels[0], sep="")
