@@ -68,8 +68,9 @@ class Dataset(Dataset):
 
 # T5_model_name = 'google/t5-efficient-tiny'
 # T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
-T5_model_name = 'model_220923_i2v_BGC2SMM.pt'
+T5_model_name = 'models/model_091223_i2v_text2SMILES_3.pt'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
+
 # t5_model = torch.load(T5_model_name)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -90,6 +91,6 @@ with open("test_i2v_gios_data_using_a_saved_BGC2SMM_model_for_inference.txt", "w
             true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
             # Decode the predictions
             decoded_predictions = [t5_tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
-
+            print()
             print("text2SMILES_I2V: ", decoded_predictions[0], "\t", true_labels[0], file=predictions_file, sep="")
             print("text2SMILES_I2V: ", decoded_predictions[0], "\t", true_labels[0], sep="")
