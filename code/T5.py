@@ -11,6 +11,7 @@ from torchmetrics import CharErrorRate, SacreBLEUScore
 from rdkit import Chem
 # from peft import get_peft_model, LoraConfig, TaskType
 
+
 def count_valid_smiles(smiles_list: list) -> int:
     valid_count = 0
     for smiles in smiles_list:
@@ -117,13 +118,13 @@ t5_model = torch.nn.DataParallel(t5_model)
 
 #load data
 # dataset/train_i2v_BGC2SMM_250923.txt => no bias set
-train_dataset = Dataset("train_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
+train_dataset = Dataset("train_pfam_i2v.txt", t5_tokenizer)
 # train_dataset = Dataset("train_sampling_5_for_iv2_151223_pfam2SMILES_sampling_5.txt", t5_tokenizer)
-test_dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
+test_dataset = Dataset("test_pfam_i2v.txt", t5_tokenizer)
 # test_dataset = Dataset("test_sampling_5_for_iv2_151223_pfam2SMILES_sampling_5.txt", t5_tokenizer)
 
 num_workers = 10
-batch_size_train = 8
+batch_size_train = 6
 
 # Modify the DataLoader instances
 train_loader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, num_workers=num_workers)
@@ -138,7 +139,7 @@ bleu = BLEUScore()
 char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 
-num_epochs = 16
+num_epochs = 11
 train_sampling_predictions = []
 test_sampling_predictions = []
 sampling = args.sampling
@@ -305,7 +306,8 @@ for epoch in range(num_epochs):
             f"Epoch\t{epoch + 1}\tTest Accuracy:\t{test_accuracy_accumulated / num_test_batches}\tAvg Test ROUGE-1 F1 Score\t{rouge_test_accumulated / num_test_batches}\tAvg Test BLEU Score\t{bleu_test_accumulated / num_test_batches}\tAvg Test Char Error Rate\t{char_error_rate_test_accumulated / num_test_batches}\tAvg Test SacreBLEU Score\t{sacre_bleu_test_accumulated / num_test_batches}\tNum correct val mols test\t{Num_correct_val_mols_test}",
             file=scores_file)
     # save the model
-    # if epoch == 17:
-    # if epoch > 2:
-    torch.save(t5_model, f"models/model_{args.output_file_name}_{epoch}.pt")
-    t5_model.module.config.to_json_file(f"models/config_{args.output_file_name}_{epoch}.json")
+    if epoch == 10:
+
+        t5_model.save_pretrained(f"models/model_{args.output_file_name}_{epoch}.pt")
+    # torch.save(t5_model, f"models/model_{args.output_file_name}_{epoch}.pt")
+    # t5_model.module.config.to_json_file(f"models/config_{args.output_file_name}_{epoch}.json")
