@@ -67,9 +67,9 @@ class Dataset(Dataset):
 
 
 # T5_model_name = 'google/t5-efficient-tiny'
-# T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
-T5_model_name = 'model_220923_i2v_BGC2SMM.pt'
+T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
+T5_model_name = 'model_220923_i2v_BGC2SMM.pt'
 
 t5_model = torch.load(T5_model_name)
 
