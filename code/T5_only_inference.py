@@ -68,10 +68,10 @@ class Dataset(Dataset):
 
 # T5_model_name = 'google/t5-efficient-tiny'
 # T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
-T5_model_name = 'models/model_091223_i2v_text2SMILES_3.pt'
+T5_model_name = 'model_220923_i2v_BGC2SMM.pt'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 
-# t5_model = torch.load(T5_model_name)
+t5_model = torch.load(T5_model_name)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
