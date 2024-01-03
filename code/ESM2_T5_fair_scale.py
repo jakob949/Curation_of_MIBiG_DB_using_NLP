@@ -109,7 +109,8 @@ peft_config = LoraConfig(
     task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=8, lora_alpha=32, lora_dropout=0.3
 )
 
-T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+# T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+T5_model_name = 'google/t5-efficient-tiny'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
@@ -133,15 +134,15 @@ fsdp_params = dict(
 
 with enable_wrap(wrapper_cls=FSDP, **fsdp_params):
 
-    # esm_model.eval()
-    # # Wrap each layer in FSDP separately
-    # for name, child in esm_model.named_children():
-    #     if name == "layers":
-    #         for layer_name, layer in child.named_children():
-    #             wrapped_layer = wrap(layer)
-    #             setattr(child, layer_name, wrapped_layer)
-    t5_model = wrap(t5_model)
-    # esm_model = wrap(esm_model)
+    esm_model.eval()
+    # Wrap each layer in FSDP separately
+    for name, child in esm_model.named_children():
+        if name == "layers":
+            for layer_name, layer in child.named_children():
+                wrapped_layer = wrap(layer)
+                setattr(child, layer_name, wrapped_layer)
+    # t5_model = wrap(t5_model)
+    esm_model = wrap(esm_model)
 
 
 projection = nn.Linear(esm_model.config.hidden_size, t5_config.d_model)
