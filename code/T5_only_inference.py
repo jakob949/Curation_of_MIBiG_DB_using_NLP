@@ -76,12 +76,6 @@ t5_model = torch.load(T5_model_name)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
-# Check if the model is a DataParallel object
-if isinstance(t5_model, torch.nn.DataParallel):
-    generate_function = t5_model.module.generate
-else:
-    generate_function = t5_model.generate
-
 #load data
 dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
 
@@ -93,7 +87,15 @@ with open("test_i2v_gios_data_using_a_saved_BGC2SMM_model_for_inference.txt", "w
         with torch.no_grad():
             inputs = batch["input_ids"].to(device)
             attention_mask = batch["attention_mask"].to(device)
-            outputs = t5_model.generate(input_ids=inputs, attention_mask=attention_mask, num_beams=10, max_length=512)
+
+            # Check if the model is a DataParallel object and use appropriate generate function
+            if isinstance(t5_model, torch.nn.DataParallel):
+                outputs = t5_model.module.generate(input_ids=inputs, attention_mask=attention_mask, num_beams=10,
+                                                   max_length=512)
+            else:
+                outputs = t5_model.generate(input_ids=inputs, attention_mask=attention_mask, num_beams=10,
+                                            max_length=512)
+
             true_labels = [t5_tokenizer.decode(label.tolist(), skip_special_tokens=True) for label in batch["labels"]]
             # Decode the predictions
             decoded_predictions = [t5_tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
