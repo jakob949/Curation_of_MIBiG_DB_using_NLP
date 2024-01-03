@@ -133,15 +133,15 @@ fsdp_params = dict(
 
 with enable_wrap(wrapper_cls=FSDP, **fsdp_params):
 
-    esm_model.eval()
-    # Wrap each layer in FSDP separately
-    for name, child in esm_model.named_children():
-        if name == "layers":
-            for layer_name, layer in child.named_children():
-                wrapped_layer = wrap(layer)
-                setattr(child, layer_name, wrapped_layer)
+    # esm_model.eval()
+    # # Wrap each layer in FSDP separately
+    # for name, child in esm_model.named_children():
+    #     if name == "layers":
+    #         for layer_name, layer in child.named_children():
+    #             wrapped_layer = wrap(layer)
+    #             setattr(child, layer_name, wrapped_layer)
     t5_model = wrap(t5_model)
-    esm_model = wrap(esm_model)
+    # esm_model = wrap(esm_model)
 
 
 projection = nn.Linear(esm_model.config.hidden_size, t5_config.d_model)
