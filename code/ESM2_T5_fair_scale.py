@@ -118,7 +118,11 @@ esm_model_name = "facebook/esm2_t6_8M_UR50D"
 esm_tokenizer = AutoTokenizer.from_pretrained(esm_model_name)
 esm_model = AutoModel.from_pretrained(esm_model_name)
 
-torch.distributed.init_process_group(backend="nccl", world_size=1, rank=0)
+# init the distributed world with world_size 1
+url = "tcp://localhost:23456"
+torch.distributed.init_process_group(backend="nccl", init_method=url, world_size=1, rank=0)
+
+
 fsdp_params = dict(
     mixed_precision=True,
     flatten_parameters=True,
