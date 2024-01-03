@@ -158,7 +158,7 @@ bleu = BLEUScore()
 char_error_rate = CharErrorRate()
 sacre_bleu = SacreBLEUScore()
 
-t5_model = get_peft_model(t5_model, peft_config)
+# t5_model = get_peft_model(t5_model, peft_config)
 
 # Training loop
 for epoch in range(num_epochs):
