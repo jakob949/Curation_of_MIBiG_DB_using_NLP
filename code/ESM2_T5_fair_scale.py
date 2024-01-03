@@ -7,7 +7,8 @@ from torchmetrics.text import BLEUScore, ROUGEScore
 from torchmetrics import CharErrorRate, SacreBLEUScore
 import argparse as arg
 from peft import get_peft_model, LoraConfig, TaskType
-from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
+# from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
+from fairscale.nn.data_parallel import FullyShardedDataParallel as FSDP
 from fairscale.nn.wrap import enable_wrap, wrap
 
 
