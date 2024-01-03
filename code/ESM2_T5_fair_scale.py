@@ -7,7 +7,7 @@ from torchmetrics.text import BLEUScore, ROUGEScore
 from torchmetrics import CharErrorRate, SacreBLEUScore
 import argparse as arg
 from peft import get_peft_model, LoraConfig, TaskType
-from fairscale.nn.data_parallel import FullyShardedDataParallel as FSDP
+from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
 from fairscale.nn.wrap import enable_wrap, wrap
 
 
@@ -139,8 +139,8 @@ with enable_wrap(wrapper_cls=FSDP, **fsdp_params):
             for layer_name, layer in child.named_children():
                 wrapped_layer = wrap(layer)
                 setattr(child, layer_name, wrapped_layer)
-
-    esm_model = FSDP(esm_model)
+    t5_model = wrap(t5_model)
+    esm_model = wrap(esm_model)
 
 
 projection = nn.Linear(esm_model.config.hidden_size, t5_config.d_model)
