@@ -76,6 +76,12 @@ t5_model = torch.load(T5_model_name)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
 
+# Check if the model is a DataParallel object
+if isinstance(t5_model, torch.nn.DataParallel):
+    model_to_use = t5_model.module
+else:
+    model_to_use = t5_model
+
 #load data
 dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
 
