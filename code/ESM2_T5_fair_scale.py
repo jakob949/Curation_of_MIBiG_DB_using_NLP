@@ -132,6 +132,7 @@ fsdp_params = dict(
 
 with enable_wrap(wrapper_cls=FSDP, **fsdp_params):
     esm_model = FSDP(esm_model)
+    t5_model = FSDP(t5_model)
 
 
 projection = nn.Linear(esm_model.config.hidden_size, t5_config.d_model)
