@@ -78,9 +78,9 @@ t5_model.to(device)
 
 # Check if the model is a DataParallel object
 if isinstance(t5_model, torch.nn.DataParallel):
-    model_to_use = t5_model.module
+    generate_function = t5_model.module.generate
 else:
-    model_to_use = t5_model
+    generate_function = t5_model.generate
 
 #load data
 dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
