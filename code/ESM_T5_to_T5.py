@@ -156,7 +156,7 @@ os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:512"
 num_epochs = 12
 learning_rate = 5e-5
 
-T5_model_name = 'google/flan-t5-small'
+T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
