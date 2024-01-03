@@ -133,8 +133,6 @@ fsdp_params = dict(
 with enable_wrap(wrapper_cls=FSDP, **fsdp_params):
 
     esm_model.eval()
-    t5_model.eval()
-
     # Wrap each layer in FSDP separately
     for name, child in esm_model.named_children():
         if name == "layers":
@@ -142,14 +140,7 @@ with enable_wrap(wrapper_cls=FSDP, **fsdp_params):
                 wrapped_layer = wrap(layer)
                 setattr(child, layer_name, wrapped_layer)
 
-    for name, child in t5_model.named_children():
-        if name == "layers":
-            for layer_name, layer in child.named_children():
-                wrapped_layer = wrap(layer)
-                setattr(child, layer_name, wrapped_layer)
-
     esm_model = FSDP(esm_model)
-    t5_model = FSDP(t5_model)
 
 
 projection = nn.Linear(esm_model.config.hidden_size, t5_config.d_model)
@@ -198,7 +189,7 @@ for epoch in range(num_epochs):
         labels = batch["labels"].to(device)
 
         concat_hidden_states = concat_seqs(text)
-
+        print("concat_hidden_states.shape: ", concat_hidden_states.shape)
         projected_hidden_states = projection(concat_hidden_states)
         optimizer.zero_grad()
 
