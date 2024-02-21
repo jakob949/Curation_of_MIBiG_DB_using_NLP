@@ -10,3 +10,4 @@ pybliometrics
 textwrap
 collections
 wordcloud
+PEFT
