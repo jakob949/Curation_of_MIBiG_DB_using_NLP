@@ -69,15 +69,15 @@ class Dataset(Dataset):
 # T5_model_name = 'google/t5-efficient-tiny'
 T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
-T5_model_name = 'models/model_020124_i2v_pfam2SMILES_0.pt'
+# T5_model_name = 'models/model_020124_i2v_pfam2SMILES_0.pt'
 
 t5_model = torch.load(T5_model_name)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 t5_model.to(device)
-
+    
 #load data
-dataset = Dataset("test_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
+dataset = Dataset("train_text2SMILES_I2V_gio_method_base_correct_format.txt", t5_tokenizer)
 
 loader = DataLoader(dataset, batch_size=1, shuffle=False)
 

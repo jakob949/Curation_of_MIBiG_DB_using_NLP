@@ -133,6 +133,9 @@ optimizer = AdamW(list(t5_model.parameters()) + list(esm_model.parameters()) + l
 # optimizer = AdamW(list(esm_model.parameters()) + list(projection.parameters()), lr=learning_rate)
 # optimizer = AdamW(list(t5_model.parameters()), lr=learning_rate)
 
+scaler = torch.cuda.amp.GradScaler()
+
+
 rouge = ROUGEScore()
 bleu = BLEUScore()
 char_error_rate = CharErrorRate()
@@ -166,14 +169,14 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()
 
         decoder_input_ids = torch.cat((torch.full((labels.size(0), 1), 0, dtype=torch.long, device=device), labels[:, :-1]), dim=-1)
-
-        t5_outputs = t5_model(
-            input_ids=None,
-            attention_mask=None,
-            decoder_input_ids=decoder_input_ids,
-            encoder_outputs=(projected_hidden_states, None),
-            labels=labels,
-        )
+        with torch.amp.autocast(device_type=“cuda”, dtype=torch.float16):
+            t5_outputs = t5_model(
+                input_ids=None,
+                attention_mask=None,
+                decoder_input_ids=decoder_input_ids,
+                encoder_outputs=(projected_hidden_states, None),
+                labels=labels,
+            )
 
         with torch.no_grad():
             train_predicted_labels = t5_tokenizer.decode(t5_outputs.logits[0].argmax(dim=-1).tolist(), skip_special_tokens=True, num_of_beams=5)
@@ -195,9 +198,11 @@ for epoch in range(num_epochs):
                 Num_correct_val_mols_train += 1
 
         loss = t5_outputs.loss
-        loss.backward()
-        optimizer.step()
-
+        scaler.scale(loss).backward()
+        # loss.backward()
+        # optimizer.step()
+        scaler.step(optimizer)
+        scaler.update()
 
 
     # Test loop

@@ -118,9 +118,9 @@ t5_model = torch.nn.DataParallel(t5_model)
 
 #load data
 # dataset/train_i2v_BGC2SMM_250923.txt => no bias set
-train_dataset = Dataset("train_pfam_i2v.txt", t5_tokenizer)
+train_dataset = Dataset("dataset/pfam2SMILES/train_pfam_v2.txt", t5_tokenizer)
 # train_dataset = Dataset("train_sampling_5_for_iv2_151223_pfam2SMILES_sampling_5.txt", t5_tokenizer)
-test_dataset = Dataset("test_pfam_i2v.txt", t5_tokenizer)
+test_dataset = Dataset("dataset/pfam2SMILES/test_pfam_v2.txt", t5_tokenizer)
 # test_dataset = Dataset("test_sampling_5_for_iv2_151223_pfam2SMILES_sampling_5.txt", t5_tokenizer)
 
 num_workers = 10
@@ -186,8 +186,7 @@ for epoch in range(num_epochs):
                 generated_texts = [t5_tokenizer.decode(generated_id, skip_special_tokens=True)
                                    for generated_id in generated_ids[i]]
                 input_text = t5_tokenizer.decode(batch["input_ids"][i].tolist(), skip_special_tokens=True)
-                true_label = t5_tokenizer.decode(batch["labels"][i].tolist(),
-                                                 skip_special_tokens=True)  # Get the true label for the current input
+                true_label = t5_tokenizer.decode(batch["labels"][i].tolist(), skip_special_tokens=True)
 
                 # Saving predictions with corresponding true labels
                 with open(f'train_sampling_{num_gen_seqs}_for_iv2_{args.output_file_name}.txt', 'a') as file:

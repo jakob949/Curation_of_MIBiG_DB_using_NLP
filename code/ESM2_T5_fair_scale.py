@@ -109,8 +109,8 @@ peft_config = LoraConfig(
     task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=8, lora_alpha=32, lora_dropout=0.3
 )
 
-# T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
-T5_model_name = 'google/t5-efficient-tiny'
+T5_model_name = 'GT4SD/multitask-text-and-chemistry-t5-base-augm'
+# T5_model_name = 'google/t5-efficient-tiny'
 t5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 t5_config = T5Config.from_pretrained(T5_model_name)
 t5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name, config=t5_config)
@@ -153,8 +153,8 @@ t5_model.to(device)
 esm_model.to(device)
 projection.to(device)
 print(device)
-train_dataset = ProteinDataset("dataset/protein_SMILE/train_protein_peptides_complete_v3_0.txt", t5_tokenizer, esm_tokenizer)
-test_dataset = ProteinDataset("dataset/protein_SMILE/test_protein_peptides_complete_v3_0.txt", t5_tokenizer, esm_tokenizer)
+train_dataset = ProteinDataset("projects/dataset/protein_SMILE/train_protein_peptides_complete_v3_0.txt", t5_tokenizer, esm_tokenizer)
+test_dataset = ProteinDataset("projects/dataset/protein_SMILE/test_protein_peptides_complete_v3_0.txt", t5_tokenizer, esm_tokenizer)
 
 train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
